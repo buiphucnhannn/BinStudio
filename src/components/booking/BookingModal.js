@@ -22,12 +22,14 @@ export default function BookingModal({ booking, services, site, lang }) {
       const el = e.target.closest("[data-booking]");
       if (!el) return;
       e.preventDefault();
-      setPreset(el.getAttribute("data-booking") || "");
+      // data-booking="02" → chọn sẵn dịch vụ 02; data-booking (React render thành "true") → không chọn sẵn
+      const v = el.getAttribute("data-booking") || "";
+      setPreset(services.some((s) => s.n === v) ? v : "");
       setOpen(true);
     };
     document.addEventListener("click", onClick);
     return () => document.removeEventListener("click", onClick);
-  }, []);
+  }, [services]);
 
   useEffect(() => {
     if (!open) return;

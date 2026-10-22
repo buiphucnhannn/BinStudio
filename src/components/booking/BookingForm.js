@@ -1,27 +1,65 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Check } from "@/components/ui/Icons";
 import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
+import { LIMITS, PEOPLE, maxDateVN, todayVN, validateBooking } from "@/lib/validation/booking";
 
 /**
- * Form đặt lịch: gửi về /api/contact → server gửi email "Yêu cầu đặt lịch mới" về hộp thư studio.
- * Đồng thời sao chép nội dung vào clipboard để khách dán vào WhatsApp / Zalo nếu muốn.
+ * Form đặt lịch → /api/contact → email "Yêu cầu đặt lịch mới" về hộp thư studio.
+ * - Kiểm tra ngay trên trình duyệt bằng CÙNG luật với server (lib/validation/booking.js):
+ *   ô sai viền đỏ, con trỏ nhảy tới ô sai, toast báo đúng lỗi.
+ * - Request có thời gian chờ tối đa; phân biệt lỗi mạng / gửi quá nhiều / lỗi server để báo đúng.
+ * - Gửi kèm thời gian điền form (chống bot) và ô ẩn honeypot.
  */
-export default function BookingForm({ booking, services, site, preset, lang }) {
+const TIMEOUT_MS = 15_000;
+const DURATION = { field: 6000, rate: 9000, server: 8000 };
+const FIELD_ORDER = ["name", "phone", "date", "people", "service", "note"];
+
+export default function BookingForm({ booking, services, preset, lang }) {
   const f = booking.fields;
+  const E = f.errors;
   const [form, setForm] = useState({
     name: "",
     phone: "",
     date: "",
     people: "2",
-    service: preset || "",
+    service: services.some((s) => s.n === preset) ? preset : "",
     note: "",
     website: "", // honeypot chống bot — người thật không thấy ô này
   });
+  const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
-  const set = (k) => (e) => setForm((v) => ({ ...v, [k]: e.target.value }));
+  const uid = useId();
+  const formRef = useRef(null);
+  const openedAt = useRef(0);
+  const lastToast = useRef(null); // toast lỗi đang hiện — đóng trước khi báo lỗi mới để không chồng
+
+  useEffect(() => {
+    openedAt.current = Date.now();
+  }, []);
+
+  const set = (k) => (e) => {
+    setForm((v) => ({ ...v, [k]: e.target.value }));
+    if (errors[k]) setErrors(({ [k]: _drop, ...rest }) => rest);
+  };
+
+  const msg = (code) => E[code] || f.toastErrDesc;
+  const clearToast = () => lastToast.current && toast.dismiss(lastToast.current);
+  const fail = (title, desc, duration) => {
+    clearToast();
+    lastToast.current = toast.error(title, desc, { duration });
+  };
+
+  // Báo lỗi trường: viền đỏ + focus ô đầu tiên sai + toast
+  const showFieldErrors = (errs) => {
+    setErrors(errs);
+    const first = FIELD_ORDER.find((k) => errs[k]);
+    if (!first) return;
+    formRef.current?.querySelector(`[name="${first}"]`)?.focus();
+    fail(E.checkTitle, msg(errs[first]), DURATION.field);
+  };
 
   const compose = () => {
     const s = services.find((x) => x.n === form.service);
@@ -40,29 +78,70 @@ export default function BookingForm({ booking, services, site, preset, lang }) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    if (status === "loading") return; // chặn bấm gửi liên tục
+
+    const check = validateBooking(form, { serviceIds: services.map((s) => s.n) });
+    if (!check.ok) return showFieldErrors(check.errors);
+
+    if (typeof navigator !== "undefined" && navigator.onLine === false) {
+      return fail(E.offline_title, E.offline, DURATION.server);
+    }
+
     setStatus("loading");
-    const s = services.find((x) => x.n === form.service);
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, serviceName: s?.title || "", lang, message: compose() }),
+        body: JSON.stringify({
+          ...form,
+          name: check.data.name,
+          phone: check.data.phone,
+          note: check.data.note,
+          lang,
+          elapsed: Date.now() - openedAt.current,
+        }),
+        signal: ctrl.signal,
       });
-      if (!res.ok) throw new Error("bad response");
-      try {
-        await navigator.clipboard.writeText(compose());
-      } catch {}
-      setStatus("success");
-      toast.success(f.toastOkTitle, f.toastOkDesc);
-    } catch {
+      const out = await res.json().catch(() => ({}));
+
+      if (res.ok && out.ok) {
+        try {
+          await navigator.clipboard.writeText(compose());
+        } catch {}
+        setStatus("success");
+        clearToast();
+        toast.success(f.toastOkTitle, f.toastOkDesc);
+        return;
+      }
+
       setStatus("error");
-      toast.error(f.toastErrTitle, f.toastErrDesc);
+      if (out.error === "invalid" && out.fields) return showFieldErrors(out.fields);
+      if (out.error === "too_fast") return fail(E.checkTitle, E.too_fast, DURATION.field);
+      if (res.status === 429) {
+        const minutes = Math.max(1, Math.ceil((out.retryAfter || 60) / 60));
+        return fail(E.rate_limited_title, E.rate_limited.replace("{n}", minutes), DURATION.rate);
+      }
+      fail(f.toastErrTitle, f.toastErrDesc, DURATION.server);
+    } catch (err) {
+      setStatus("error");
+      const aborted = err?.name === "AbortError";
+      fail(
+        aborted ? f.toastErrTitle : E.offline_title,
+        aborted ? E.timeout : E.offline,
+        DURATION.server,
+      );
+    } finally {
+      clearTimeout(timer);
     }
   };
 
   const reset = () => {
     setForm((v) => ({ ...v, date: "", note: "", website: "" }));
+    setErrors({});
     setStatus("idle");
+    openedAt.current = Date.now();
   };
 
   // Gửi xong: thay form bằng màn hình xác nhận
@@ -98,8 +177,29 @@ export default function BookingForm({ booking, services, site, preset, lang }) {
     );
   }
 
+  // Ô lỗi: viền đỏ + vòng sáng đỏ nhạt
+  const bad = (k) =>
+    errors[k] && "border-red-400 ring-2 ring-red-100 focus:border-red-500 focus:ring-red-100";
+  const label =
+    "absolute top-1.5 left-4 text-[11px] tracking-wider text-ink-muted uppercase lg:text-[10px]";
+  // Dòng báo lỗi nhỏ dưới ô (trình đọc màn hình đọc qua aria-describedby)
+  const errId = (k) => `${uid}-${k}-err`;
+  const a11y = (k) => ({
+    "aria-invalid": Boolean(errors[k]),
+    "aria-describedby": errors[k] ? errId(k) : undefined,
+  });
+  const hint = (k) =>
+    errors[k] ? (
+      <p
+        id={errId(k)}
+        className="mt-1 [animation:fadeIn_.25s_ease-out_both] pl-4 text-[11.5px] leading-snug text-red-600"
+      >
+        {msg(errors[k])}
+      </p>
+    ) : null;
+
   return (
-    <form onSubmit={onSubmit} className="space-y-3">
+    <form ref={formRef} onSubmit={onSubmit} noValidate className="space-y-3">
       <input
         type="text"
         name="website"
@@ -111,86 +211,130 @@ export default function BookingForm({ booking, services, site, preset, lang }) {
         className="absolute -left-[9999px] h-0 w-0 opacity-0"
       />
       <div className="grid gap-3 sm:grid-cols-2">
-        <input
-          required
-          className="field"
-          placeholder={f.name}
-          value={form.name}
-          onChange={set("name")}
-          autoComplete="name"
-        />
-        <input
-          required
-          className="field"
-          type="tel"
-          placeholder={f.phone}
-          value={form.phone}
-          onChange={set("phone")}
-          autoComplete="tel"
-        />
+        <div>
+          <input
+            name="name"
+            required
+            maxLength={LIMITS.name}
+            className={cn("field", bad("name"))}
+            {...a11y("name")}
+            aria-label={f.name}
+            placeholder={f.name}
+            value={form.name}
+            onChange={set("name")}
+            autoComplete="name"
+            enterKeyHint="next"
+          />
+          {hint("name")}
+        </div>
+        <div>
+          <input
+            name="phone"
+            required
+            type="tel"
+            inputMode="tel"
+            maxLength={LIMITS.phone}
+            className={cn("field", bad("phone"))}
+            {...a11y("phone")}
+            aria-label={f.phone}
+            placeholder={f.phone}
+            value={form.phone}
+            onChange={set("phone")}
+            autoComplete="tel"
+            spellCheck={false}
+            enterKeyHint="next"
+          />
+          {hint("phone")}
+        </div>
       </div>
       <div className="grid grid-cols-[1.4fr_1fr] gap-3 sm:grid-cols-2">
+        <div>
+          <label className="relative block">
+            <span className={label}>{f.date}</span>
+            <input
+              name="date"
+              required
+              className={cn("field pt-5", bad("date"))}
+              {...a11y("date")}
+              type="date"
+              value={form.date}
+              onChange={set("date")}
+              // Giới hạn chọn ngày: từ hôm nay (giờ VN) tới 2 năm sau — đặt khi người dùng mở ô ngày
+              onFocus={(e) => {
+                e.currentTarget.min = todayVN();
+                e.currentTarget.max = maxDateVN();
+              }}
+            />
+          </label>
+          {hint("date")}
+        </div>
+        <div>
+          <label className="relative block">
+            <span className={label}>{f.people}</span>
+            <select
+              name="people"
+              className={cn("field pt-5", bad("people"))}
+              {...a11y("people")}
+              value={form.people}
+              onChange={set("people")}
+            >
+              {PEOPLE.map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </label>
+          {hint("people")}
+        </div>
+      </div>
+      <div>
         <label className="relative block">
-          <span className="absolute top-1.5 left-4 text-[11px] tracking-wider text-ink-muted uppercase lg:text-[10px]">
-            {f.date}
-          </span>
-          <input className="field pt-5" type="date" value={form.date} onChange={set("date")} />
-        </label>
-        <label className="relative block">
-          <span className="absolute top-1.5 left-4 text-[11px] tracking-wider text-ink-muted uppercase lg:text-[10px]">
-            {f.people}
-          </span>
-          <select className="field pt-5" value={form.people} onChange={set("people")}>
-            {["1", "2", "3-5", "6-10", "10+"].map((n) => (
-              <option key={n} value={n}>
-                {n}
+          <span className={label}>{f.service}</span>
+          <select
+            name="service"
+            className={cn("field pt-5", bad("service"))}
+            {...a11y("service")}
+            value={form.service}
+            onChange={set("service")}
+          >
+            <option value="">{f.undecided}</option>
+            {services.map((s) => (
+              <option key={s.n} value={s.n}>
+                {s.title}
               </option>
             ))}
           </select>
         </label>
+        {hint("service")}
       </div>
-      <label className="relative block">
-        <span className="absolute top-1.5 left-4 text-[11px] tracking-wider text-ink-muted uppercase lg:text-[10px]">
-          {f.service}
-        </span>
-        <select className="field pt-5" value={form.service} onChange={set("service")}>
-          <option value="">{f.undecided}</option>
-          {services.map((s) => (
-            <option key={s.n} value={s.n}>
-              {s.title}
-            </option>
-          ))}
-        </select>
-      </label>
-      <textarea
-        className="min-h-[72px] field resize-none sm:min-h-[88px]"
-        placeholder={f.note}
-        value={form.note}
-        onChange={set("note")}
-      />
+      <div>
+        <textarea
+          name="note"
+          maxLength={LIMITS.note}
+          className={cn("min-h-[72px] field resize-none sm:min-h-[88px]", bad("note"))}
+          {...a11y("note")}
+          aria-label={f.note}
+          placeholder={f.note}
+          value={form.note}
+          onChange={set("note")}
+        />
+        {hint("note")}
+      </div>
 
       <button
         type="submit"
         disabled={status === "loading"}
-        className="inline-flex w-full items-center justify-center rounded-full bg-ink px-6 py-3.5 text-sm font-medium text-white transition hover:bg-graphite disabled:opacity-60"
+        aria-busy={status === "loading"}
+        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-6 py-3.5 text-sm font-medium text-white transition hover:bg-graphite disabled:cursor-wait disabled:opacity-60"
       >
+        {status === "loading" && (
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+        )}
         {status === "loading" ? f.sending : f.submit}
       </button>
 
-      <p
-        role="status"
-        aria-live="polite"
-        className={cn(
-          "flex items-center justify-center gap-2 text-center text-[12px] transition-all duration-300",
-          status === "success"
-            ? "text-ink"
-            : status === "error"
-              ? "text-red-600"
-              : "text-ink-muted",
-        )}
-      >
-        {status === "error" ? f.error : f.privacy}
-      </p>
+      <p className="text-center text-[12px] text-ink-muted">{f.privacy}</p>
     </form>
   );
 }

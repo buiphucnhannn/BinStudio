@@ -912,6 +912,61 @@ export const booking = {
       "Vui lòng thử lại, hoặc nhắn Bin trực tiếp qua WhatsApp / Zalo.",
       "Please try again, or message Bin directly on WhatsApp / Zalo.",
     ),
+    // Thông báo lỗi theo mã (lib/validation/booking.js + api/contact). {n} = số phút chờ.
+    errors: {
+      checkTitle: t("Vui lòng kiểm tra lại thông tin", "Please check your details"),
+      name_required: t("Vui lòng nhập họ tên của bạn.", "Please enter your name."),
+      name_short: t("Họ tên cần ít nhất 2 chữ cái.", "Your name needs at least 2 letters."),
+      name_long: t("Họ tên tối đa 60 ký tự.", "Your name can be up to 60 characters."),
+      name_invalid: t(
+        "Họ tên chỉ gồm chữ cái và khoảng trắng, không chứa số hay ký hiệu.",
+        "Please use letters and spaces only — no numbers or symbols.",
+      ),
+      phone_required: t(
+        "Vui lòng nhập số điện thoại / WhatsApp / Zalo.",
+        "Please enter your phone / WhatsApp number.",
+      ),
+      phone_invalid: t(
+        "Số điện thoại chưa đúng. Ví dụ: 0384 038 453 hoặc +84 384 038 453.",
+        "That phone number doesn't look right. Example: +84 384 038 453.",
+      ),
+      phone_intl: t(
+        "Số nước ngoài cần có dấu + và mã quốc gia, ví dụ +61 412 345 678.",
+        "International numbers need a + and country code, e.g. +61 412 345 678.",
+      ),
+      date_required: t("Vui lòng chọn ngày dự kiến chụp.", "Please choose your preferred date."),
+      date_invalid: t("Ngày dự kiến không hợp lệ.", "That date isn't valid."),
+      date_past: t("Ngày dự kiến không thể ở quá khứ.", "Please pick a date from today onwards."),
+      date_far: t("Bin nhận lịch tối đa 2 năm tới.", "Bookings open up to 2 years ahead."),
+      people_invalid: t("Số người không hợp lệ.", "Please choose a group size."),
+      service_invalid: t(
+        "Dịch vụ không hợp lệ, vui lòng chọn lại.",
+        "Please choose a service from the list.",
+      ),
+      note_long: t("Ghi chú tối đa 1.000 ký tự.", "Notes can be up to 1,000 characters."),
+      note_links: t(
+        "Ghi chú chứa quá nhiều đường link hoặc mã HTML.",
+        "Your note has too many links or HTML code.",
+      ),
+      too_fast: t(
+        "Bạn gửi hơi nhanh — vui lòng kiểm tra lại thông tin rồi gửi lần nữa.",
+        "That was quick! Please review your details and send again.",
+      ),
+      rate_limited_title: t("Bạn đã gửi nhiều yêu cầu", "Too many requests"),
+      rate_limited: t(
+        "Vui lòng thử lại sau {n} phút, hoặc nhắn Bin trực tiếp qua WhatsApp / Zalo.",
+        "Please try again in {n} min, or message Bin directly on WhatsApp / Zalo.",
+      ),
+      offline_title: t("Mất kết nối mạng", "You're offline"),
+      offline: t(
+        "Kiểm tra kết nối Internet rồi gửi lại nhé.",
+        "Check your connection and try again.",
+      ),
+      timeout: t(
+        "Máy chủ phản hồi chậm, vui lòng thử lại.",
+        "The server is slow to respond — please try again.",
+      ),
+    },
     error: t(
       "Gửi chưa thành công — vui lòng nhắn trực tiếp qua WhatsApp / Zalo.",
       "Something went wrong — please message directly on WhatsApp / Zalo.",

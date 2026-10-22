@@ -105,6 +105,24 @@ Khách bấm **Gửi yêu cầu** → `/api/contact` kiểm tra dữ liệu → 
 Chưa cấu hình SMTP: dev chỉ ghi log; production trả lỗi để form báo khách nhắn trực tiếp. Có sẵn ô ẩn chống bot
 và giới hạn 5 yêu cầu / 10 phút / IP.
 
+### Bảo mật form
+
+| Lớp | Cách chặn |
+| --- | --- |
+| Nguồn gửi | Chỉ nhận `fetch` từ chính website (Origin / Sec-Fetch-Site), đúng `Content-Type: application/json` |
+| Kích thước | Body tối đa 8KB, đọc dạng text rồi mới parse JSON |
+| Tần suất | Theo IP: 3/phút, 8/giờ, 20/ngày · theo số điện thoại: 3/giờ · gửi trùng trong 10 phút không gửi lại mail |
+| Bot | Ô ẩn honeypot + chặn form điền xong dưới 1,5 giây |
+| Dữ liệu | Luật chung client/server ở `src/lib/validation/booking.js`: họ tên chỉ chữ cái (có dấu, mọi ngôn ngữ), SĐT Việt Nam (03/05/07/08/09, 02…) hoặc quốc tế dạng +mã nước; ngày từ hôm nay tới 2 năm; dịch vụ chỉ nhận mã có thật |
+| Email | Bỏ ký tự điều khiển / vô hình (chống chèn header), escape HTML trong template |
+| Header | `X-Frame-Options`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, HSTS, ẩn `X-Powered-By` |
+
+Lỗi hiển thị bằng toast: lỗi nhập 6 giây (kèm viền đỏ + nhảy tới ô sai), gửi quá nhiều 9 giây (có số phút chờ), lỗi mạng / server 8 giây.
+
+**Khi deploy:** cấu hình `UPSTASH_REDIS_REST_URL` / `TOKEN` để giới hạn tần suất không bị reset giữa các instance;
+bật **Vercel Firewall** (Attack Challenge Mode khi bị tấn công) hoặc đặt site sau **Cloudflare** — DDoS quy mô lớn
+chỉ chặn được ở tầng hạ tầng, không phải trong code ứng dụng.
+
 ### Toast dùng chung
 
 Gọi từ bất kỳ client component nào (hiển thị bởi `<Toaster />` trong layout, luôn nổi trên cùng):

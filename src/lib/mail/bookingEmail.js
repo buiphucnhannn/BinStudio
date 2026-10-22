@@ -65,7 +65,7 @@ const row = (label, value) =>
  * @returns {{ subject: string, html: string, text: string }}
  */
 export function bookingEmail(b) {
-  const digits = phoneDigits(b.phone);
+  const digits = phoneDigits(b.phoneE164 || b.phone);
   const langLabel = b.lang === "en" ? "English — nên trả lời bằng tiếng Anh" : "Tiếng Việt";
   const received = new Date(b.receivedAt).toLocaleString("vi-VN", {
     timeZone: "Asia/Ho_Chi_Minh",

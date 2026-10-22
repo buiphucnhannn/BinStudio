@@ -44,3 +44,6 @@ next-env.d.ts
 
 # Ảnh gốc (chưa nén) — không deploy
 raw-photos/
+
+# Bản build kiểm tra (NEXT_DIST_DIR=.next-verify)
+/.next-verify/
