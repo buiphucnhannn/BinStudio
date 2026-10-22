@@ -213,7 +213,7 @@ export default function BookingForm({ booking, services, preset, lang }) {
       ref={formRef}
       onSubmit={onSubmit}
       noValidate
-      className="space-y-2.5 [@media(max-height:700px)]:space-y-2"
+      className="flex flex-1 flex-col space-y-2.5 [@media(max-height:700px)]:space-y-2"
     >
       <input
         type="text"
@@ -340,12 +340,13 @@ export default function BookingForm({ booking, services, preset, lang }) {
         </label>
         {hint("service")}
       </div>
-      <div>
+      {/* Ô ghi chú tự giãn lấp phần còn trống của popup (desktop) */}
+      <div className="flex flex-1 flex-col">
         <textarea
           name="note"
           maxLength={LIMITS.note}
           className={cn(
-            "h-[60px] field resize-none [@media(max-height:700px)]:h-[48px]",
+            "min-h-[60px] field flex-1 resize-none [@media(max-height:700px)]:min-h-[44px] lg:[@media(max-height:640px)]:min-h-[34px] lg:[@media(max-height:640px)]:py-2",
             bad("note"),
           )}
           {...a11y("note")}

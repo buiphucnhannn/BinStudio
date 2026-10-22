@@ -93,7 +93,7 @@ export default function BookingModal({ booking, services, site, lang }) {
         {/* Cột form — data-lenis-prevent: Lenis không chặn cuộn bên trong popup */}
         <div
           data-lenis-prevent
-          className="relative no-scrollbar flex max-h-[calc(100svh-1rem)] flex-col justify-center overflow-y-auto overscroll-contain px-5 py-5 sm:max-h-[calc(100svh-1.5rem)] sm:px-9 sm:py-8 [@media(max-height:700px)]:py-3.5 [@media(max-height:720px)]:sm:py-5"
+          className="relative no-scrollbar flex max-h-[calc(100svh-1rem)] flex-col overflow-y-auto overscroll-contain px-5 py-5 sm:max-h-[calc(100svh-1.5rem)] sm:px-9 sm:py-8 [@media(max-height:700px)]:py-3.5 [@media(max-height:720px)]:sm:py-5"
         >
           <button
             onClick={close}
@@ -104,7 +104,7 @@ export default function BookingModal({ booking, services, site, lang }) {
           </button>
 
           <div className="flex flex-col items-center text-center">
-            <Logo className="h-8 sm:h-9 [@media(max-height:700px)]:h-6 [@media(max-height:720px)]:h-7" />
+            <Logo className="h-10 sm:h-12 max-lg:[@media(max-height:700px)]:h-6 max-lg:[@media(min-height:701px)_and_(max-height:720px)]:h-9 lg:[@media(max-height:640px)]:h-8" />
             <h3 className="mt-3 font-serif text-[1.6rem] leading-tight text-ink sm:text-[2.1rem] [@media(max-height:700px)]:mt-1 [@media(max-height:700px)]:text-[1.4rem] [@media(max-height:720px)]:mt-2 [@media(max-height:720px)]:sm:text-[1.8rem]">
               {booking.title}
             </h3>
@@ -113,7 +113,7 @@ export default function BookingModal({ booking, services, site, lang }) {
             </p>
           </div>
 
-          <div className="mt-5 [@media(max-height:720px)]:mt-3.5">
+          <div className="mt-5 flex flex-1 flex-col [@media(max-height:720px)]:mt-3.5">
             <BookingForm
               booking={booking}
               services={services}
