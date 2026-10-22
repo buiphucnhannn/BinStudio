@@ -12,6 +12,7 @@ import ScrollTop from "@/components/fx/ScrollTop";
 import Preloader from "@/components/fx/Preloader";
 import PageTransition from "@/components/fx/PageTransition";
 import BookingModal from "@/components/booking/BookingModal";
+import Toaster from "@/components/ui/Toaster";
 import "../globals.css";
 
 const serif = Cormorant_Garamond({
@@ -130,6 +131,7 @@ export default async function RootLayout({ children, params }) {
           site={site}
           lang={lang}
         />
+        <Toaster />
       </body>
     </html>
   );

@@ -92,7 +92,31 @@ src/
 - **Khoảnh khắc**: section ghim, dải ảnh chạy ngang theo chiều cuộn (viewport ≤ 1080px cao).
 - **Địa điểm / Bộ sưu tập**: kéo chuột để lướt, hover nở caption; `.reveal` / `.split` hiện dần khi cuộn tới.
 
-## 6. Cần khách xác nhận
+## 6. Email đặt lịch
+
+Khách bấm **Gửi yêu cầu** → `/api/contact` kiểm tra dữ liệu → gửi email HTML "Yêu cầu đặt lịch mới"
+(template `src/lib/mail/bookingEmail.js`, màu & logo theo website, có nút Gọi / Zalo / WhatsApp tới khách).
+
+1. Gmail của studio: bật **Xác minh 2 bước**, tạo **Mật khẩu ứng dụng** tại https://myaccount.google.com/apppasswords.
+2. Tạo `.env.local` từ `.env.example`, điền `SMTP_USER` (Gmail) và `SMTP_PASS` (mật khẩu ứng dụng 16 ký tự).
+   `CONTACT_TO_EMAIL` = hộp thư nhận (bỏ trống = gửi về chính Gmail đó).
+3. Khởi động lại `npm run dev`. Khi deploy (Vercel…), khai báo các biến này trong phần Environment Variables.
+
+Chưa cấu hình SMTP: dev chỉ ghi log; production trả lỗi để form báo khách nhắn trực tiếp. Có sẵn ô ẩn chống bot
+và giới hạn 5 yêu cầu / 10 phút / IP.
+
+### Toast dùng chung
+
+Gọi từ bất kỳ client component nào (hiển thị bởi `<Toaster />` trong layout, luôn nổi trên cùng):
+
+```js
+import { toast } from "@/lib/toast";
+toast.success("Đã gửi yêu cầu", "Bin sẽ liên hệ lại trong ngày.");
+toast.error("Gửi chưa thành công", "Vui lòng thử lại.");
+toast.info("Đã sao chép", undefined, { duration: 3000 }); // duration: 0 = không tự đóng
+```
+
+## 7. Cần khách xác nhận
 
 - **Đánh giá khách hàng** đang là nội dung mẫu (có ghi chú trên trang) — thay bằng review thật.
 - **Giờ vàng, địa điểm, gói gợi ý, FAQ** viết theo kiến thức chung về Phú Quốc — khách rà lại cho đúng thực tế.

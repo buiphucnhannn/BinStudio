@@ -288,6 +288,15 @@ html.lenis body {
   animation: heroIn 1.8s var(--ease-out-expo) both;
   transform-origin: center;
 }
+/* Thanh đếm ngược của toast */
+@keyframes toastbar {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
 /* Thanh tiến độ slide hero */
 @keyframes slidebar {
   from {

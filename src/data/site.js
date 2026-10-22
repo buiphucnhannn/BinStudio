@@ -898,6 +898,20 @@ export const booking = {
     submit: t("Gửi yêu cầu", "Send request"),
     sending: t("Đang gửi…", "Sending…"),
     sent: t("Đã nhận! Bin sẽ phản hồi trong ngày.", "Received! Bin will reply within the day."),
+    // Màn hình sau khi gửi thành công ({phone} = số khách vừa nhập)
+    successTitle: t("Đã gửi yêu cầu thành công!", "Request sent!"),
+    successDesc: t(
+      "Cảm ơn bạn! Bin sẽ liên hệ qua số {phone} trong ngày để xác nhận lịch và gợi ý địa điểm.",
+      "Thank you! Bin will contact you at {phone} within the day to confirm and suggest locations.",
+    ),
+    again: t("Gửi yêu cầu khác", "Send another request"),
+    toastOkTitle: t("Đã gửi yêu cầu", "Request sent"),
+    toastOkDesc: t("Bin sẽ liên hệ lại trong ngày.", "Bin will get back to you within the day."),
+    toastErrTitle: t("Gửi chưa thành công", "Couldn't send your request"),
+    toastErrDesc: t(
+      "Vui lòng thử lại, hoặc nhắn Bin trực tiếp qua WhatsApp / Zalo.",
+      "Please try again, or message Bin directly on WhatsApp / Zalo.",
+    ),
     error: t(
       "Gửi chưa thành công — vui lòng nhắn trực tiếp qua WhatsApp / Zalo.",
       "Something went wrong — please message directly on WhatsApp / Zalo.",

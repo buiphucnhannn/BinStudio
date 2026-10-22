@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { Check } from "@/components/ui/Icons";
+import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 
 /**
- * Form đặt lịch: gửi về /api/contact (hiện chỉ ghi log server — tích hợp email/CRM tại route.js).
+ * Form đặt lịch: gửi về /api/contact → server gửi email "Yêu cầu đặt lịch mới" về hộp thư studio.
  * Đồng thời sao chép nội dung vào clipboard để khách dán vào WhatsApp / Zalo nếu muốn.
  */
 export default function BookingForm({ booking, services, site, preset, lang }) {
@@ -17,6 +18,7 @@ export default function BookingForm({ booking, services, site, preset, lang }) {
     people: "2",
     service: preset || "",
     note: "",
+    website: "", // honeypot chống bot — người thật không thấy ô này
   });
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
   const set = (k) => (e) => setForm((v) => ({ ...v, [k]: e.target.value }));
@@ -51,13 +53,63 @@ export default function BookingForm({ booking, services, site, preset, lang }) {
         await navigator.clipboard.writeText(compose());
       } catch {}
       setStatus("success");
+      toast.success(f.toastOkTitle, f.toastOkDesc);
     } catch {
       setStatus("error");
+      toast.error(f.toastErrTitle, f.toastErrDesc);
     }
   };
 
+  const reset = () => {
+    setForm((v) => ({ ...v, date: "", note: "", website: "" }));
+    setStatus("idle");
+  };
+
+  // Gửi xong: thay form bằng màn hình xác nhận
+  if (status === "success") {
+    const [before, after] = f.successDesc.split("{phone}");
+    return (
+      <div
+        role="status"
+        className="flex [animation:popIn_.5s_cubic-bezier(.22,1,.36,1)_both] flex-col items-center px-2 py-6 text-center sm:py-10"
+      >
+        <span className="relative flex h-20 w-20 items-center justify-center rounded-full bg-emerald-50">
+          <span className="absolute inset-0 [animation:ripple_2.4s_ease-out_infinite] rounded-full bg-emerald-200/60" />
+          <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-white shadow-[0_10px_30px_-10px_rgba(16,185,129,0.7)]">
+            <Check className="h-7 w-7" />
+          </span>
+        </span>
+        <h4 className="mt-7 font-serif text-[1.7rem] leading-tight text-ink sm:text-[2rem]">
+          {f.successTitle}
+        </h4>
+        <p className="mt-3 max-w-sm text-[14.5px] leading-relaxed text-ink-soft">
+          {before}
+          <strong className="font-semibold text-ink">{form.phone}</strong>
+          {after}
+        </p>
+        <button
+          type="button"
+          onClick={reset}
+          className="mt-8 inline-flex items-center justify-center rounded-full border border-ink/15 px-6 py-3 text-sm font-medium text-ink transition hover:border-ink hover:bg-ink hover:text-white"
+        >
+          {f.again}
+        </button>
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={onSubmit} className="space-y-3">
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        value={form.website}
+        onChange={set("website")}
+        className="absolute -left-[9999px] h-0 w-0 opacity-0"
+      />
       <div className="grid gap-3 sm:grid-cols-2">
         <input
           required
@@ -137,8 +189,7 @@ export default function BookingForm({ booking, services, site, preset, lang }) {
               : "text-ink-muted",
         )}
       >
-        {status === "success" && <Check className="h-3.5 w-3.5" />}
-        {status === "success" ? f.sent : status === "error" ? f.error : f.privacy}
+        {status === "error" ? f.error : f.privacy}
       </p>
     </form>
   );
