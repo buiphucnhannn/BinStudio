@@ -1,0 +1,5 @@
+# Không tải lên Vercel khi deploy bằng CLI (`vercel`)
+raw-photos/
+.next-verify/
+docs/
+.env.local

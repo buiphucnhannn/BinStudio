@@ -141,7 +141,7 @@ html.lenis body {
   @apply bg-white p-2 pb-7 shadow-polaroid;
 }
 @utility field {
-  @apply w-full rounded-xl border border-ink/10 bg-white px-4 py-3 text-sm text-ink transition outline-none placeholder:text-ink-muted focus:border-ink/40 focus:ring-2 focus:ring-ink/10;
+  @apply w-full rounded-xl border border-ink/10 bg-white px-4 py-2.5 text-sm text-ink transition outline-none placeholder:text-ink-muted focus:border-ink/40 focus:ring-2 focus:ring-ink/10;
 }
 @utility panel {
   @apply rounded-[2rem] sm:rounded-[2.5rem];

@@ -887,13 +887,12 @@ export const booking = {
   fields: {
     name: t("Họ tên", "Full name"),
     phone: t("Điện thoại / WhatsApp / Zalo", "Phone / WhatsApp / Zalo"),
+    hotel: t("Địa điểm khách sạn", "Hotel location"),
+    hotelPlaceholder: t("Tên khách sạn / resort, khu vực", "Hotel / resort name, area"),
     date: t("Ngày dự kiến", "Preferred date"),
     people: t("Số người", "Group size"),
     service: t("Dịch vụ quan tâm", "Service"),
-    note: t(
-      "Ghi chú (resort đang ở, concept, yêu cầu riêng…)",
-      "Notes (your resort, concept, special requests…)",
-    ),
+    note: t("Ghi chú (concept, yêu cầu riêng…)", "Notes (concept, special requests…)"),
     undecided: t("Chưa quyết định, cần tư vấn", "Not sure yet, need advice"),
     submit: t("Gửi yêu cầu", "Send request"),
     sending: t("Đang gửi…", "Sending…"),
@@ -944,6 +943,22 @@ export const booking = {
         "Please choose a service from the list.",
       ),
       note_long: t("Ghi chú tối đa 1.000 ký tự.", "Notes can be up to 1,000 characters."),
+      hotel_required: t(
+        "Vui lòng nhập khách sạn / resort mà bạn đang / sẽ ở.",
+        "Please enter the hotel or resort you're staying or will stay at.",
+      ),
+      hotel_short: t(
+        "Tên khách sạn cần ít nhất 2 chữ cái.",
+        "The hotel name needs at least 2 letters.",
+      ),
+      hotel_long: t(
+        "Địa điểm khách sạn tối đa 120 ký tự.",
+        "Hotel location can be up to 120 characters.",
+      ),
+      hotel_invalid: t(
+        "Địa điểm khách sạn không được chứa link, email hay ký hiệu lạ.",
+        "Hotel location can't contain links, emails or unusual symbols.",
+      ),
       note_links: t(
         "Ghi chú chứa quá nhiều đường link hoặc mã HTML.",
         "Your note has too many links or HTML code.",

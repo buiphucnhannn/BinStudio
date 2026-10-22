@@ -53,7 +53,7 @@ export default function BookingModal({ booking, services, site, lang }) {
 
   return (
     <div
-      className="fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-6"
+      className="fixed inset-0 z-[150] flex items-center justify-center p-2 sm:p-6"
       role="dialog"
       aria-modal="true"
       aria-label={booking.title}
@@ -63,7 +63,7 @@ export default function BookingModal({ booking, services, site, lang }) {
         onClick={close}
       />
 
-      <div className="relative grid max-h-[calc(100svh-2rem)] w-full max-w-[980px] [animation:popIn_.55s_cubic-bezier(.22,1,.36,1)_both] overflow-hidden rounded-[1.75rem] bg-sand shadow-soft lg:grid-cols-[0.42fr_0.58fr] lg:rounded-[2rem]">
+      <div className="relative grid max-h-[calc(100svh-1rem)] w-full max-w-[980px] [animation:popIn_.55s_cubic-bezier(.22,1,.36,1)_both] overflow-hidden rounded-[1.75rem] bg-sand shadow-soft sm:max-h-[calc(100svh-1.5rem)] lg:min-h-[min(700px,calc(100svh-1.5rem))] lg:grid-cols-[0.42fr_0.58fr] lg:rounded-[2rem]">
         {/* Cột ảnh (desktop) */}
         <div className="relative hidden lg:block">
           <Pic
@@ -93,7 +93,7 @@ export default function BookingModal({ booking, services, site, lang }) {
         {/* Cột form — data-lenis-prevent: Lenis không chặn cuộn bên trong popup */}
         <div
           data-lenis-prevent
-          className="relative no-scrollbar max-h-[calc(100svh-2rem)] overflow-y-auto overscroll-contain px-5 py-6 sm:px-9 sm:py-8"
+          className="relative no-scrollbar flex max-h-[calc(100svh-1rem)] flex-col justify-center overflow-y-auto overscroll-contain px-5 py-5 sm:max-h-[calc(100svh-1.5rem)] sm:px-9 sm:py-8 [@media(max-height:700px)]:py-3.5 [@media(max-height:720px)]:sm:py-5"
         >
           <button
             onClick={close}
@@ -104,16 +104,16 @@ export default function BookingModal({ booking, services, site, lang }) {
           </button>
 
           <div className="flex flex-col items-center text-center">
-            <Logo className="h-7 sm:h-9" />
-            <h3 className="mt-2 font-serif text-[1.5rem] leading-tight text-ink sm:mt-4 sm:text-[2.2rem]">
+            <Logo className="h-8 sm:h-9 [@media(max-height:700px)]:h-6 [@media(max-height:720px)]:h-7" />
+            <h3 className="mt-3 font-serif text-[1.6rem] leading-tight text-ink sm:text-[2.1rem] [@media(max-height:700px)]:mt-1 [@media(max-height:700px)]:text-[1.4rem] [@media(max-height:720px)]:mt-2 [@media(max-height:720px)]:sm:text-[1.8rem]">
               {booking.title}
             </h3>
-            <p className="mt-2 max-w-sm text-[13.5px] leading-relaxed text-balance text-ink-soft">
+            <p className="mt-1.5 max-w-sm text-[13px] leading-relaxed text-balance text-ink-soft">
               {booking.desc}
             </p>
           </div>
 
-          <div className="mt-4 sm:mt-6">
+          <div className="mt-5 [@media(max-height:720px)]:mt-3.5">
             <BookingForm
               booking={booking}
               services={services}
@@ -123,7 +123,7 @@ export default function BookingModal({ booking, services, site, lang }) {
             />
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 border-t border-ink/10 pt-4 text-[12px] text-ink-muted sm:mt-6 sm:pt-5">
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-3.5 gap-y-1.5 border-t border-ink/10 pt-4 text-[11.5px] text-ink-muted [@media(max-height:700px)]:mt-2.5 [@media(max-height:700px)]:pt-2.5">
             <span>{booking.fields.or}</span>
             {quick.map(({ href, label, Icon, ext }) => (
               <a
@@ -133,7 +133,7 @@ export default function BookingModal({ booking, services, site, lang }) {
                 rel={ext ? "noopener noreferrer" : undefined}
                 className="inline-flex items-center gap-1.5 text-ink/80 transition hover:text-ink"
               >
-                <Icon className="h-4 w-4" /> {label}
+                <Icon className="h-3.5 w-3.5" /> {label}
               </a>
             ))}
           </div>

@@ -12,7 +12,13 @@ export const siteConfig = {
     "Studio Bin — nhiếp ảnh gia bản địa tại Phú Quốc. Chụp ảnh cưới & pre-wedding ngoại cảnh biển, cặp đôi, cầu hôn, săn hoàng hôn, gia đình nghỉ dưỡng tại resort/villa, chân dung nghệ thuật & sự kiện. Phong cách phóng sự tự nhiên, phục vụ khách trong và ngoài nước.",
     "Studio Bin — a local photographer in Phu Quoc, Vietnam. Beach weddings & pre-wedding, couples, proposals, sunset sessions, family holidays at resorts & villas, editorial portraits & events. Candid, documentary style for guests from around the world.",
   ),
-  url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+  // Domain dùng cho SEO (sitemap, canonical, ảnh chia sẻ). Ưu tiên NEXT_PUBLIC_SITE_URL;
+  // không có thì tự lấy domain production Vercel cấp (biến hệ thống VERCEL_PROJECT_PRODUCTION_URL).
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "http://localhost:3000"),
   themeColor: "#f6f1ea",
   keywords: [
     "Photographer Phú Quốc",

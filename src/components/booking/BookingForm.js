@@ -15,7 +15,7 @@ import { LIMITS, PEOPLE, maxDateVN, todayVN, validateBooking } from "@/lib/valid
  */
 const TIMEOUT_MS = 15_000;
 const DURATION = { field: 6000, rate: 9000, server: 8000 };
-const FIELD_ORDER = ["name", "phone", "date", "people", "service", "note"];
+const FIELD_ORDER = ["name", "phone", "hotel", "date", "people", "service", "note"];
 
 export default function BookingForm({ booking, services, preset, lang }) {
   const f = booking.fields;
@@ -23,6 +23,7 @@ export default function BookingForm({ booking, services, preset, lang }) {
   const [form, setForm] = useState({
     name: "",
     phone: "",
+    hotel: "",
     date: "",
     people: "2",
     service: services.some((s) => s.n === preset) ? preset : "",
@@ -67,6 +68,7 @@ export default function BookingForm({ booking, services, preset, lang }) {
       booking.message,
       `• ${f.name}: ${form.name}`,
       `• ${f.phone}: ${form.phone}`,
+      `• ${f.hotel}: ${form.hotel}`,
       form.date && `• ${f.date}: ${form.date}`,
       `• ${f.people}: ${form.people}`,
       `• ${f.service}: ${s ? s.title : f.undecided}`,
@@ -97,6 +99,7 @@ export default function BookingForm({ booking, services, preset, lang }) {
         body: JSON.stringify({
           ...form,
           name: check.data.name,
+          hotel: check.data.hotel,
           phone: check.data.phone,
           note: check.data.note,
           lang,
@@ -181,25 +184,37 @@ export default function BookingForm({ booking, services, preset, lang }) {
   const bad = (k) =>
     errors[k] && "border-red-400 ring-2 ring-red-100 focus:border-red-500 focus:ring-red-100";
   const label =
-    "absolute top-1.5 left-4 text-[11px] tracking-wider text-ink-muted uppercase lg:text-[10px]";
+    "absolute top-[5px] left-4 text-[10.5px] tracking-wider text-ink-muted uppercase lg:text-[10px]";
   // Dòng báo lỗi nhỏ dưới ô (trình đọc màn hình đọc qua aria-describedby)
   const errId = (k) => `${uid}-${k}-err`;
   const a11y = (k) => ({
     "aria-invalid": Boolean(errors[k]),
     "aria-describedby": errors[k] ? errId(k) : undefined,
   });
+  // Chỉ HIỆN dòng lỗi của ô sai đầu tiên (giữ popup vừa 1 màn hình); ô sai khác vẫn viền đỏ
+  // và vẫn có dòng lỗi ẩn (sr-only) cho trình đọc màn hình. Sửa xong ô này → lỗi ô kế tiếp hiện ra.
+  const firstErr = FIELD_ORDER.find((k) => errors[k]);
   const hint = (k) =>
     errors[k] ? (
       <p
         id={errId(k)}
-        className="mt-1 [animation:fadeIn_.25s_ease-out_both] pl-4 text-[11.5px] leading-snug text-red-600"
+        className={
+          k === firstErr
+            ? "mt-1 [animation:fadeIn_.25s_ease-out_both] pl-4 text-[11.5px] leading-snug text-red-600"
+            : "sr-only"
+        }
       >
         {msg(errors[k])}
       </p>
     ) : null;
 
   return (
-    <form ref={formRef} onSubmit={onSubmit} noValidate className="space-y-3">
+    <form
+      ref={formRef}
+      onSubmit={onSubmit}
+      noValidate
+      className="space-y-2.5 [@media(max-height:700px)]:space-y-2"
+    >
       <input
         type="text"
         name="website"
@@ -247,6 +262,23 @@ export default function BookingForm({ booking, services, preset, lang }) {
           {hint("phone")}
         </div>
       </div>
+      <div>
+        <label className="relative block">
+          <span className={label}>{f.hotel}</span>
+          <input
+            name="hotel"
+            required
+            maxLength={LIMITS.hotel}
+            className={cn("field pt-[1.15rem] pb-1.5", bad("hotel"))}
+            {...a11y("hotel")}
+            placeholder={f.hotelPlaceholder}
+            value={form.hotel}
+            onChange={set("hotel")}
+            enterKeyHint="next"
+          />
+        </label>
+        {hint("hotel")}
+      </div>
       <div className="grid grid-cols-[1.4fr_1fr] gap-3 sm:grid-cols-2">
         <div>
           <label className="relative block">
@@ -254,7 +286,7 @@ export default function BookingForm({ booking, services, preset, lang }) {
             <input
               name="date"
               required
-              className={cn("field pt-5", bad("date"))}
+              className={cn("field pt-[1.15rem] pb-1.5", bad("date"))}
               {...a11y("date")}
               type="date"
               value={form.date}
@@ -273,7 +305,7 @@ export default function BookingForm({ booking, services, preset, lang }) {
             <span className={label}>{f.people}</span>
             <select
               name="people"
-              className={cn("field pt-5", bad("people"))}
+              className={cn("field pt-[1.15rem] pb-1.5", bad("people"))}
               {...a11y("people")}
               value={form.people}
               onChange={set("people")}
@@ -293,7 +325,7 @@ export default function BookingForm({ booking, services, preset, lang }) {
           <span className={label}>{f.service}</span>
           <select
             name="service"
-            className={cn("field pt-5", bad("service"))}
+            className={cn("field pt-[1.15rem] pb-1.5", bad("service"))}
             {...a11y("service")}
             value={form.service}
             onChange={set("service")}
@@ -312,7 +344,10 @@ export default function BookingForm({ booking, services, preset, lang }) {
         <textarea
           name="note"
           maxLength={LIMITS.note}
-          className={cn("min-h-[72px] field resize-none sm:min-h-[88px]", bad("note"))}
+          className={cn(
+            "h-[60px] field resize-none [@media(max-height:700px)]:h-[48px]",
+            bad("note"),
+          )}
           {...a11y("note")}
           aria-label={f.note}
           placeholder={f.note}
@@ -326,7 +361,7 @@ export default function BookingForm({ booking, services, preset, lang }) {
         type="submit"
         disabled={status === "loading"}
         aria-busy={status === "loading"}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-6 py-3.5 text-sm font-medium text-white transition hover:bg-graphite disabled:cursor-wait disabled:opacity-60"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-medium text-white transition hover:bg-graphite disabled:cursor-wait disabled:opacity-60"
       >
         {status === "loading" && (
           <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
@@ -334,7 +369,7 @@ export default function BookingForm({ booking, services, preset, lang }) {
         {status === "loading" ? f.sending : f.submit}
       </button>
 
-      <p className="text-center text-[12px] text-ink-muted">{f.privacy}</p>
+      <p className="text-center text-[11.5px] text-ink-muted">{f.privacy}</p>
     </form>
   );
 }

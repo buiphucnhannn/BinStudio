@@ -61,7 +61,7 @@ const row = (label, value) =>
     : "";
 
 /**
- * @param {object} b  dữ liệu đã kiểm tra: { name, phone, date, people, serviceName, note, lang, receivedAt }
+ * @param {object} b  dữ liệu đã kiểm tra: { name, phone, hotel, date, people, serviceName, note, lang, receivedAt }
  * @returns {{ subject: string, html: string, text: string }}
  */
 export function bookingEmail(b) {
@@ -119,6 +119,7 @@ export function bookingEmail(b) {
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid ${C.line};">
           ${row("Họ tên", esc(b.name))}
           ${row("Điện thoại / Zalo", `<a href="tel:+${digits}" style="color:${C.ink};text-decoration:none;font-weight:600;">${esc(b.phone)}</a>`)}
+          ${row("Địa điểm khách sạn", esc(b.hotel))}
           ${row("Dịch vụ", esc(service))}
           ${row("Ngày dự kiến", esc(date))}
           ${row("Số người", esc(b.people))}
@@ -167,6 +168,7 @@ export function bookingEmail(b) {
     "",
     `Họ tên: ${b.name}`,
     `Điện thoại / Zalo: ${b.phone}`,
+    `Địa điểm khách sạn: ${b.hotel}`,
     `Dịch vụ: ${service}`,
     date && `Ngày dự kiến: ${date}`,
     `Số người: ${b.people}`,

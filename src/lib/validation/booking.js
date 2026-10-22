@@ -4,7 +4,7 @@
  */
 
 export const PEOPLE = ["1", "2", "3-5", "6-10", "10+"];
-export const LIMITS = { name: 60, phone: 20, note: 1000 };
+export const LIMITS = { name: 60, phone: 20, hotel: 120, note: 1000 };
 
 // Ký tự điều khiển, ký tự vô hình, ký tự đảo chiều văn bản (bidi) — hay dùng để giả mạo / chèn header email.
 // Dựng từ mã số ký tự (không viết ký tự thật vào mã nguồn để tránh lỗi cú pháp / khó đọc).
@@ -116,6 +116,22 @@ export function checkDate(raw, now = new Date()) {
   return { value: v };
 }
 
+// ---------- Địa điểm khách sạn (bắt buộc) ----------
+// Tên khách sạn / resort / villa / khu vực: chữ (mọi ngôn ngữ), số (số nhà, "Villa 12"), dấu câu thông dụng.
+// Chặn link, HTML, email và ký hiệu lạ — chuỗi này đi thẳng vào email gửi studio.
+const HOTEL_RE = /^[\p{L}\p{M}\d][\p{L}\p{M}\d '’.,&\-/()#:]*$/u;
+
+export function checkHotel(raw) {
+  const hotel = clean(raw, LIMITS.hotel + 1);
+  if (!hotel) return { error: "hotel_required" };
+  if (hotel.length > LIMITS.hotel) return { error: "hotel_long" };
+  if ((hotel.match(/\p{L}/gu) || []).length < 2) return { error: "hotel_short" };
+  if (/(https?:\/\/|www\.)|@|<|>/i.test(hotel) || !HOTEL_RE.test(hotel)) {
+    return { error: "hotel_invalid" };
+  }
+  return { value: hotel };
+}
+
 // ---------- Ghi chú (không bắt buộc) ----------
 export function checkNote(raw) {
   const note = clean(raw, LIMITS.note + 1, { multiline: true });
@@ -128,7 +144,7 @@ export function checkNote(raw) {
 
 /**
  * Kiểm tra toàn bộ form.
- * @param {object} input  dữ liệu thô { name, phone, date, people, service, note }
+ * @param {object} input  dữ liệu thô { name, phone, hotel, date, people, service, note }
  * @param {{ serviceIds?: string[], now?: Date }} opts  serviceIds = danh sách mã dịch vụ hợp lệ ("01"…"05")
  * @returns {{ ok: boolean, errors: Record<string,string>, data: object }}
  */
@@ -143,6 +159,10 @@ export function validateBooking(input = {}, { serviceIds, now } = {}) {
   const phone = checkPhone(input.phone);
   if (phone.error) errors.phone = phone.error;
   else Object.assign(data, { phone: phone.value, phoneE164: phone.e164 });
+
+  const hotel = checkHotel(input.hotel);
+  if (hotel.error) errors.hotel = hotel.error;
+  else data.hotel = hotel.value;
 
   const date = checkDate(input.date, now);
   if (date.error) errors.date = date.error;

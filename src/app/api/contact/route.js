@@ -151,7 +151,14 @@ export async function POST(request) {
       "Retry-After": String(phoneBlocked.retryAfter),
     });
   }
-  const fingerprint = [data.phoneE164, data.name, data.date, data.service, data.note].join("|");
+  const fingerprint = [
+    data.phoneE164,
+    data.name,
+    data.hotel,
+    data.date,
+    data.service,
+    data.note,
+  ].join("|");
   const dup = await limit(`dup:${fingerprint}`, 1, 600_000);
   if (!dup.ok) return json({ ok: true, duplicate: true });
 
