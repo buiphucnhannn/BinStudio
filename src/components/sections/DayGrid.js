@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * "Một ngày với Bin": lưới ảnh 8 tấm có mốc giờ, như một tờ contact sheet —
- * từ bình minh tới giờ xanh. Ảnh ngang chiếm 2 cột. Bấm mở lightbox.
+ * từ bình minh tới giờ xanh. Ảnh ngang chiếm 2 cột; hàng cuối thiếu ảnh thì căn giữa. Bấm mở lightbox.
  */
 export default function DayGrid({ data }) {
   const [idx, setIdx] = useState(null);
@@ -19,7 +19,7 @@ export default function DayGrid({ data }) {
     <section className="relative overflow-hidden bg-sand-100 py-16 lg:py-24">
       <Container wide>
         <SectionHeading eyebrow={data.eyebrow} title={data.title} align="center" />
-        <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+        <div className="mt-12 flex flex-wrap justify-center gap-3 md:gap-4">
           {data.items.map((m, i) => (
             <button
               key={m.src}
@@ -27,7 +27,9 @@ export default function DayGrid({ data }) {
               onClick={() => setIdx(i)}
               className={cn(
                 "group reveal relative overflow-hidden rounded-2xl bg-sand-200",
-                m.wide ? "col-span-2 aspect-[3/2]" : "aspect-[3/4]",
+                m.wide
+                  ? "aspect-[3/2] w-full md:w-[calc(50%-0.5rem)]"
+                  : "aspect-[3/4] w-[calc(50%-0.375rem)] md:w-[calc(25%-0.75rem)]",
               )}
               style={{ "--reveal-delay": `${i * 70}ms` }}
               aria-label={m.time}

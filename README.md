@@ -96,5 +96,5 @@ src/
 
 - **Đánh giá khách hàng** đang là nội dung mẫu (có ghi chú trên trang) — thay bằng review thật.
 - **Giờ vàng, địa điểm, gói gợi ý, FAQ** viết theo kiến thức chung về Phú Quốc — khách rà lại cho đúng thực tế.
-- Link Instagram, email liên hệ, domain (`NEXT_PUBLIC_SITE_URL`); WhatsApp đang dùng cùng số 0384 038 453.
+- Email liên hệ, domain (`NEXT_PUBLIC_SITE_URL`); WhatsApp đang dùng cùng số 0384 038 453. Facebook & Messenger trỏ tới facebook.com/danhlyts67 (đã bỏ Instagram).
 - Giờ làm việc đang để 06:00 – 21:00 hằng ngày.

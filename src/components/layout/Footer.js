@@ -2,15 +2,7 @@ import Link from "next/link";
 import Container from "@/components/ui/Container";
 import Logo from "@/components/ui/Logo";
 import { href } from "@/i18n";
-import {
-  Facebook,
-  Instagram,
-  MapPin,
-  Phone,
-  Clock,
-  Messenger,
-  WhatsApp,
-} from "@/components/ui/Icons";
+import { Facebook, MapPin, Phone, Clock, Messenger, WhatsApp } from "@/components/ui/Icons";
 
 const YEAR = new Date().getFullYear();
 
@@ -18,7 +10,6 @@ const YEAR = new Date().getFullYear();
 export default function Footer({ lang, site, nav, ui, footer }) {
   const socials = [
     { Icon: Facebook, href: site.facebook, label: "Facebook" },
-    { Icon: Instagram, href: site.instagram, label: "Instagram" },
     { Icon: Messenger, href: site.messenger, label: "Messenger" },
     { Icon: WhatsApp, href: site.whatsapp, label: "WhatsApp" },
   ];

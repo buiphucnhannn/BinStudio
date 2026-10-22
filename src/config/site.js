@@ -31,9 +31,8 @@ export const siteConfig = {
   phoneIntl: "+84384038453",
   zalo: "https://zalo.me/0384038453",
   whatsapp: "https://wa.me/84384038453",
-  facebook: "https://www.facebook.com/PhotographerPhuQuocs",
-  messenger: "https://m.me/PhotographerPhuQuocs",
-  instagram: "https://www.instagram.com/", // TODO: khách bổ sung link Instagram chính thức
+  facebook: "https://www.facebook.com/danhlyts67",
+  messenger: "https://m.me/danhlyts67", // nhắn tin thẳng tới trang Facebook trên
   mapsLink: "https://maps.app.goo.gl/zT888PU8bKJ9nmje8",
   mapsEmbed:
     // Nhúng đúng thẻ địa điểm "Photographer Phu Quoc - Studio Bin" (CID lấy từ link maps.app.goo.gl trong brief)
