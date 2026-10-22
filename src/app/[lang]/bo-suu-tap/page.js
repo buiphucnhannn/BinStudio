@@ -107,9 +107,24 @@ export default async function CollectionsListPage({ params }) {
 
       <section
         data-nav-theme="dark"
-        className="grain relative overflow-hidden bg-navy py-16 text-white lg:py-24"
+        className="relative overflow-hidden bg-navy-deep py-16 text-white lg:py-24"
       >
-        <div className="pointer-events-none absolute top-1/2 left-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/25 blur-[150px]" />
+        {/* Nền 3 ảnh mờ + lớp navy (đồng bộ với khối kết trang Dịch vụ) */}
+        <div className="absolute inset-0 bleed-cap grid grid-cols-3 opacity-35">
+          {page.ctaBg.map((im) => (
+            <div key={im.src} className="relative">
+              <Pic
+                src={im.src}
+                alt=""
+                fill
+                sizes="34vw"
+                className="object-cover"
+                style={{ objectPosition: im.pos }}
+              />
+            </div>
+          ))}
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-deep via-navy-deep/80 to-navy-deep/60" />
         <Container className="relative text-center">
           <p className="reveal font-script text-3xl text-accent-light sm:text-4xl">
             {page.ctaScript}

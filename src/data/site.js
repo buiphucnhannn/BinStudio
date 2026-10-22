@@ -1076,6 +1076,12 @@ export const collectionsPage = {
     "Ngày bạn ở đảo, nơi bạn ở và những người đi cùng — Bin sẽ gợi ý concept phù hợp nhất.",
     "Your dates, where you're staying and who's coming — Bin will suggest the concept that fits best.",
   ),
+  // Nền 3 ảnh mờ cho khối mời gọi cuối trang
+  ctaBg: [
+    { src: P("beach-lookbook", 4), pos: "center 45%" },
+    { src: P("family-beach", 9), pos: "center 35%" },
+    { src: P("sunset-portrait", 10), pos: "center 35%" },
+  ],
   // Hero trang bộ sưu tập: 3 cột ảnh trôi dọc
   columns: [
     [P("wedding-beach", 1), P("family-beach", 5), P("sunset-portrait", 7)],
