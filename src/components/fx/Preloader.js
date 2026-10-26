@@ -7,15 +7,25 @@ import { cn } from "@/lib/utils";
 /**
  * Màn chào khi TẢI TRANG: nền kem + logo + vạch nạp, rồi tấm màn kéo lên.
  * Khi màn bắt đầu kéo lên: phát sự kiện "bin:ready" + class is-ready trên <html> để Hero mở màn đúng lúc.
+ *
+ * Chỉ chạy 1 lần cho mỗi lần TẢI TRANG (vào mới / F5). Chuyển trang trong site không hiện lại:
+ * cờ window.__binPreloaded tồn tại suốt phiên trang, chỉ mất khi trình duyệt tải lại toàn trang.
  */
 const SHOW_MS = 1200;
 const LEAVE_MS = 900;
 
 export default function Preloader({ caption }) {
-  const [state, setState] = useState("show"); // show | leave | done
+  // Lần hydrate đầu: cờ chưa có → "show" (khớp HTML server). Component bị dựng lại sau khi chuyển trang → "done".
+  const [state, setState] = useState(() =>
+    typeof window !== "undefined" && window.__binPreloaded ? "done" : "show",
+  ); // show | leave | done
 
   useEffect(() => {
+    if (window.__binPreloaded) return;
+    // Đánh dấu khi màn bắt đầu kéo lên (không đánh dấu ngay): Strict Mode ở dev chạy effect 2 lần,
+    // đánh dấu sớm sẽ làm lần chạy thứ 2 bỏ qua → màn chào kẹt.
     const t1 = setTimeout(() => {
+      window.__binPreloaded = true;
       setState("leave");
       document.documentElement.classList.add("is-ready");
       window.dispatchEvent(new Event("bin:ready"));
