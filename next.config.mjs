@@ -41,7 +41,6 @@ const nextConfig = {
   // Tiếng Việt mặc định tại "/", tiếng Anh tại "/en" (route thật nằm ở app/[lang])
   async rewrites() {
     return [
-      { source: "/", destination: "/vi" },
       { source: "/bo-suu-tap", destination: "/vi/bo-suu-tap" },
       { source: "/bo-suu-tap/:slug", destination: "/vi/bo-suu-tap/:slug" },
       { source: "/dich-vu", destination: "/vi/dich-vu" },
