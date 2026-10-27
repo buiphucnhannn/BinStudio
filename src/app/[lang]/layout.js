@@ -16,17 +16,18 @@ import BookingModal from "@/components/booking/BookingModal";
 import Toaster from "@/components/ui/Toaster";
 import "../globals.css";
 
+// Chỉ khai báo độ đậm thật sự dùng (serif: thường 400 + h-display 500) → ít file font phải tải
 const serif = Cormorant_Garamond({
-  subsets: ["latin", "vietnamese"],
-  weight: ["400", "500", "600"],
+  subsets: ["latin", "latin-ext", "vietnamese"],
+  weight: ["400", "500"],
   style: ["normal", "italic"],
   variable: "--font-serif",
   display: "swap",
 });
 
 const sans = Be_Vietnam_Pro({
-  subsets: ["latin", "vietnamese"],
-  weight: ["300", "400", "500", "600"],
+  subsets: ["latin", "latin-ext", "vietnamese"],
+  weight: ["400", "500", "600"],
   variable: "--font-sans",
   display: "swap",
 });
@@ -37,6 +38,7 @@ const script = Great_Vibes({
   weight: "400",
   variable: "--font-script",
   display: "swap",
+  preload: false, // chỉ dùng cho chữ ký trang trí phía dưới, không cần tải trước
 });
 
 export function generateStaticParams() {

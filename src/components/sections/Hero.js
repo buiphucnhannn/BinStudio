@@ -91,26 +91,35 @@ export default function Hero({ hero, ui, exploreHref }) {
             )}
             aria-hidden={i !== idx}
           >
-            {/* desktop: ảnh ngang */}
-            <Pic
-              src={s.wide.src}
-              alt=""
-              fill
-              preload={i === 0}
-              sizes="100vw"
-              className={cn("hidden object-cover sm:block", i === idx && "animate-kenburns-slow")}
-              style={{ objectPosition: s.wide.pos }}
-            />
-            {/* mobile: ảnh dọc */}
-            <Pic
-              src={s.tall.src}
-              alt=""
-              fill
-              preload={i === 0}
-              sizes="100vw"
-              className={cn("object-cover sm:hidden", i === idx && "animate-kenburns-slow")}
-              style={{ objectPosition: s.tall.pos }}
-            />
+            {/* Ảnh slide sau chỉ gắn khi màn chào đã kéo lên (còn ~5s mới tới lượt hiện)
+                → lúc tải trang, băng thông dành cho ảnh đầu tiên */}
+            {(i === 0 || ready) && (
+              <>
+                {/* desktop: ảnh ngang */}
+                <Pic
+                  src={s.wide.src}
+                  alt=""
+                  fill
+                  preload={i === 0}
+                  sizes="100vw"
+                  className={cn(
+                    "hidden object-cover sm:block",
+                    i === idx && "animate-kenburns-slow",
+                  )}
+                  style={{ objectPosition: s.wide.pos }}
+                />
+                {/* mobile: ảnh dọc */}
+                <Pic
+                  src={s.tall.src}
+                  alt=""
+                  fill
+                  preload={i === 0}
+                  sizes="100vw"
+                  className={cn("object-cover sm:hidden", i === idx && "animate-kenburns-slow")}
+                  style={{ objectPosition: s.tall.pos }}
+                />
+              </>
+            )}
           </div>
         ))}
       </div>
