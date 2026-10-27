@@ -1,5 +1,5 @@
 import { siteConfig } from "@/config/site";
-import { localize, href } from "@/i18n";
+import { localize, href, anchor } from "@/i18n";
 import {
   hero,
   marquee,
@@ -64,9 +64,9 @@ export default async function HomePage({ params }) {
 
   return (
     <>
-      <Hero hero={L.hero} ui={L.ui} exploreHref={href(lang, "/bo-suu-tap")} />
+      <Hero hero={L.hero} ui={L.ui} exploreHref={href(lang, "/collections")} />
       <Marquee items={L.marquee} />
-      <About about={L.about} />
+      <About about={L.about} id={anchor(lang, "about")} />
       <Usps usps={L.usps} />
       <Collections
         lang={lang}
@@ -76,17 +76,17 @@ export default async function HomePage({ params }) {
       />
       <Services lang={lang} services={L.services} ui={L.ui} />
       <GoldenHour data={L.goldenHour} />
-      <Locations data={L.locations} ui={L.ui} />
+      <Locations data={L.locations} ui={L.ui} id={anchor(lang, "locations")} />
       <Process data={L.process} />
       <Moments
         moments={L.moments}
         ui={L.ui}
-        allHref={href(lang, "/bo-suu-tap")}
+        allHref={href(lang, "/collections")}
         collectionsCount={collections.length}
       />
       <DayGrid data={L.dayGrid} />
       <Testimonials data={L.testimonials} />
-      <Contact contact={L.contact} site={site} ui={L.ui} />
+      <Contact contact={L.contact} site={site} ui={L.ui} id={anchor(lang, "contact")} />
     </>
   );
 }

@@ -43,10 +43,12 @@ function layout(images) {
 
 const START = { 2: "md:col-start-2", 3: "md:col-start-3" };
 
-export default function AlbumGallery({ images, name }) {
+export default function AlbumGallery({ images, name, place }) {
   const [idx, setIdx] = useState(null);
   const items = layout(images);
-  const list = items.map((im, i) => ({ src: im.src, alt: `${name} — ${i + 1}` }));
+  // Mô tả ảnh cho Google Hình ảnh & trình đọc màn hình: "Hoàng hôn của hai người — chụp ảnh tại Phú Quốc (3)"
+  const altOf = (i) => `${name}${place ? ` — ${place}` : ""} (${i + 1})`;
+  const list = items.map((im, i) => ({ src: im.src, alt: altOf(i) }));
 
   return (
     <>
@@ -64,11 +66,10 @@ export default function AlbumGallery({ images, name }) {
               START[im.start],
             )}
             style={{ "--reveal-delay": `${(i % 6) * 60}ms` }}
-            aria-label={`${name} ${i + 1}`}
           >
             <Pic
               src={im.src}
-              alt=""
+              alt={altOf(i)}
               fill
               sizes={im.wide ? "(min-width: 768px) 66vw, 100vw" : "(min-width: 768px) 33vw, 50vw"}
               className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"

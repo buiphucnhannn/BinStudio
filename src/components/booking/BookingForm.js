@@ -346,7 +346,7 @@ export default function BookingForm({ booking, services, preset, lang }) {
           name="note"
           maxLength={LIMITS.note}
           className={cn(
-            "min-h-[60px] field flex-1 resize-none [@media(max-height:700px)]:min-h-[44px] lg:[@media(max-height:640px)]:min-h-[34px] lg:[@media(max-height:640px)]:py-2",
+            "min-h-[60px] field flex-1 resize-none lg:[@media(max-height:640px)]:min-h-[34px] lg:[@media(max-height:640px)]:py-2 [@media(max-height:700px)]:min-h-[44px]",
             bad("note"),
           )}
           {...a11y("note")}

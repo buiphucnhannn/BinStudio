@@ -21,8 +21,8 @@ const LAYOUT = [
 ];
 
 export default function Collections({ lang, collections, ui, heading }) {
-  const allHref = href(lang, "/bo-suu-tap");
-  const linkFor = (slug) => href(lang, `/bo-suu-tap/${slug}`);
+  const allHref = href(lang, "/collections");
+  const linkFor = (slug) => href(lang, `/collections/${slug}`);
 
   return (
     <section id="collections" className="relative overflow-hidden bg-sand py-16 lg:py-24">

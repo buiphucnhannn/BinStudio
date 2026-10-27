@@ -11,8 +11,8 @@ const P = (group, n) => `/images/${group}/${group}-${String(n).padStart(2, "0")}
 // ---------- Điều hướng ----------
 export const nav = [
   { label: t("Về Bin", "About"), href: "/#about" },
-  { label: t("Bộ sưu tập", "Portfolio"), href: "/bo-suu-tap" },
-  { label: t("Dịch vụ", "Services"), href: "/dich-vu" },
+  { label: t("Bộ sưu tập", "Portfolio"), href: "/collections" },
+  { label: t("Dịch vụ", "Services"), href: "/services" },
   { label: t("Địa điểm", "Locations"), href: "/#locations" },
   { label: t("Liên hệ", "Contact"), href: "/#contact" },
 ];
@@ -998,7 +998,7 @@ export const booking = {
   ),
 };
 
-// ---------- Trang Dịch vụ (/dich-vu) ----------
+// ---------- Trang Dịch vụ (/services) ----------
 export const servicesPage = {
   meta: {
     title: t("Dịch vụ", "Services"),

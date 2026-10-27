@@ -28,7 +28,7 @@ const Polaroid = ({ p, className = "", sizes = "260px" }) => (
  * Khối mời gọi cuối trang: tiêu đề lớn ở giữa, polaroid xoè quanh (parallax),
  * nút đặt lịch mở popup + 4 kênh liên hệ nhanh.
  */
-export default function Contact({ contact, site, ui }) {
+export default function Contact({ contact, site, ui, id = "contact" }) {
   const [p1, p2, p3, p4] = contact.polaroids;
   const spots = [
     { p: p1, cls: "left-[4%] top-[14%] w-[15vw] max-w-[260px] -rotate-[7deg]", speed: 0.08 },
@@ -46,7 +46,7 @@ export default function Contact({ contact, site, ui }) {
 
   return (
     <section
-      id="contact"
+      id={id}
       data-nav-theme="dark"
       className="grain relative flex screen items-center justify-center overflow-hidden bg-navy py-16 text-white lg:py-24"
     >

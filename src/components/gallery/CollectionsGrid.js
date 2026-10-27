@@ -57,7 +57,7 @@ export default function CollectionsGrid({ lang, collections, categories, ui }) {
           {list.map((c, i) => (
             <Link
               key={c.slug}
-              href={href(lang, `/bo-suu-tap/${c.slug}`)}
+              href={href(lang, `/collections/${c.slug}`)}
               className={cn(
                 "group reveal relative block overflow-hidden rounded-[1.5rem] bg-sand-200",
                 "aspect-[4/5] w-full sm:w-[calc(50%-0.625rem)] lg:w-[calc(33.333%-0.834rem)]",

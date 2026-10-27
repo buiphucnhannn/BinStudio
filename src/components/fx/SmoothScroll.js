@@ -3,6 +3,18 @@
 import { useEffect } from "react";
 import Lenis from "lenis";
 import { usePathname } from "next/navigation";
+import { anchorAlias } from "@/i18n/routes";
+
+// "#lien-he" → section; không có thì thử id tương ứng ở ngôn ngữ kia ("#contact")
+function findAnchor(hash) {
+  let id = hash.slice(1);
+  try {
+    id = decodeURIComponent(id);
+  } catch {}
+  if (!id) return null;
+  const alias = anchorAlias(id);
+  return document.getElementById(id) || (alias ? document.getElementById(alias) : null);
+}
 
 /**
  * Cuộn mượt toàn trang (Lenis) — cảm giác chậm, có quán tính như các site Framer.
@@ -93,10 +105,10 @@ export default function SmoothScroll() {
       const hash = href.slice(hashIdx);
       const norm = (p) => p.replace(/\/$/, "") || "/";
       if (norm(path) !== norm(window.location.pathname)) return;
-      const target = document.querySelector(hash);
+      const target = findAnchor(hash);
       if (!target) return;
       e.preventDefault();
-      history.pushState(null, "", hash);
+      history.pushState(null, "", `#${target.id}`);
       // Bấm từ menu mobile: menu đang khoá cuộn → chờ menu đóng rồi mới cuộn. force: không bị Lenis bỏ qua.
       setTimeout(() => scrollToTarget(lenis, target, true), 60);
     };
@@ -117,8 +129,10 @@ export default function SmoothScroll() {
       window.scrollTo(0, 0);
       return;
     }
-    const target = document.querySelector(window.location.hash);
+    const target = findAnchor(window.location.hash);
     if (!target) return;
+    // Link cũ / khác ngôn ngữ (vd. "/#contact" trên bản tiếng Việt) → sửa URL về id đúng ("/#lien-he")
+    if (`#${target.id}` !== window.location.hash) history.replaceState(null, "", `#${target.id}`);
     window.__lenis?.scrollTo(0, { immediate: true, force: true });
     const t = setTimeout(() => {
       if (window.__lenis) scrollToTarget(window.__lenis, target);

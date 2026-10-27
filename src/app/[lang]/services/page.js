@@ -1,5 +1,6 @@
 import { localize, href, isLocale } from "@/i18n";
 import { siteConfig } from "@/config/site";
+import { pageMeta } from "@/lib/seo";
 import { services, servicesPage, process, ui } from "@/data/site";
 import ServicesHero from "@/components/services/ServicesHero";
 import ServiceList from "@/components/services/ServiceList";
@@ -12,14 +13,7 @@ export async function generateMetadata({ params }) {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   const L = localize(servicesPage.meta, lang);
-  return {
-    title: L.title,
-    description: L.desc,
-    alternates: {
-      canonical: href(lang, "/dich-vu"),
-      languages: { vi: href("vi", "/dich-vu"), en: href("en", "/dich-vu") },
-    },
-  };
+  return pageMeta(lang, "/services", { title: L.title, description: L.desc });
 }
 
 export default async function ServicesPage({ params }) {
@@ -30,7 +24,7 @@ export default async function ServicesPage({ params }) {
 
   return (
     <>
-      <ServicesHero hero={page.hero} ui={L.ui} />
+      <ServicesHero lang={lang} hero={page.hero} ui={L.ui} />
       <ServiceList lang={lang} items={L.services.items} ui={L.ui} heading={L.services} />
       <Packages data={page.packages} ui={L.ui} />
       <Process data={L.process} />

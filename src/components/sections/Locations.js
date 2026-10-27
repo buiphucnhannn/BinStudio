@@ -12,13 +12,13 @@ import { cn, pad2 } from "@/lib/utils";
  * - Phải: ảnh lớn crossfade theo điểm đang chọn.
  * Mobile: ảnh ở trên, danh sách bên dưới.
  */
-export default function Locations({ data, ui }) {
+export default function Locations({ data, ui, id = "locations" }) {
   const [active, setActive] = useState(0);
   const items = data.items;
   const cur = items[active];
 
   return (
-    <section id="locations" className="relative overflow-x-clip bg-sand py-16 lg:py-24">
+    <section id={id} className="relative overflow-x-clip bg-sand py-16 lg:py-24">
       <Container wide>
         {/* Tiêu đề nằm hàng riêng để khối danh sách + ảnh bên dưới vừa một màn hình */}
         <p className="reveal eyebrow">{data.eyebrow}</p>

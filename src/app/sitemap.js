@@ -6,9 +6,9 @@ export default function sitemap() {
   const base = siteConfig.url;
   const paths = [
     "/",
-    "/bo-suu-tap",
-    "/dich-vu",
-    ...collections.map((c) => `/bo-suu-tap/${c.slug}`),
+    "/collections",
+    "/services",
+    ...collections.map((c) => `/collections/${c.slug}`),
   ];
   const now = new Date();
   return paths.flatMap((p) =>
@@ -16,7 +16,7 @@ export default function sitemap() {
       url: base + href(lang, p),
       lastModified: now,
       changeFrequency: "monthly",
-      priority: p === "/" ? 1 : p.includes("/bo-suu-tap/") ? 0.6 : 0.8,
+      priority: p === "/" ? 1 : p.includes("/collections/") ? 0.6 : 0.8,
       alternates: {
         languages: Object.fromEntries(LOCALES.map((l) => [l, base + href(l, p)])),
       },

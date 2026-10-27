@@ -5,9 +5,10 @@ import Parallax from "@/components/fx/Parallax";
 import { Watermark } from "@/components/ui/Ornaments";
 import { ArrowRight } from "@/components/ui/Icons";
 import { cn } from "@/lib/utils";
+import { anchor } from "@/i18n";
 
 // Hero trang Dịch vụ: chữ bên trái, 3 ảnh dọc xếp bậc thang bên phải (parallax lệch tốc độ).
-export default function ServicesHero({ hero, ui }) {
+export default function ServicesHero({ lang, hero, ui }) {
   return (
     <section className="relative flex screen items-center overflow-hidden bg-sand pt-32 pb-16 lg:pt-0 lg:pb-0">
       <Watermark
@@ -43,7 +44,7 @@ export default function ServicesHero({ hero, ui }) {
               </span>
             </button>
             <a
-              href="#services"
+              href={`#${anchor(lang, "services")}`}
               className="inline-flex items-center gap-2 rounded-full border border-ink/20 px-6 py-3 text-sm font-medium text-ink transition hover:border-ink"
             >
               {hero.ctaSecondary}

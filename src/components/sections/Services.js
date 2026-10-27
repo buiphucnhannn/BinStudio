@@ -57,7 +57,7 @@ export default function Services({ lang, services, ui }) {
               className="hidden w-24 animate-spin-slow text-ink/[0.12] lg:block"
             />
             <Link
-              href={href(lang, "/dich-vu")}
+              href={href(lang, "/services")}
               className="group inline-flex items-center gap-3 rounded-full border border-ink/15 py-1.5 pr-1.5 pl-6 text-sm font-medium text-ink transition hover:border-ink"
             >
               {services.allLabel}
@@ -92,7 +92,7 @@ export default function Services({ lang, services, ui }) {
                 >
                   <Pic
                     src={s.image}
-                    alt=""
+                    alt={s.title}
                     fill
                     sizes="(min-width: 1024px) 42vw, 90vw"
                     className={cn("object-cover", active === i && "animate-kenburns")}
@@ -116,7 +116,7 @@ export default function Services({ lang, services, ui }) {
               </div>
               {current.collection && (
                 <Link
-                  href={href(lang, `/bo-suu-tap/${current.collection}`)}
+                  href={href(lang, `/collections/${current.collection}`)}
                   aria-label={`${ui.viewAlbum}: ${current.title}`}
                   className="absolute inset-0 z-10 rounded-[1.75rem]"
                 />
@@ -153,7 +153,7 @@ export default function Services({ lang, services, ui }) {
                   <div className="relative mb-5 aspect-[16/10] overflow-hidden rounded-2xl bg-sand-200 lg:hidden">
                     <Pic
                       src={s.image}
-                      alt=""
+                      alt={s.title}
                       fill
                       sizes="90vw"
                       className="object-cover"
@@ -184,7 +184,7 @@ export default function Services({ lang, services, ui }) {
                     </button>
                     {s.collection && (
                       <Link
-                        href={href(lang, `/bo-suu-tap/${s.collection}`)}
+                        href={href(lang, `/collections/${s.collection}`)}
                         className="inline-flex items-center gap-2 rounded-full border border-ink/15 px-5 py-2.5 text-[13px] font-medium text-ink transition hover:border-ink"
                       >
                         {ui.viewAlbum}

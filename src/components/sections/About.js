@@ -8,10 +8,10 @@ import { cn } from "@/lib/utils";
  * Về Bin: câu tuyên ngôn lớn kiểu serif với các từ hiện dần, ảnh lớn parallax bên phải,
  * 2 polaroid xoè nhẹ và 3 điểm nổi bật.
  */
-export default function About({ about }) {
+export default function About({ about, id = "about" }) {
   return (
     <section
-      id="about"
+      id={id}
       className="relative flex screen items-center overflow-hidden bg-sand py-16 lg:py-24"
     >
       <Ornament

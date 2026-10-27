@@ -2,15 +2,16 @@ import Link from "next/link";
 import Container from "@/components/ui/Container";
 import Pic from "@/components/ui/Pic";
 import Parallax from "@/components/fx/Parallax";
-import { href } from "@/i18n";
+import { href, anchor } from "@/i18n";
 import { ArrowRight, Check } from "@/components/ui/Icons";
 import Ornament from "@/components/ui/Ornaments";
 import { cn } from "@/lib/utils";
 
 // Danh sách dịch vụ chi tiết: ảnh / chữ xen kẽ trái–phải, mỗi mục có số, điểm chính và nút đặt lịch.
 export default function ServiceList({ lang, items, ui, heading }) {
+  const id = anchor(lang, "services");
   return (
-    <section id="services" className="bg-sand-50 py-16 lg:py-24">
+    <section id={id} className="bg-sand-50 py-16 lg:py-24">
       <Container wide>
         <p className="reveal eyebrow">{heading.eyebrow}</p>
         <div className="mt-4 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
@@ -111,7 +112,7 @@ export default function ServiceList({ lang, items, ui, heading }) {
                     </button>
                     {s.collection && (
                       <Link
-                        href={href(lang, `/bo-suu-tap/${s.collection}`)}
+                        href={href(lang, `/collections/${s.collection}`)}
                         className="inline-flex items-center gap-2 rounded-full border border-ink/20 px-6 py-3 text-sm font-medium text-ink transition hover:border-ink"
                       >
                         {ui.viewAlbum}

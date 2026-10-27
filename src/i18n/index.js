@@ -1,9 +1,11 @@
 /**
  * Song ngữ Việt / Anh.
  * - Chuỗi trong data viết dạng t("tiếng Việt", "English") => { vi, en }; localize(data, lang) duyệt sâu và chọn ngôn ngữ.
- * - URL: tiếng Việt tại "/", tiếng Anh tại "/en" (xem rewrites trong next.config.mjs).
+ * - URL: tiếng Việt tại "/" với đường dẫn tiếng Việt, tiếng Anh tại "/en" với đường dẫn tiếng Anh
+ *   (bảng ánh xạ ở ./routes, rewrite trong src/proxy.js).
  */
-import { toEnPath, toViPath } from "./routes";
+import { toViPath, fromViPath } from "./routes";
+export { anchor } from "./routes";
 
 export const LOCALES = ["vi", "en"];
 export const DEFAULT_LOCALE = "vi";
@@ -31,19 +33,20 @@ export function localize(data, lang) {
   return data;
 }
 
-// Luôn truyền đường dẫn TIẾNG VIỆT; bản tiếng Anh tự dịch đường dẫn:
-// href("en", "/bo-suu-tap/wedding-beach") => "/en/collections/wedding-beach"; href("vi", "/#about") => "/#about"
+// Luôn truyền đường dẫn NỘI BỘ (route thật, slug tiếng Anh); trả về URL công khai đúng ngôn ngữ:
+// href("vi", "/collections/wedding-beach") => "/bo-suu-tap/anh-cuoi-bien"
+// href("en", "/collections/wedding-beach") => "/en/collections/wedding-beach"; href("vi", "/#about") => "/#gioi-thieu"
 export function href(lang, path = "/") {
-  if (lang === DEFAULT_LOCALE) return path;
+  if (lang === DEFAULT_LOCALE) return toViPath(path);
   if (path === "/") return "/en";
   if (path.startsWith("/#")) return `/en${path.slice(1)}`;
-  return `/en${toEnPath(path)}`;
+  return `/en${path}`;
 }
 
-// Đường dẫn bất kỳ (URL thật hoặc nội bộ sau rewrite, cả /vi/... & /en/...) → dạng tiếng Việt không tiền tố
+// URL công khai bất kỳ (cả /vi/... & /en/...) → đường dẫn nội bộ không tiền tố ngôn ngữ
 export function toCanonicalPath(pathname = "/") {
-  if (/^\/en(\/|$)/.test(pathname)) return toViPath(pathname.replace(/^\/en/, "") || "/");
-  return pathname.replace(/^\/vi(?=\/|$)/, "") || "/";
+  if (/^\/(en|vi)(\/|$)/.test(pathname)) return pathname.replace(/^\/(en|vi)/, "") || "/";
+  return fromViPath(pathname) || pathname;
 }
 
 export function localeFromPath(pathname) {

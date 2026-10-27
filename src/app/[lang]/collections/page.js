@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { localize, href, isLocale } from "@/i18n";
+import { pageMeta } from "@/lib/seo";
 import { collections, collectionsPage, categories, ui, totalPhotos } from "@/data/site";
 import Container from "@/components/ui/Container";
 import Pic from "@/components/ui/Pic";
@@ -12,14 +13,7 @@ export async function generateMetadata({ params }) {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   const L = localize(collectionsPage.meta, lang);
-  return {
-    title: L.title,
-    description: L.desc,
-    alternates: {
-      canonical: href(lang, "/bo-suu-tap"),
-      languages: { vi: href("vi", "/bo-suu-tap"), en: href("en", "/bo-suu-tap") },
-    },
-  };
+  return pageMeta(lang, "/collections", { title: L.title, description: L.desc });
 }
 
 export default async function CollectionsListPage({ params }) {
@@ -156,7 +150,7 @@ export default async function CollectionsListPage({ params }) {
               </span>
             </button>
             <Link
-              href={href(lang, "/dich-vu")}
+              href={href(lang, "/services")}
               className="inline-flex items-center gap-2 rounded-full border border-white/40 px-6 py-3.5 text-sm font-medium text-white transition hover:bg-white hover:text-ink"
             >
               {lang === "vi" ? "Xem dịch vụ" : "See services"}

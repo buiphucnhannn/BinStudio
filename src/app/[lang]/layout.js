@@ -1,6 +1,7 @@
 import { Cormorant_Garamond, Be_Vietnam_Pro, Great_Vibes } from "next/font/google";
 import { notFound } from "next/navigation";
 import { siteConfig } from "@/config/site";
+import { pageMeta } from "@/lib/seo";
 import { LOCALES, isLocale, localize, href } from "@/i18n";
 import { nav, ui, footer, booking, services } from "@/data/site";
 import Navbar from "@/components/layout/Navbar";
@@ -52,21 +53,8 @@ export async function generateMetadata({ params }) {
       default: `${site.name} | ${site.tagline}`,
       template: `${site.name} | %s`,
     },
-    description: site.description,
     keywords: site.keywords,
-    alternates: {
-      canonical: href(lang, "/"),
-      languages: { vi: "/", en: "/en" },
-    },
-    openGraph: {
-      type: "website",
-      locale: lang === "vi" ? "vi_VN" : "en_US",
-      url: href(lang, "/"),
-      siteName: site.name,
-      title: `${site.name} | ${site.tagline}`,
-      description: site.description,
-    },
-    twitter: { card: "summary_large_image" },
+    ...pageMeta(lang, "/"),
     robots: { index: true, follow: true },
   };
 }

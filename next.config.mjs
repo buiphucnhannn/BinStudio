@@ -38,18 +38,9 @@ const nextConfig = {
     qualities: [75, 90],
     formats: ["image/avif", "image/webp"],
   },
-  // Tiếng Việt mặc định tại "/", tiếng Anh tại "/en" (route thật nằm ở app/[lang])
-  async rewrites() {
-    return [
-      { source: "/bo-suu-tap", destination: "/vi/bo-suu-tap" },
-      { source: "/bo-suu-tap/:slug", destination: "/vi/bo-suu-tap/:slug" },
-      { source: "/dich-vu", destination: "/vi/dich-vu" },
-      // Bản tiếng Anh có đường dẫn tiếng Anh; route thật dùng chung
-      { source: "/en/collections", destination: "/en/bo-suu-tap" },
-      { source: "/en/collections/:slug", destination: "/en/bo-suu-tap/:slug" },
-      { source: "/en/services", destination: "/en/dich-vu" },
-    ];
-  },
+  // Tiếng Việt mặc định tại "/" (đường dẫn tiếng Việt, rewrite trong src/proxy.js),
+  // tiếng Anh tại "/en" (đường dẫn tiếng Anh = route thật app/[lang]).
+  // Đường dẫn tiếng Việt cũ dưới /en → đường dẫn tiếng Anh (giữ link đã chia sẻ & SEO)
   async redirects() {
     return [
       { source: "/en/bo-suu-tap", destination: "/en/collections", permanent: true },

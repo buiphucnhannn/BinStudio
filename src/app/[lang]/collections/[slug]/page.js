@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { localize, href, isLocale, LOCALES } from "@/i18n";
+import { pageMeta } from "@/lib/seo";
 import { collections, getCollection, categories, ui } from "@/data/site";
 import Container from "@/components/ui/Container";
 import Pic from "@/components/ui/Pic";
@@ -18,16 +19,11 @@ export async function generateMetadata({ params }) {
   const c = getCollection(slug);
   if (!isLocale(lang) || !c) return {};
   const L = localize(c, lang);
-  const path = `/bo-suu-tap/${slug}`;
-  return {
+  return pageMeta(lang, `/collections/${slug}`, {
     title: L.name,
     description: L.desc,
-    alternates: {
-      canonical: href(lang, path),
-      languages: { vi: href("vi", path), en: href("en", path) },
-    },
-    openGraph: { images: [{ url: c.cover, width: 1200, height: 1500 }] },
-  };
+    image: { url: c.cover, width: 1200, height: 1500 },
+  });
 }
 
 export default async function CollectionDetailPage({ params }) {
@@ -39,7 +35,7 @@ export default async function CollectionDetailPage({ params }) {
   const nextRaw = collections[(idx + 1) % collections.length];
   const L = localize({ c: raw, next: nextRaw, categories, ui }, lang);
   const { c, next } = L;
-  const listHref = href(lang, "/bo-suu-tap");
+  const listHref = href(lang, "/collections");
 
   return (
     <>
@@ -118,7 +114,11 @@ export default async function CollectionDetailPage({ params }) {
 
       <section className="bg-sand pb-16 lg:pb-24">
         <Container wide>
-          <AlbumGallery images={c.images} name={c.name} />
+          <AlbumGallery
+            images={c.images}
+            name={c.name}
+            place={lang === "vi" ? "chụp ảnh tại Phú Quốc" : "photoshoot in Phu Quoc"}
+          />
         </Container>
       </section>
 
@@ -127,7 +127,7 @@ export default async function CollectionDetailPage({ params }) {
         <Container wide>
           <p className="reveal eyebrow">{L.ui.nextCollection}</p>
           <Link
-            href={href(lang, `/bo-suu-tap/${next.slug}`)}
+            href={href(lang, `/collections/${next.slug}`)}
             className="group reveal mt-5 grid items-center gap-8 rounded-[1.75rem] border border-ink/[0.06] bg-white p-4 shadow-card transition hover:shadow-soft md:grid-cols-[0.45fr_1fr] md:p-5"
             style={{ "--reveal-delay": "100ms" }}
           >
