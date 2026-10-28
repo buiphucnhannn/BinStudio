@@ -50,7 +50,8 @@ export default async function CollectionsListPage({ params }) {
         ]}
       />
       {/* Hero: chữ bên trái, 3 cột ảnh trôi dọc bên phải */}
-      <section className="relative flex items-center overflow-hidden bg-sand pt-28 pb-12 lg:min-h-[100svh] lg:pt-32 lg:pb-16">
+      {/* screen = cao 1 màn hình nhưng tối đa 1080px (--screen) → zoom nhỏ không bị phình */}
+      <section className="relative flex screen items-center overflow-hidden bg-sand pt-28 pb-12 lg:pt-32 lg:pb-16">
         <Container wide className="grid items-center gap-12 lg:grid-cols-[1fr_1fr]">
           <div>
             <p className="reveal eyebrow">{L.ui.collections}</p>
@@ -89,7 +90,7 @@ export default async function CollectionsListPage({ params }) {
             </dl>
           </div>
 
-          <div className="relative h-[52svh] min-h-[380px] overflow-hidden rounded-[1.75rem] lg:h-[min(calc(100svh-14rem),640px)]">
+          <div className="relative h-[52svh] min-h-[380px] overflow-hidden rounded-[1.75rem] lg:h-[min(calc(var(--screen)-14rem),640px)]">
             <div className="absolute inset-0 grid grid-cols-3 gap-3">
               {page.columns.map((col, c) => (
                 <div

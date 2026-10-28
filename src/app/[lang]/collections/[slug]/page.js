@@ -56,7 +56,7 @@ export default async function CollectionDetailPage({ params }) {
         ]}
       />
       {/* Hero: chữ bên trái, ảnh ngang lớn bên phải */}
-      <section className="relative flex items-center overflow-hidden bg-sand pt-32 pb-16 lg:min-h-[100svh] lg:pt-32 lg:pb-16">
+      <section className="relative flex screen items-center overflow-hidden bg-sand pt-32 pb-16 lg:pt-32 lg:pb-16">
         <Container wide className="grid items-center gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
           <div>
             <nav className="reveal flex flex-wrap items-center gap-2 text-[12px] text-ink-muted">
