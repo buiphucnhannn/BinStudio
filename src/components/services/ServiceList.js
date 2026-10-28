@@ -60,7 +60,7 @@ export default function ServiceList({ lang, items, ui, heading }) {
                     src={s.image}
                     alt={s.title}
                     fill
-                    sizes="(min-width: 1024px) 45vw, 90vw"
+                    sizes="(min-width: 520px) 460px, 90vw"
                     className="object-cover"
                     style={{ objectPosition: s.pos }}
                   />

@@ -84,7 +84,7 @@ export default function Faq({ faq }) {
                   src={p.src}
                   alt=""
                   fill
-                  sizes="280px"
+                  sizes="(min-width: 1440px) 264px, (min-width: 1280px) 233px, 173px"
                   className="object-cover"
                   style={{ objectPosition: p.pos }}
                 />

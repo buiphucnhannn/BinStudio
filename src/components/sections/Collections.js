@@ -11,6 +11,16 @@ import { ArrowRight } from "@/components/ui/Icons";
  * Bộ sưu tập kiểu "editorial grid": 6 thẻ kích thước khác nhau, so le, có số thứ tự.
  * Hover: ảnh phóng nhẹ, caption trượt lên, vòng mũi tên hiện ra.
  */
+// sizes khớp từng thẻ: 7/12, 5/12, 4/12 khung nội dung (tối đa 1312px); sm: 2 cột; mobile: 1 cột
+const SIZES = [
+  "(min-width: 1440px) 757px, (min-width: 1024px) 51vw, (min-width: 768px) 54vw, (min-width: 640px) 44vw, 90vw",
+  "(min-width: 1440px) 538px, (min-width: 1024px) 37vw, (min-width: 768px) 38vw, (min-width: 640px) 44vw, 90vw",
+  "(min-width: 1440px) 538px, (min-width: 1024px) 37vw, (min-width: 768px) 38vw, (min-width: 640px) 44vw, 90vw",
+  "(min-width: 1440px) 427px, (min-width: 1024px) 29vw, (min-width: 768px) 30vw, (min-width: 640px) 44vw, 90vw",
+  "(min-width: 1440px) 427px, (min-width: 1024px) 29vw, (min-width: 768px) 30vw, (min-width: 640px) 44vw, 90vw",
+  "(min-width: 1440px) 427px, (min-width: 1024px) 29vw, (min-width: 768px) 30vw, (min-width: 640px) 44vw, 90vw",
+];
+
 const LAYOUT = [
   "md:col-span-7 md:row-span-2 aspect-[4/5] md:aspect-auto",
   "md:col-span-5 aspect-[4/5] md:aspect-[5/4]",
@@ -58,7 +68,7 @@ export default function Collections({ lang, collections, ui, heading }) {
                 src={c.cover}
                 alt={c.name}
                 fill
-                sizes="(min-width: 768px) 50vw, 100vw"
+                sizes={SIZES[i]}
                 className="object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-105"
                 style={{ objectPosition: c.coverPos }}
               />

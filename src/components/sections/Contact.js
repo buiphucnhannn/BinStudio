@@ -4,7 +4,7 @@ import Parallax from "@/components/fx/Parallax";
 import { ArrowRight, Messenger, Phone, WhatsApp, Zalo } from "@/components/ui/Icons";
 import { cn } from "@/lib/utils";
 
-const Polaroid = ({ p, className = "", sizes = "260px" }) => (
+const Polaroid = ({ p, className = "", sizes = "(min-width: 1760px) 240px, 14vw" }) => (
   <div className={cn("polaroid", className)}>
     <div
       className={cn("relative w-full overflow-hidden", p.wide ? "aspect-[3/2]" : "aspect-[4/5]")}
@@ -80,19 +80,19 @@ export default function Contact({ contact, site, ui, id = "contact" }) {
 
         <div className="mt-8 flex items-end justify-center gap-3 lg:hidden">
           <div className="reveal w-[26vw] max-w-[150px] -rotate-6">
-            <Polaroid p={p4} sizes="150px" />
+            <Polaroid p={p4} sizes="(min-width: 640px) 134px, 22vw" />
           </div>
           <div
             className="reveal w-[30vw] max-w-[170px] translate-y-3"
             style={{ "--reveal-delay": "100ms" }}
           >
-            <Polaroid p={p1} sizes="170px" />
+            <Polaroid p={p1} sizes="(min-width: 640px) 154px, 26vw" />
           </div>
           <div
             className="reveal w-[26vw] max-w-[150px] rotate-6"
             style={{ "--reveal-delay": "200ms" }}
           >
-            <Polaroid p={p3} sizes="150px" />
+            <Polaroid p={p3} sizes="(min-width: 640px) 134px, 22vw" />
           </div>
         </div>
         <p

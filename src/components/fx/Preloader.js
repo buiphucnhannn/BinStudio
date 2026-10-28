@@ -53,7 +53,7 @@ export default function Preloader({ caption }) {
           state === "leave" ? "-translate-y-6 opacity-0" : "[animation:fadeUp_.9s_ease-out_both]",
         )}
       >
-        <Logo className="h-14 sm:h-16" preload />
+        <Logo className="h-14 sm:h-16" sizes="(min-width: 640px) 208px, 182px" eager priority />
         <p className="mt-5 text-[10px] tracking-[0.4em] text-ink-muted uppercase">{caption}</p>
         <span className="relative mt-7 block h-px w-28 overflow-hidden bg-ink/10">
           <span className="absolute inset-y-0 left-0 w-full origin-left [animation:loadbar_1.1s_cubic-bezier(.22,1,.36,1)_.1s_both] bg-accent" />

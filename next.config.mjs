@@ -34,8 +34,8 @@ const nextConfig = {
     },
   },
   images: {
-    // Next 16 bắt buộc khai báo danh sách quality; ảnh studio dùng 90 cho nét
-    qualities: [75, 90],
+    // Next 16 bắt buộc khai báo danh sách quality; ảnh studio dùng 90 cho nét, ô lưới album 85
+    qualities: [75, 85, 90],
     formats: ["image/avif", "image/webp"],
   },
   // Tiếng Việt mặc định tại "/" (đường dẫn tiếng Việt, rewrite trong src/proxy.js),

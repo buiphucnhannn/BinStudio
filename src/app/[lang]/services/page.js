@@ -1,6 +1,7 @@
 import { localize, href, isLocale } from "@/i18n";
 import { siteConfig } from "@/config/site";
 import { pageMeta } from "@/lib/seo";
+import { breadcrumb, JsonLd } from "@/lib/schema";
 import { services, servicesPage, process, ui } from "@/data/site";
 import ServicesHero from "@/components/services/ServicesHero";
 import ServiceList from "@/components/services/ServiceList";
@@ -24,6 +25,12 @@ export default async function ServicesPage({ params }) {
 
   return (
     <>
+      <JsonLd
+        data={breadcrumb(lang, [
+          { name: L.ui.home, path: "/" },
+          { name: L.ui.services, path: "/services" },
+        ])}
+      />
       <ServicesHero lang={lang} hero={page.hero} ui={L.ui} />
       <ServiceList lang={lang} items={L.services.items} ui={L.ui} heading={L.services} />
       <Packages data={page.packages} ui={L.ui} />

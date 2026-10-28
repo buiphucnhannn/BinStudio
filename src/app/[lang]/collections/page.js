@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { localize, href, isLocale } from "@/i18n";
 import { pageMeta } from "@/lib/seo";
+import { breadcrumb, collectionList, JsonLd } from "@/lib/schema";
+import { SLUGS_VI } from "@/i18n/routes";
 import { collections, collectionsPage, categories, ui, totalPhotos } from "@/data/site";
 import Container from "@/components/ui/Container";
 import Pic from "@/components/ui/Pic";
@@ -20,9 +22,33 @@ export default async function CollectionsListPage({ params }) {
   const { lang } = await params;
   const L = localize({ collections, collectionsPage, categories, ui }, lang);
   const page = L.collectionsPage;
+  // Từ khoá phụ cho ô tìm kiếm: tên / phong cách bằng ngôn ngữ còn lại + slug → gõ "sunset" trên bản Việt vẫn ra
+  const other = lang === "vi" ? "en" : "vi";
+  const searchExtra = Object.fromEntries(
+    collections.map((c) => [
+      c.slug,
+      [c.name, c.sub, c.concept, categories[c.category]]
+        .map((v) => v[other])
+        .concat(c.slug, SLUGS_VI[c.slug] || "")
+        .join(" "),
+    ]),
+  );
 
   return (
     <>
+      <JsonLd
+        data={[
+          breadcrumb(lang, [
+            { name: L.ui.home, path: "/" },
+            { name: L.ui.collections, path: "/collections" },
+          ]),
+          collectionList(lang, {
+            name: page.meta.title,
+            description: page.meta.desc,
+            items: L.collections,
+          }),
+        ]}
+      />
       {/* Hero: chữ bên trái, 3 cột ảnh trôi dọc bên phải */}
       <section className="relative flex items-center overflow-hidden bg-sand pt-28 pb-12 lg:min-h-[100svh] lg:pt-32 lg:pb-16">
         <Container wide className="grid items-center gap-12 lg:grid-cols-[1fr_1fr]">
@@ -78,7 +104,14 @@ export default async function CollectionsListPage({ params }) {
                       key={`${src}-${i}`}
                       className="relative aspect-[3/4] w-full shrink-0 overflow-hidden rounded-2xl bg-sand-200"
                     >
-                      <Pic src={src} alt="" fill sizes="20vw" className="object-cover" />
+                      <Pic
+                        src={src}
+                        alt=""
+                        fill
+                        sizes="(min-width: 1440px) 203px, (min-width: 1024px) 14vw, 29vw"
+                        loading={i < 2 ? "eager" : undefined}
+                        className="object-cover"
+                      />
                     </div>
                   ))}
                 </div>
@@ -94,6 +127,7 @@ export default async function CollectionsListPage({ params }) {
             lang={lang}
             collections={L.collections}
             categories={L.categories}
+            searchExtra={searchExtra}
             ui={L.ui}
           />
         </Container>

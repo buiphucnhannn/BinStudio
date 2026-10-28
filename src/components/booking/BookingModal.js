@@ -104,7 +104,10 @@ export default function BookingModal({ booking, services, site, lang }) {
           </button>
 
           <div className="flex flex-col items-center text-center">
-            <Logo className="h-10 sm:h-12 lg:[@media(max-height:640px)]:h-8 max-lg:[@media(max-height:700px)]:h-6 max-lg:[@media(min-height:701px)_and_(max-height:720px)]:h-9" />
+            <Logo
+              sizes="(min-width: 640px) 156px, 130px"
+              className="h-10 sm:h-12 lg:[@media(max-height:640px)]:h-8 max-lg:[@media(max-height:700px)]:h-6 max-lg:[@media(min-height:701px)_and_(max-height:720px)]:h-9"
+            />
             <h3 className="mt-3 font-serif text-[1.6rem] leading-tight text-ink sm:text-[2.1rem] [@media(max-height:700px)]:mt-1 [@media(max-height:700px)]:text-[1.4rem] [@media(max-height:720px)]:mt-2 [@media(max-height:720px)]:sm:text-[1.8rem]">
               {booking.title}
             </h3>

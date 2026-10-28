@@ -24,18 +24,11 @@ npm run build && npm start
 ## 2. Cấu trúc
 
 ```
-raw-photos/              73 ảnh GỐC khách gửi (20–30MB/ảnh) — gitignore, KHÔNG deploy
+raw-photos/              ảnh GỐC khách gửi (73 ảnh đợt đầu + update/ 266 ảnh đợt 2) — gitignore, KHÔNG deploy
+│                        webp-sources.json: ảnh web nào được tạo từ file gốc nào
 public/images/
-├── brand/               logo-gold / logo-dark / logo-white (PNG tách nền), logo-original.jpg, logo-family.png
-├── wedding-beach/       11 ảnh ┐
-├── sunset-couple/        6 ảnh │
-├── maternity/            4 ảnh │
-├── sunset-portrait/     11 ảnh │  73 ảnh đã phân loại, nén ≤ 2000px
-├── resort-editorial/     7 ảnh │  đặt tên <bộ>-<số>.jpg
-├── family-villa/        11 ảnh │
-├── family-beach/        11 ảnh │
-├── family-travel/        6 ảnh │
-└── beach-lookbook/       6 ảnh ┘
+├── brand/               logo-gold / logo-dark / logo-white (WebP nền trong suốt), logo-original, logo-family
+└── <slug>/<slug>-NN.webp   27 bộ sưu tập · 327 ảnh WebP, cạnh dài ≤ 2400px (q84–88, file ≤ 900KB)
 
 src/
 ├── app/
@@ -52,15 +45,17 @@ src/
 │   ├── layout/    Navbar (pill kính mờ + VI/EN — giống mẫu), Footer (bản đồ), FloatingContact
 │   ├── sections/  Hero, Marquee, About, Usps, Collections, Services, GoldenHour, Locations,
 │   │              Process, Moments, DayGrid, Testimonials, Contact
-│   ├── gallery/   CollectionsGrid (bộ lọc), AlbumGallery (lưới + lightbox)
+│   ├── gallery/   CollectionsGrid (bộ lọc), AlbumGallery (justified rows không cắt ảnh + lightbox)
 │   ├── services/  ServicesHero, ServiceList, Packages, Faq, ServicesCta
 │   ├── booking/   BookingModal + BookingForm (POST /api/contact)
 │   └── ui/        Button, Container, Icons, Lightbox, Logo, Ornaments, Pic, Reveal, SectionHeading
 ├── config/site.js   thông tin thương hiệu, liên hệ, SEO
-├── data/site.js     TOÀN BỘ nội dung text song ngữ + mapping ảnh vào bộ sưu tập
+├── data/site.js     TOÀN BỘ nội dung text song ngữ
+├── data/collections.js  27 bộ sưu tập (loại, mô tả, ảnh bìa, danh sách ảnh)
+├── data/photos.js   P()/img()/seq() — đường dẫn ảnh WebP + kích thước thật (photo-sizes.json, tự sinh)
 ├── i18n/            t(), localize(), href() — cơ chế song ngữ; routes.js ánh xạ URL VI ↔ EN
 ├── hooks/           useReveal, useScrollProgress, useDragScroll
-└── lib/utils.js     cn(), lockScroll(), pad2()
+└── lib/             utils (cn, lockScroll), seo (metadata), schema (JSON-LD), justify (chia hàng ảnh)
 ```
 
 ## 3. Song ngữ Việt / Anh
@@ -71,14 +66,15 @@ src/
 
 ## 4. Sửa nội dung
 
-| Muốn sửa                               | Ở đâu                                                                                        |
-| -------------------------------------- | -------------------------------------------------------------------------------------------- |
-| SĐT, Zalo, WhatsApp, Facebook, địa chỉ | `src/config/site.js`                                                                         |
-| Text từng section, bộ sưu tập, ảnh     | `src/data/site.js`                                                                           |
-| Thêm bộ sưu tập                        | thêm thư mục ảnh + 1 object trong `collections` + slug tiếng Việt trong `src/i18n/routes.js` |
-| Màu, font, animation                   | khối `@theme` trong `src/app/globals.css`                                                    |
-| Thứ tự section trang chủ               | `src/app/[lang]/page.js`                                                                     |
-| Gửi email từ form                      | `src/app/api/contact/route.js` + `.env.example`                                              |
+| Muốn sửa                               | Ở đâu                                                                                                                                                            |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SĐT, Zalo, WhatsApp, Facebook, địa chỉ | `src/config/site.js`                                                                                                                                             |
+| Text từng section                      | `src/data/site.js`                                                                                                                                               |
+| Bộ sưu tập, ảnh bìa, thứ tự album      | `src/data/collections.js`                                                                                                                                        |
+| Thêm bộ sưu tập                        | ảnh WebP vào `public/images/<slug>/` + kích thước vào `src/data/photo-sizes.json` + 1 object trong `collections.js` + slug tiếng Việt trong `src/i18n/routes.js` |
+| Màu, font, animation                   | khối `@theme` trong `src/app/globals.css`                                                                                                                        |
+| Thứ tự section trang chủ               | `src/app/[lang]/page.js`                                                                                                                                         |
+| Gửi email từ form                      | `src/app/api/contact/route.js` + `.env.example`                                                                                                                  |
 
 `coverPos` / `pos` là `object-position` của ảnh (ảnh chân dung thường `center 25–35%` để không cắt mặt).
 

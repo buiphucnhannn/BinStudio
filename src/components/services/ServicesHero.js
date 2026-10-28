@@ -79,8 +79,9 @@ export default function ServicesHero({ lang, hero, ui }) {
                   src={im.src}
                   alt=""
                   fill
-                  preload={i === 0}
-                  sizes="(min-width: 1024px) 16vw, 30vw"
+                  loading="eager"
+                  fetchPriority={i === 0 ? "high" : undefined}
+                  sizes="(min-width: 1440px) 195px, (min-width: 1024px) 13vw, 29vw"
                   className="object-cover"
                   style={{ objectPosition: im.pos }}
                 />

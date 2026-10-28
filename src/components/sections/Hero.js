@@ -1,13 +1,60 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { preload } from "react-dom";
 import Link from "next/link";
-import Pic from "@/components/ui/Pic";
+import { getImageProps } from "next/image";
 import SplitText from "@/components/fx/SplitText";
 import { cn, pad2 } from "@/lib/utils";
 import { ArrowRight } from "@/components/ui/Icons";
 
 const TICK = 5200; // thời gian mỗi slide
+const DESKTOP = "(min-width: 640px)";
+
+/**
+ * Một slide = một <picture>: từ 640px dùng ảnh ngang, nhỏ hơn dùng ảnh dọc (art direction).
+ * Trình duyệt chỉ tải đúng 1 ảnh theo khổ màn hình (trước đây render 2 <Image> rồi ẩn 1 cái → tải cả 2).
+ * Slide đầu là ảnh LCP: preload theo media query + tải ngay với độ ưu tiên cao.
+ */
+function SlidePicture({ slide, first, active }) {
+  const common = { alt: "", fill: true, sizes: "100vw", quality: 90 };
+  const wide = getImageProps({ ...common, src: slide.wide.src }).props;
+  const { srcSet: tallSet, ...img } = getImageProps({ ...common, src: slide.tall.src }).props;
+  if (first) {
+    preload(wide.src, {
+      as: "image",
+      imageSrcSet: wide.srcSet,
+      imageSizes: "100vw",
+      media: DESKTOP,
+      fetchPriority: "high",
+    });
+    preload(img.src, {
+      as: "image",
+      imageSrcSet: tallSet,
+      imageSizes: "100vw",
+      media: "(max-width: 639.98px)",
+      fetchPriority: "high",
+    });
+  }
+  return (
+    <picture>
+      <source media={DESKTOP} srcSet={wide.srcSet} sizes="100vw" />
+      <img
+        {...img}
+        alt=""
+        srcSet={tallSet}
+        loading={first ? "eager" : "lazy"}
+        fetchPriority={first ? "high" : undefined}
+        draggable={false}
+        className={cn(
+          "object-cover [object-position:var(--pos-m)] sm:[object-position:var(--pos-d)]",
+          active && "animate-kenburns-slow",
+        )}
+        style={{ ...img.style, "--pos-m": slide.tall.pos, "--pos-d": slide.wide.pos }}
+      />
+    </picture>
+  );
+}
 
 /**
  * Hero "điện ảnh": một ảnh tràn màn hình, chuyển cảnh chậm (crossfade + ken burns) qua 5 bộ ảnh.
@@ -93,33 +140,7 @@ export default function Hero({ hero, ui, exploreHref }) {
           >
             {/* Ảnh slide sau chỉ gắn khi màn chào đã kéo lên (còn ~5s mới tới lượt hiện)
                 → lúc tải trang, băng thông dành cho ảnh đầu tiên */}
-            {(i === 0 || ready) && (
-              <>
-                {/* desktop: ảnh ngang */}
-                <Pic
-                  src={s.wide.src}
-                  alt=""
-                  fill
-                  preload={i === 0}
-                  sizes="100vw"
-                  className={cn(
-                    "hidden object-cover sm:block",
-                    i === idx && "animate-kenburns-slow",
-                  )}
-                  style={{ objectPosition: s.wide.pos }}
-                />
-                {/* mobile: ảnh dọc */}
-                <Pic
-                  src={s.tall.src}
-                  alt=""
-                  fill
-                  preload={i === 0}
-                  sizes="100vw"
-                  className={cn("object-cover sm:hidden", i === idx && "animate-kenburns-slow")}
-                  style={{ objectPosition: s.tall.pos }}
-                />
-              </>
-            )}
+            {(i === 0 || ready) && <SlidePicture slide={s} first={i === 0} active={i === idx} />}
           </div>
         ))}
       </div>

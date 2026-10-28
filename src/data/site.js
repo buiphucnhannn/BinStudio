@@ -5,8 +5,16 @@
 // ============================================================
 import { t } from "@/i18n";
 
-// Ảnh: /images/<bộ>/<bộ>-NN.jpg (đã tối ưu ≤ 2000px). Ảnh gốc nằm ở raw-photos/.
-const P = (group, n) => `/images/${group}/${group}-${String(n).padStart(2, "0")}.jpg`;
+// Ảnh: /images/<bộ>/<bộ>-NN.webp (xem src/data/photos.js). Bộ sưu tập: src/data/collections.js.
+import { P } from "./photos";
+export {
+  categories,
+  categorySeo,
+  collections,
+  getCollection,
+  featuredCollections,
+  totalPhotos,
+} from "./collections";
 
 // ---------- Điều hướng ----------
 export const nav = [
@@ -28,6 +36,7 @@ export const ui = {
   scroll: t("Cuộn", "Scroll"),
   home: t("Trang chủ", "Home"),
   collections: t("Bộ sưu tập", "Portfolio"),
+  services: t("Dịch vụ", "Services"),
   nextCollection: t("Bộ sưu tập tiếp theo", "Next collection"),
   aboutCollection: t("Về bộ ảnh", "About this collection"),
   bookThis: t("Đặt lịch chụp kiểu này", "Book a session like this"),
@@ -43,6 +52,15 @@ export const ui = {
   all: t("Tất cả", "All"),
   resetFilters: t("Xoá bộ lọc", "Clear filter"),
   noResults: t("Chưa có bộ ảnh phù hợp.", "No collection matches this filter yet."),
+  search: t("Tìm bộ ảnh", "Search collections"),
+  searchPlaceholder: t("Tìm theo tên, địa điểm, phong cách…", "Search by name, place or style…"),
+  searchClear: t("Xoá tìm kiếm", "Clear search"),
+  searchCount: t("{n} bộ ảnh phù hợp", "{n} matching collections"),
+  searchEmpty: t("Không tìm thấy bộ ảnh nào cho “{q}”.", "No collections match “{q}”."),
+  searchTip: t(
+    "Thử từ khoá ngắn hơn hoặc bỏ bớt bộ lọc — ví dụ: cưới, gia đình, Thị trấn Hoàng Hôn.",
+    "Try a shorter keyword or remove a filter — e.g. wedding, family, Sunset Town.",
+  ),
   notFoundTitle: t("Không tìm thấy trang", "Page not found"),
   notFoundDesc: t(
     "Trang bạn tìm không tồn tại hoặc đã được di chuyển.",
@@ -57,257 +75,6 @@ export const ui = {
   bestTime: t("Đẹp nhất", "Best at"),
   minutes: t("phút", "min"),
 };
-
-// ---------- Phân loại bộ sưu tập ----------
-export const categories = {
-  wedding: t("Cưới & Pre-wedding", "Wedding & Pre-wedding"),
-  couple: t("Cặp đôi & Hoàng hôn", "Couples & Sunset"),
-  family: t("Gia đình & Du lịch", "Family & Holiday"),
-  portrait: t("Chân dung & Lookbook", "Portrait & Lookbook"),
-};
-
-// ---------- Bộ sưu tập (9 bộ, dùng đủ 73 ảnh trong kho) ----------
-// pos = objectPosition cho ảnh bìa; ảnh dọc chụp chân dung thường cần "center 25%" để không cắt mặt.
-// wide = ảnh ngang (gốc), dùng để xếp lưới.
-const W = (group, n, pos = "center") => ({ src: P(group, n), pos, wide: true });
-const V = (group, n, pos = "center 30%") => ({ src: P(group, n), pos });
-
-export const collections = [
-  {
-    slug: "wedding-beach",
-    category: "wedding",
-    name: t("Lễ cưới bên biển", "Beach Wedding"),
-    sub: t("Cưới · Bãi biển Phú Quốc", "Wedding · Phu Quoc beach"),
-    concept: t("Váy ren, hoa trắng và tiếng cười", "Lace, white flowers and laughter"),
-    desc: t(
-      "Một buổi chiều trời dịu trên bãi cát dài — cô dâu chú rể chạy, cười, ôm nhau giữa sóng. Studio Bin đi cùng như một người bạn, ghi lại những khoảnh khắc không dàn dựng của ngày trọng đại.",
-      "A soft afternoon on a long sandy beach — the couple runs, laughs and holds each other between the waves. Studio Bin walks alongside like a friend, capturing the unstaged moments of the big day.",
-    ),
-    cover: P("wedding-beach", 9),
-    coverPos: "center 28%",
-    hero: { src: P("wedding-beach", 4), pos: "center 40%" },
-    images: [
-      V("wedding-beach", 1, "center 25%"),
-      V("wedding-beach", 2, "center 25%"),
-      W("wedding-beach", 3, "center 40%"),
-      W("wedding-beach", 4, "center 40%"),
-      W("wedding-beach", 5),
-      W("wedding-beach", 6),
-      V("wedding-beach", 7, "center 30%"),
-      W("wedding-beach", 8, "center 35%"),
-      V("wedding-beach", 9, "center 28%"),
-      W("wedding-beach", 10),
-      W("wedding-beach", 11, "center 35%"),
-    ],
-  },
-  {
-    slug: "sunset-couple",
-    category: "couple",
-    name: t("Hoàng hôn của hai người", "Sunset for Two"),
-    sub: t("Cặp đôi · Giờ vàng", "Couple · Golden hour"),
-    concept: t("Sóng, váy trắng và bầu trời hồng cam", "Waves, a white dress and a peach sky"),
-    desc: t(
-      "Phú Quốc nằm ở bờ tây nên mặt trời lặn thẳng xuống biển. Bộ ảnh này chụp trong 40 phút cuối ngày: ánh sáng vàng mật, rồi chuyển hồng, rồi tím — mỗi khung hình một màu trời khác nhau.",
-      "Phu Quoc faces west, so the sun sets straight into the sea. This set was shot in the last 40 minutes of daylight: honey gold, then pink, then violet — every frame a different sky.",
-    ),
-    cover: P("sunset-couple", 2),
-    coverPos: "center 35%",
-    hero: { src: P("sunset-couple", 1), pos: "center 45%" },
-    images: [
-      W("sunset-couple", 1, "center 45%"),
-      V("sunset-couple", 2, "center 35%"),
-      W("sunset-couple", 3, "center 45%"),
-      V("sunset-couple", 4, "center 40%"),
-      V("sunset-couple", 5, "center 35%"),
-      V("sunset-couple", 6, "center 30%"),
-    ],
-  },
-  {
-    slug: "maternity",
-    category: "couple",
-    name: t("Chờ đón thiên thần", "Waiting for You"),
-    sub: t("Cặp đôi · Maternity", "Couple · Maternity"),
-    concept: t("Cầu gỗ, hoàng hôn và tấm ảnh siêu âm", "A wooden pier, sunset and an ultrasound"),
-    desc: t(
-      "Bộ ảnh maternity trên cầu gỗ vươn ra biển lúc hoàng hôn. Nhẹ nhàng, riêng tư, tập trung vào ánh mắt của hai người và tấm ảnh siêu âm đầu tiên.",
-      "A maternity session on a wooden pier reaching into the sea at sunset. Gentle, private, focused on the way the two of them look at each other — and at the very first ultrasound.",
-    ),
-    cover: P("maternity", 4),
-    coverPos: "center 25%",
-    hero: { src: P("maternity", 2), pos: "center 30%" },
-    images: [
-      V("maternity", 1, "center 25%"),
-      V("maternity", 2, "center 25%"),
-      V("maternity", 3, "center 25%"),
-      V("maternity", 4, "center 25%"),
-    ],
-  },
-  {
-    slug: "sunset-portrait",
-    category: "portrait",
-    name: t("Giờ vàng trên đá", "Golden Hour on the Rocks"),
-    sub: t("Chân dung · Ghềnh đá hoàng hôn", "Portrait · Sunset rocks"),
-    concept: t("Đá, sóng và ánh sáng ngược", "Rocks, surf and backlight"),
-    desc: t(
-      "Ghềnh đá phía tây đảo là phim trường tự nhiên đẹp nhất lúc 17h30. Chân dung ngược sáng, bóng đổ dài, màu da ấm — phong cách lookbook cho khách muốn một bộ ảnh cá nhân thật khác biệt.",
-      "The rocky west coast is the island's most beautiful natural set at 5:30pm. Backlit portraits, long shadows, warm skin tones — a lookbook style for guests who want a personal set that stands out.",
-    ),
-    cover: P("sunset-portrait", 8),
-    coverPos: "center 30%",
-    hero: { src: P("sunset-portrait", 3), pos: "center 55%" },
-    images: [
-      V("sunset-portrait", 1, "center 25%"),
-      V("sunset-portrait", 2, "center 25%"),
-      W("sunset-portrait", 3, "center 55%"),
-      V("sunset-portrait", 4, "center 30%"),
-      V("sunset-portrait", 5, "center 50%"),
-      W("sunset-portrait", 6, "center 50%"),
-      V("sunset-portrait", 7, "center 25%"),
-      V("sunset-portrait", 8, "center 30%"),
-      V("sunset-portrait", 9, "center 35%"),
-      V("sunset-portrait", 10, "center 35%"),
-      V("sunset-portrait", 11, "center 55%"),
-    ],
-  },
-  {
-    slug: "resort-editorial",
-    category: "portrait",
-    name: t("Editorial tại Resort", "Resort Editorial"),
-    sub: t("Chân dung · Resort cao cấp", "Portrait · Luxury resort"),
-    concept: t("Thư viện gỗ, gạch bàn cờ, váy lụa", "Wooden library, checkered floors, silk"),
-    desc: t(
-      "Không chỉ có biển — Phú Quốc còn có những resort với kiến trúc Đông Dương tuyệt đẹp. Bộ ảnh này chụp trong nhà với ánh sáng cửa sổ, phong cách tạp chí: tiết chế, sang và nhiều khoảng lặng.",
-      "Beyond the beach, Phu Quoc has resorts with stunning Indochine architecture. This set was shot indoors with window light, magazine style: restrained, elegant and full of quiet moments.",
-    ),
-    cover: P("resort-editorial", 2),
-    coverPos: "center 30%",
-    hero: { src: P("resort-editorial", 6), pos: "center 60%" },
-    images: [
-      V("resort-editorial", 1, "center 30%"),
-      V("resort-editorial", 2, "center 30%"),
-      V("resort-editorial", 3, "center 35%"),
-      V("resort-editorial", 4, "center 35%"),
-      V("resort-editorial", 5, "center 30%"),
-      W("resort-editorial", 6, "center 60%"),
-      W("resort-editorial", 7, "center 40%"),
-    ],
-  },
-  {
-    slug: "family-villa",
-    category: "family",
-    name: t("Gia đình tại Villa", "Family at the Villa"),
-    sub: t("Gia đình · Resort & villa", "Family · Resort & villa"),
-    concept: t(
-      "Phòng ngủ sáng, bãi cỏ dừa và hai cậu bé",
-      "A bright bedroom, palm lawns and two boys",
-    ),
-    desc: t(
-      "Buổi sáng của một gia đình đang nghỉ dưỡng: bắt đầu trên giường villa, rồi ra bãi cỏ dưới hàng dừa. Không tạo dáng — chỉ chơi, tung bé lên trời và cười. Bin chụp theo kiểu phóng sự để giữ nguyên không khí ấy.",
-      "A holiday morning for one family: starting on the villa bed, then out to the palm-lined lawn. No posing — just play, tossing the little one in the air and laughing. Bin shoots documentary style to keep that mood intact.",
-    ),
-    cover: P("family-villa", 6),
-    coverPos: "center 30%",
-    hero: { src: P("family-villa", 4), pos: "center 50%" },
-    images: [
-      V("family-villa", 1, "center 40%"),
-      V("family-villa", 2, "center 45%"),
-      V("family-villa", 3, "center 45%"),
-      W("family-villa", 4, "center 50%"),
-      V("family-villa", 5, "center 45%"),
-      V("family-villa", 6, "center 30%"),
-      V("family-villa", 7, "center 30%"),
-      V("family-villa", 8, "center 30%"),
-      V("family-villa", 9, "center 40%"),
-      V("family-villa", 10, "center 45%"),
-      V("family-villa", 11, "center 55%"),
-    ],
-  },
-  {
-    slug: "family-beach",
-    category: "family",
-    name: t("Sinh nhật đầu tiên bên biển", "First Birthday by the Sea"),
-    sub: t("Gia đình · Bãi biển lúc chiều", "Family · Beach at dusk"),
-    concept: t(
-      "Vương miện giấy, váy xanh bạc hà và sóng nhỏ",
-      "A paper crown, mint dress and small waves",
-    ),
-    desc: t(
-      "Sinh nhật một tuổi của bé được tổ chức trên bãi biển lúc chiều muộn. Ánh sáng mềm như phim, bố mẹ dắt bé đi dọc mép nước — những bức ảnh gia đình sẽ còn được treo rất lâu.",
-      "A first birthday celebrated on the beach in the late afternoon. Film-soft light, parents walking the little one along the water's edge — family photos that will hang on the wall for years.",
-    ),
-    cover: P("family-beach", 7),
-    coverPos: "center 35%",
-    hero: { src: P("family-beach", 2), pos: "center 30%" },
-    images: [
-      V("family-beach", 1, "center 25%"),
-      V("family-beach", 2, "center 25%"),
-      V("family-beach", 3, "center 25%"),
-      V("family-beach", 4, "center 30%"),
-      V("family-beach", 5, "center 30%"),
-      V("family-beach", 6, "center 40%"),
-      V("family-beach", 7, "center 35%"),
-      V("family-beach", 8, "center 40%"),
-      V("family-beach", 9, "center 35%"),
-      V("family-beach", 10, "center 30%"),
-      V("family-beach", 11, "center 30%"),
-    ],
-  },
-  {
-    slug: "family-travel",
-    category: "family",
-    name: t("Kỳ nghỉ gia đình", "Family Holiday"),
-    sub: t("Du lịch · Biển & hàng dừa", "Travel · Sea & palm roads"),
-    concept: t("Áo trắng, xe đạp và con đường dừa", "White shirts, bicycles and a palm road"),
-    desc: t(
-      "Gói chụp du lịch nửa ngày: sáng đạp xe dưới hàng dừa, trưa ra bãi biển xanh ngắt. Ảnh tươi, sáng, đúng tinh thần một kỳ nghỉ — giao nhanh để gia đình kịp đăng khi còn ở đảo.",
-      "A half-day travel session: cycling under the palms in the morning, then the turquoise beach at noon. Bright, fresh holiday photos — delivered fast so the family can post them while still on the island.",
-    ),
-    cover: P("family-travel", 1),
-    coverPos: "center 35%",
-    hero: { src: P("family-travel", 4), pos: "center 55%" },
-    images: [
-      V("family-travel", 1, "center 35%"),
-      W("family-travel", 2, "center 45%"),
-      W("family-travel", 3, "center 45%"),
-      W("family-travel", 4, "center 55%"),
-      W("family-travel", 5, "center 55%"),
-      W("family-travel", 6, "center 55%"),
-    ],
-  },
-  {
-    slug: "beach-lookbook",
-    category: "portrait",
-    name: t("Lookbook bãi biển", "Beach Lookbook"),
-    sub: t("Chân dung · Lookbook", "Portrait · Lookbook"),
-    concept: t("Khăn lụa xanh, cát vàng và nắng xiên", "Blue silk, golden sand and low sun"),
-    desc: t(
-      "Bộ lookbook cho khách muốn ảnh cá nhân phong cách tạp chí du lịch: trưa nắng dưới hàng dừa, chiều nằm trên cát với khăn lụa bay. Bin tư vấn trang phục và màu sắc từ trước buổi chụp.",
-      "A lookbook for guests who want personal photos in travel-magazine style: noon sun under the palms, then lying on golden sand with silk in the wind. Bin advises on outfits and colours before the shoot.",
-    ),
-    cover: P("beach-lookbook", 6),
-    coverPos: "center 30%",
-    hero: { src: P("beach-lookbook", 2), pos: "center 55%" },
-    images: [
-      V("beach-lookbook", 1, "center 30%"),
-      W("beach-lookbook", 2, "center 55%"),
-      V("beach-lookbook", 3, "center 40%"),
-      V("beach-lookbook", 4, "center 45%"),
-      V("beach-lookbook", 5, "center 45%"),
-      V("beach-lookbook", 6, "center 30%"),
-    ],
-  },
-];
-
-export const getCollection = (slug) => collections.find((c) => c.slug === slug);
-export const featuredCollections = [
-  "wedding-beach",
-  "sunset-couple",
-  "family-villa",
-  "sunset-portrait",
-  "family-beach",
-  "resort-editorial",
-].map(getCollection);
-export const totalPhotos = collections.reduce((s, c) => s + c.images.length, 0);
 
 // ---------- Hero ----------
 export const hero = {
@@ -1001,7 +768,7 @@ export const booking = {
 // ---------- Trang Dịch vụ (/services) ----------
 export const servicesPage = {
   meta: {
-    title: t("Dịch vụ", "Services"),
+    title: t("Dịch vụ chụp ảnh tại Phú Quốc", "Photography Services in Phu Quoc"),
     desc: t(
       "Dịch vụ chụp ảnh của Studio Bin tại Phú Quốc: ảnh cưới & pre-wedding ngoại cảnh biển, cặp đôi, cầu hôn, săn hoàng hôn, gia đình nghỉ dưỡng tại resort/villa, chân dung nghệ thuật, sự kiện và gói trọn gói makeup – trang phục – quay phim.",
       "Studio Bin photography services in Phu Quoc: beach weddings & pre-wedding, couples, proposals, sunset sessions, family holidays at resorts & villas, editorial portraits, events and all-inclusive packages with makeup, attire and film.",
@@ -1142,10 +909,13 @@ export const servicesPage = {
 // ---------- Trang Bộ sưu tập ----------
 export const collectionsPage = {
   meta: {
-    title: t("Bộ sưu tập", "Portfolio"),
+    title: t(
+      "Bộ sưu tập ảnh cưới, cặp đôi & gia đình Phú Quốc",
+      "Phu Quoc Wedding, Couple & Family Portfolio",
+    ),
     desc: t(
-      "Bộ sưu tập ảnh của Studio Bin tại Phú Quốc: ảnh cưới bên biển, cặp đôi hoàng hôn, maternity, gia đình tại resort & villa, chân dung editorial và lookbook bãi biển.",
-      "Studio Bin's Phu Quoc portfolio: beach weddings, sunset couples, maternity, families at resorts & villas, editorial portraits and beach lookbooks.",
+      "Album ảnh thật của Studio Bin tại Phú Quốc: pre-wedding Thị trấn Hoàng Hôn, cưới bên biển, cầu hôn, trăng mật, gia đình ở resort, chân dung editorial và tiệc bãi biển.",
+      "Real albums by Studio Bin in Phu Quoc: Sunset Town pre-weddings, beach weddings, proposals, honeymoons, resort family holidays, editorial portraits and beach parties.",
     ),
   },
   title: t("Bộ sưu tập của", "Portfolio by"),

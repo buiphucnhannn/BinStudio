@@ -35,7 +35,7 @@ export default function Process({ data }) {
                     src={s.image.src}
                     alt=""
                     fill
-                    sizes="280px"
+                    sizes="(min-width: 1280px) 280px, (min-width: 1024px) 210px, 280px"
                     className="object-cover"
                     style={{ objectPosition: s.image.pos }}
                   />

@@ -38,7 +38,11 @@ export default function DayGrid({ data }) {
                 src={m.src}
                 alt=""
                 fill
-                sizes="(min-width: 768px) 25vw, 50vw"
+                sizes={
+                  m.wide
+                    ? "(min-width: 1440px) 648px, (min-width: 768px) 46vw, 90vw"
+                    : "(min-width: 1440px) 316px, (min-width: 768px) 22vw, 44vw"
+                }
                 className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
                 style={{ objectPosition: m.pos }}
               />

@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { localize, href, isLocale, LOCALES } from "@/i18n";
 import { pageMeta } from "@/lib/seo";
-import { collections, getCollection, categories, ui } from "@/data/site";
+import { breadcrumb, imageGallery, JsonLd } from "@/lib/schema";
+import { collections, getCollection, categories, categorySeo, ui } from "@/data/site";
 import Container from "@/components/ui/Container";
 import Pic from "@/components/ui/Pic";
 import SplitText from "@/components/fx/SplitText";
@@ -18,11 +19,13 @@ export async function generateMetadata({ params }) {
   const { lang, slug } = await params;
   const c = getCollection(slug);
   if (!isLocale(lang) || !c) return {};
-  const L = localize(c, lang);
+  const L = localize({ c, seo: categorySeo[c.category] }, lang);
+  const cover = c.images.find((im) => im.src === c.cover) || c.images[0];
   return pageMeta(lang, `/collections/${slug}`, {
-    title: L.name,
-    description: L.desc,
-    image: { url: c.cover, width: 1200, height: 1500 },
+    // Tiêu đề có từ khoá: "Nàng thơ Đông Dương — Chụp ảnh chân dung Phú Quốc | Studio Bin"
+    title: `${L.c.name} — ${L.seo}`,
+    description: L.c.desc,
+    image: { url: cover.src, width: cover.w, height: cover.h, alt: L.c.name },
   });
 }
 
@@ -33,12 +36,25 @@ export default async function CollectionDetailPage({ params }) {
 
   const idx = collections.findIndex((c) => c.slug === slug);
   const nextRaw = collections[(idx + 1) % collections.length];
-  const L = localize({ c: raw, next: nextRaw, categories, ui }, lang);
+  const L = localize({ c: raw, next: nextRaw, categories, categorySeo, ui }, lang);
   const { c, next } = L;
   const listHref = href(lang, "/collections");
+  // Mô tả ảnh (alt) có từ khoá theo loại: "Nàng thơ Đông Dương — Chụp ảnh chân dung Phú Quốc (3)"
+  const seo = L.categorySeo[c.category];
+  const altOf = (i) => `${c.name} — ${seo} (${i + 1})`;
 
   return (
     <>
+      <JsonLd
+        data={[
+          breadcrumb(lang, [
+            { name: L.ui.home, path: "/" },
+            { name: L.ui.collections, path: "/collections" },
+            { name: c.name, path: `/collections/${c.slug}` },
+          ]),
+          imageGallery(lang, c, { title: `${c.name} — ${seo}`, altOf }),
+        ]}
+      />
       {/* Hero: chữ bên trái, ảnh ngang lớn bên phải */}
       <section className="relative flex items-center overflow-hidden bg-sand pt-32 pb-16 lg:min-h-[100svh] lg:pt-32 lg:pb-16">
         <Container wide className="grid items-center gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
@@ -103,8 +119,9 @@ export default async function CollectionDetailPage({ params }) {
               src={c.hero.src}
               alt={c.name}
               fill
-              preload
-              sizes="(min-width: 1024px) 60vw, 100vw"
+              loading="eager"
+              fetchPriority="high"
+              sizes="(min-width: 1440px) 749px, (min-width: 1024px) 51vw, 92vw"
               className="object-cover"
               style={{ objectPosition: c.hero.pos }}
             />
@@ -114,11 +131,7 @@ export default async function CollectionDetailPage({ params }) {
 
       <section className="bg-sand pb-16 lg:pb-24">
         <Container wide>
-          <AlbumGallery
-            images={c.images}
-            name={c.name}
-            place={lang === "vi" ? "chụp ảnh tại Phú Quốc" : "photoshoot in Phu Quoc"}
-          />
+          <AlbumGallery images={c.images} name={c.name} place={seo} />
         </Container>
       </section>
 
@@ -136,7 +149,7 @@ export default async function CollectionDetailPage({ params }) {
                 src={next.cover}
                 alt={next.name}
                 fill
-                sizes="(min-width: 768px) 30vw, 90vw"
+                sizes="(min-width: 1440px) 384px, (min-width: 768px) 26vw, 85vw"
                 className="object-cover transition-transform duration-[1200ms] group-hover:scale-105"
                 style={{ objectPosition: next.coverPos }}
               />

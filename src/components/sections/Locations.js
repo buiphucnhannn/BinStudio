@@ -114,7 +114,7 @@ export default function Locations({ data, ui, id = "locations" }) {
                     src={l.image.src}
                     alt={l.name}
                     fill
-                    sizes="(min-width: 1024px) 55vw, 100vw"
+                    sizes="(min-width: 1440px) 715px, (min-width: 1024px) 49vw, 92vw"
                     className={cn("object-cover", active === i && "animate-kenburns")}
                     style={{ objectPosition: l.image.pos }}
                   />

@@ -64,7 +64,11 @@ export default function Moments({ moments, ui, allHref, collectionsCount }) {
         src={m.src}
         alt={m.caption}
         fill
-        sizes="34vw"
+        sizes={
+          m.size === "tall"
+            ? "(min-height: 1080px) 446px, 42vh"
+            : "(min-height: 1080px) 680px, 63vh"
+        }
         className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
         style={{ objectPosition: m.pos }}
       />
@@ -174,7 +178,7 @@ export default function Moments({ moments, ui, allHref, collectionsCount }) {
                 src={m.src}
                 alt={m.caption}
                 fill
-                sizes="70vw"
+                sizes={m.size === "tall" ? "35vh" : "42vh"}
                 className="object-cover"
                 style={{ objectPosition: m.pos }}
               />

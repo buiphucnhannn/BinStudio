@@ -94,7 +94,7 @@ export default function Services({ lang, services, ui }) {
                     src={s.image}
                     alt={s.title}
                     fill
-                    sizes="(min-width: 1024px) 42vw, 90vw"
+                    sizes="(min-width: 1440px) 616px, 42vw"
                     className={cn("object-cover", active === i && "animate-kenburns")}
                     style={{ objectPosition: s.pos }}
                   />
@@ -155,7 +155,7 @@ export default function Services({ lang, services, ui }) {
                       src={s.image}
                       alt={s.title}
                       fill
-                      sizes="90vw"
+                      sizes="82vw"
                       className="object-cover"
                       style={{ objectPosition: s.pos }}
                     />

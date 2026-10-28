@@ -30,6 +30,13 @@ export const Close = ({ className = "h-5 w-5" }) => (
     <path d="M6 6l12 12M18 6 6 18" />
   </svg>
 );
+export const Search = ({ className = "h-5 w-5" }) => (
+  <svg {...base({ className })}>
+    <circle cx="11" cy="11" r="6.5" />
+    <path d="m20 20-4.2-4.2" />
+  </svg>
+);
+
 export const ChevronLeft = ({ className = "h-5 w-5" }) => (
   <svg {...base({ className })}>
     <path d="m15 6-6 6 6 6" />

@@ -7,7 +7,9 @@ import { lockScroll } from "@/lib/utils";
 
 /**
  * Lightbox xem ảnh toàn màn hình.
- * props: images [{src, alt}], index (number|null), onClose, onChange(index)
+ * props: images [{src, alt, w?, h?}], index (number|null), onClose, onChange(index)
+ * Khung ảnh 92vw × 82vh (tối đa 1024px), ảnh object-contain → ảnh dọc hiển thị hẹp hơn khung:
+ * có w/h thì "sizes" tính theo chiều cao (82vh × tỉ lệ) để không tải ảnh to hơn cần thiết.
  */
 export default function Lightbox({ images, index, onClose, onChange }) {
   const open = index !== null && index !== undefined;
@@ -34,6 +36,9 @@ export default function Lightbox({ images, index, onClose, onChange }) {
 
   if (!open) return null;
   const img = images[index];
+  const ratio = img.w && img.h ? img.w / img.h : null;
+  const sizes =
+    ratio && ratio < 1.2 ? `calc(82vh * ${ratio.toFixed(3)})` : "(min-width: 1113px) 1024px, 92vw";
 
   const navBtn = (onClick, label, Icon, cls) => (
     <button
@@ -100,10 +105,11 @@ export default function Lightbox({ images, index, onClose, onChange }) {
           src={img.src}
           alt={img.alt || ""}
           fill
-          sizes="92vw"
+          sizes={sizes}
           quality={90}
           className="object-contain"
-          preload
+          loading="eager"
+          fetchPriority="high"
         />
       </div>
 

@@ -1,20 +1,34 @@
 import { siteConfig } from "@/config/site";
-import { href } from "@/i18n";
+import { href, t } from "@/i18n";
 
 const OG_DEFAULT = { url: "/opengraph-image", width: 1200, height: 630 };
+
+// Tiêu đề trang chủ: từ khoá chính đứng trước, thương hiệu đứng sau (template "%s | Studio Bin")
+export const HOME_TITLE = t(
+  "Photographer Phú Quốc – Chụp ảnh cưới, cặp đôi, gia đình",
+  "Phu Quoc Photographer – Wedding, Couple & Family Photos",
+);
+export const titleTemplate = `%s | ${siteConfig.name}`;
+
+// Mô tả meta gọn trong ~160 ký tự (Google cắt phần dư), cắt ở ranh giới từ
+export function clip(text, max = 158) {
+  if (!text || text.length <= max) return text;
+  const cut = text.slice(0, max - 1);
+  return `${cut.slice(0, cut.lastIndexOf(" ")).replace(/[\s,.;:—–-]+$/, "")}…`;
+}
 
 /**
  * Metadata SEO dùng chung cho mỗi trang: canonical, hreflang (vi / en / x-default), Open Graph & Twitter.
  * Next ghi đè nguyên khối openGraph của layout khi trang khai báo openGraph, nên mọi trang đều đi qua hàm này
  * để og:url, og:title, ảnh chia sẻ luôn đúng với trang đang xem.
- * - path: đường dẫn không tiền tố ngôn ngữ ("/", "/services", "/collections/sunset-couple")
- * - title: tiêu đề ngắn của trang (bỏ trống = trang chủ); image: { url, width, height } (bỏ trống = ảnh OG chung)
+ * - path: đường dẫn nội bộ không tiền tố ngôn ngữ ("/", "/services", "/collections/sunset-couple")
+ * - title: tiêu đề trang (bỏ trống = trang chủ); image: { url, width, height, alt } (bỏ trống = ảnh OG chung)
  */
 export function pageMeta(lang, path, { title, description, image } = {}) {
   const name = siteConfig.name;
-  const fullTitle = `${name} | ${title || siteConfig.tagline[lang]}`;
-  const desc = description || siteConfig.description[lang];
-  const images = [{ ...(image || OG_DEFAULT), alt: title || siteConfig.fullName }];
+  const fullTitle = `${title || HOME_TITLE[lang]} | ${name}`;
+  const desc = clip(description || siteConfig.description[lang]);
+  const images = [{ alt: title || siteConfig.fullName, ...(image || OG_DEFAULT) }];
   return {
     ...(title && { title }),
     description: desc,

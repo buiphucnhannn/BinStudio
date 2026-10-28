@@ -87,7 +87,7 @@ export default function Navbar({ lang, nav, ui, phone, phoneRaw }) {
           aria-label="Studio Bin"
           className="-my-2 flex shrink-0 items-center py-2"
         >
-          <Logo className="h-7 sm:h-8" light={dark} />
+          <Logo className="h-7 sm:h-8" sizes="(min-width: 640px) 104px, 91px" eager light={dark} />
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">

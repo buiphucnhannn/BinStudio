@@ -66,7 +66,7 @@ export default function About({ about, id = "about" }) {
               src={about.main.src}
               alt=""
               fill
-              sizes="(min-width: 1024px) 40vw, 90vw"
+              sizes="(min-width: 1280px) 480px, (min-width: 1024px) 37vw, (min-width: 540px) 480px, 90vw"
               className="object-cover"
               style={{ objectPosition: about.main.pos }}
             />
@@ -97,7 +97,7 @@ export default function About({ about, id = "about" }) {
                     src={p.src}
                     alt=""
                     fill
-                    sizes="240px"
+                    sizes="(min-width: 1280px) 205px, 156px"
                     className="object-cover"
                     style={{ objectPosition: p.pos }}
                   />

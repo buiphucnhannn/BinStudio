@@ -88,7 +88,7 @@ export default function GoldenHour({ data }) {
                   src={s.image.src}
                   alt=""
                   fill
-                  sizes="(min-width: 1024px) 25vw, 50vw"
+                  sizes="(min-width: 1440px) 311px, (min-width: 1024px) 21vw, (min-width: 640px) 44vw, 90vw"
                   className="object-cover transition-transform duration-[1200ms] group-hover:scale-105"
                   style={{ objectPosition: s.image.pos }}
                 />

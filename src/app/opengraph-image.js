@@ -1,29 +1,33 @@
 import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import sharp from "sharp";
 import { siteConfig } from "@/config/site";
 import { hero } from "@/data/site";
 
 /* eslint-disable @next/next/no-img-element -- ImageResponse (Satori) chỉ hỗ trợ <img> thuần */
 // Ảnh chia sẻ mạng xã hội (Facebook, Zalo...): ảnh hoàng hôn bên trái + khối navy với tiêu đề serif
-// giống hero của website. Sinh 1 lần lúc build. Font .woff trong src/assets/og-fonts (Satori không đọc woff2).
+// giống hero của website. Sinh 1 lần lúc build. Font .woff trong src/assets/og-fonts (Satori không đọc woff2);
+// ảnh WebP được sharp chuyển sang JPEG/PNG trước khi đưa vào Satori.
 export const alt = "Studio Bin — Photographer Phú Quốc";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const PHOTO = "sunset-couple/sunset-couple-01.jpg";
 const C = { navy: "#0e2234", cream: "#f6f1ea", gold: "#e9cf98", goldDeep: "#c9a25a" };
 
 export default async function OpengraphImage() {
+  // Đường dẫn viết tĩnh từng file: đường dẫn ghép động khiến Next kéo cả project vào gói server khi deploy
   const cwd = process.cwd();
-  const file = (...p) => readFile(join(cwd, ...p));
-  const font = (name) => file("src", "assets", "og-fonts", name);
   const [photo, logo, serif, serifItalic, sans] = await Promise.all([
-    file("public", "images", PHOTO),
-    file("public", "images", "brand", "logo-gold.png"),
-    font("cormorant-500.woff"),
-    font("cormorant-500-italic.woff"),
-    font("be-vietnam-pro-500.woff"),
+    readFile(join(cwd, "public/images/sunset-couple/sunset-couple-01.webp")).then((b) =>
+      sharp(b).resize({ width: 1400 }).jpeg({ quality: 90 }).toBuffer(),
+    ),
+    readFile(join(cwd, "public/images/brand/logo-gold.webp")).then((b) =>
+      sharp(b).png().toBuffer(),
+    ),
+    readFile(join(cwd, "src/assets/og-fonts/cormorant-500.woff")),
+    readFile(join(cwd, "src/assets/og-fonts/cormorant-500-italic.woff")),
+    readFile(join(cwd, "src/assets/og-fonts/be-vietnam-pro-500.woff")),
   ]);
   const accent = hero.accent.vi.split(" ");
   const dataUrl = (buf, type) => `data:${type};base64,${buf.toString("base64")}`;

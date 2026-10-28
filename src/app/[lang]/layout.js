@@ -1,7 +1,8 @@
 import { Cormorant_Garamond, Be_Vietnam_Pro, Great_Vibes } from "next/font/google";
 import { notFound } from "next/navigation";
 import { siteConfig } from "@/config/site";
-import { pageMeta } from "@/lib/seo";
+import { pageMeta, HOME_TITLE, titleTemplate } from "@/lib/seo";
+import { BUSINESS_ID, JsonLd, website } from "@/lib/schema";
 import { LOCALES, isLocale, localize, href } from "@/i18n";
 import { nav, ui, footer, booking, services } from "@/data/site";
 import Navbar from "@/components/layout/Navbar";
@@ -52,8 +53,8 @@ export async function generateMetadata({ params }) {
   return {
     metadataBase: new URL(site.url),
     title: {
-      default: `${site.name} | ${site.tagline}`,
-      template: `${site.name} | %s`,
+      default: `${HOME_TITLE[lang]} | ${site.name}`,
+      template: titleTemplate,
     },
     keywords: site.keywords,
     ...pageMeta(lang, "/"),
@@ -74,16 +75,18 @@ export default async function RootLayout({ children, params }) {
   const site = localize(siteConfig, lang);
   const L = localize({ nav, ui, footer, booking, services }, lang);
 
-  // Dữ liệu có cấu trúc cho Google (LocalBusiness)
-  const jsonLd = {
+  // Dữ liệu có cấu trúc cho Google: doanh nghiệp địa phương + website (trang con tham chiếu qua @id)
+  const business = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
+    "@id": BUSINESS_ID,
     name: site.fullName,
+    alternateName: site.name,
     description: site.description,
     url: site.url + href(lang, "/"),
     telephone: site.phoneIntl,
     image: site.url + "/opengraph-image",
-    logo: site.url + "/images/brand/logo-gold.png",
+    logo: site.url + "/images/brand/logo-gold.webp",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Phú Quốc",
@@ -94,16 +97,15 @@ export default async function RootLayout({ children, params }) {
     hasMap: site.mapsLink,
     sameAs: [site.facebook],
     openingHours: site.openingHoursSchema,
-    priceRange: "$$",
+    priceRange: "$",
+    areaServed: { "@type": "Place", name: "Phú Quốc, Việt Nam" },
+    knowsLanguage: ["vi", "en"],
   };
 
   return (
     <html lang={lang} className={`${serif.variable} ${sans.variable} ${script.variable}`}>
       <body>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <JsonLd data={[business, website(lang, site.description)]} />
         <Preloader
           caption={lang === "vi" ? "Photographer · Phú Quốc" : "Photographer · Phu Quoc"}
         />
