@@ -333,6 +333,13 @@ html.lenis body {
   background: #f6f1ea;
 }
 
+/* Chữ viết tay (Great Vibes) chỉ để trang trí: font tải sau khi trang tải xong (fx/LateFonts.js).
+   Trước đó ẩn chữ + giữ chỗ bằng font hệ thống → trình duyệt không tải Great Vibes lúc trang đang hiện. */
+html:not(.script-ready) .font-script {
+  font-family: cursive;
+  visibility: hidden;
+}
+
 /* Cormorant mặc định dùng số kiểu "old-style" → bật số thẳng hàng cho chữ serif */
 .font-serif,
 .h-display {

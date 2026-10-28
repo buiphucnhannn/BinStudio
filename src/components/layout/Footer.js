@@ -48,7 +48,7 @@ export default function Footer({ lang, site, nav, ui, footer }) {
 
           {/* Liên hệ */}
           <div>
-            <h4 className="mb-5 font-serif text-xl text-white">{ui.contact}</h4>
+            <h2 className="mb-5 font-serif text-xl text-white">{ui.contact}</h2>
             <ul className="space-y-4 text-sm text-sand/75">
               <li className="flex items-start gap-3">
                 <Phone className="mt-0.5 h-4 w-4 shrink-0 text-accent-light" />
@@ -89,7 +89,7 @@ export default function Footer({ lang, site, nav, ui, footer }) {
 
           {/* Bản đồ */}
           <div>
-            <h4 className="mb-5 font-serif text-xl text-white">{ui.map}</h4>
+            <h2 className="mb-5 font-serif text-xl text-white">{ui.map}</h2>
             <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-soft">
               <iframe
                 title="Studio Bin map"
@@ -104,7 +104,7 @@ export default function Footer({ lang, site, nav, ui, footer }) {
 
           {/* Menu */}
           <div className="text-center md:text-left">
-            <h4 className="mb-5 font-serif text-xl text-white">{ui.menu}</h4>
+            <h2 className="mb-5 font-serif text-xl text-white">{ui.menu}</h2>
             <ul className="flex flex-wrap justify-center gap-x-6 gap-y-1 text-sm text-sand/75 md:block md:space-y-3">
               {nav.map((i) => (
                 <li key={i.href}>

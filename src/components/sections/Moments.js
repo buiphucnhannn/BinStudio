@@ -160,7 +160,8 @@ export default function Moments({ moments, ui, allHref, collectionsCount }) {
             {moments.title}
           </h2>
         </div>
-        <p className="mt-3 px-5 text-[11px] tracking-[0.25em] text-ink-muted uppercase">
+        {/* #736d62: màu gần ink-muted nhất mà vẫn đạt tương phản 4.5:1 trên nền sand (chữ 11px) */}
+        <p className="mt-3 px-5 text-[11px] tracking-[0.25em] text-[#736d62] uppercase">
           {ui.swipe}
         </p>
         <div className="mt-5 no-scrollbar flex snap-x gap-4 overflow-x-auto px-5">

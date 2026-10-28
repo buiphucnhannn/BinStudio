@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Container from "@/components/ui/Container";
 import Pic from "@/components/ui/Pic";
+import AfterIntro from "@/components/fx/AfterIntro";
 import SplitText from "@/components/fx/SplitText";
 import Button from "@/components/ui/Button";
 import { cn, pad2 } from "@/lib/utils";
@@ -64,14 +65,17 @@ export default function Collections({ lang, collections, ui, heading }) {
               )}
               style={{ "--reveal-delay": `${100 + i * 90}ms` }}
             >
-              <Pic
-                src={c.cover}
-                alt={c.name}
-                fill
-                sizes={SIZES[i]}
-                className="object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-105"
-                style={{ objectPosition: c.coverPos }}
-              />
+              {/* ảnh bìa cách màn hình đầu vài lần cuộn: chỉ tải sau màn chào */}
+              <AfterIntro>
+                <Pic
+                  src={c.cover}
+                  alt={c.name}
+                  fill
+                  sizes={SIZES[i]}
+                  className="object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-105"
+                  style={{ objectPosition: c.coverPos }}
+                />
+              </AfterIntro>
               <div className="absolute inset-0 bg-gradient-to-t from-navy-deep/85 via-navy-deep/10 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-100" />
 
               <span className="absolute top-5 left-5 rounded-full bg-white/85 px-2.5 py-1 text-[11px] font-medium tracking-wider text-ink backdrop-blur lg:text-[10px]">

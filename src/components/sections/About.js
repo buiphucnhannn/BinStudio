@@ -1,6 +1,7 @@
 import Container from "@/components/ui/Container";
 import Pic from "@/components/ui/Pic";
 import Parallax from "@/components/fx/Parallax";
+import AfterIntro from "@/components/fx/AfterIntro";
 import Ornament from "@/components/ui/Ornaments";
 import { cn } from "@/lib/utils";
 
@@ -62,14 +63,17 @@ export default function About({ about, id = "about" }) {
             className="reveal relative aspect-[4/5] overflow-hidden rounded-[1.75rem] bg-sand-200"
             data-reveal="clip"
           >
-            <Pic
-              src={about.main.src}
-              alt=""
-              fill
-              sizes="(min-width: 1280px) 480px, (min-width: 1024px) 37vw, (min-width: 540px) 480px, 90vw"
-              className="object-cover"
-              style={{ objectPosition: about.main.pos }}
-            />
+            {/* ảnh ngay dưới hero: chỉ tải sau màn chào */}
+            <AfterIntro>
+              <Pic
+                src={about.main.src}
+                alt=""
+                fill
+                sizes="(min-width: 1280px) 480px, (min-width: 1024px) 37vw, (min-width: 540px) 480px, 90vw"
+                className="object-cover"
+                style={{ objectPosition: about.main.pos }}
+              />
+            </AfterIntro>
           </Parallax>
           {about.polaroids.map((p, i) => (
             <Parallax
@@ -93,14 +97,17 @@ export default function About({ about, id = "about" }) {
                     p.wide ? "aspect-[3/2]" : "aspect-[4/5]",
                   )}
                 >
-                  <Pic
-                    src={p.src}
-                    alt=""
-                    fill
-                    sizes="(min-width: 1280px) 205px, 156px"
-                    className="object-cover"
-                    style={{ objectPosition: p.pos }}
-                  />
+                  {/* ảnh ngay dưới hero: chỉ tải sau màn chào */}
+                  <AfterIntro>
+                    <Pic
+                      src={p.src}
+                      alt=""
+                      fill
+                      sizes="(min-width: 1280px) 205px, 156px"
+                      className="object-cover"
+                      style={{ objectPosition: p.pos }}
+                    />
+                  </AfterIntro>
                 </div>
                 <p className="mt-2 text-center font-serif text-sm text-ink-soft italic">
                   {p.caption}
