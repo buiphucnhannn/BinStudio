@@ -31,7 +31,7 @@ const ratio = (im) => (im.w && im.h ? im.w / im.h : im.wide ? 1.5 : 0.667);
 export default function AlbumGallery({ images, name, place }) {
   const [idx, setIdx] = useState(null);
   // Mô tả ảnh cho Google Hình ảnh & trình đọc màn hình: "Hoàng hôn của hai người — chụp ảnh tại Phú Quốc (3)"
-  const altOf = (i) => `${name}${place ? ` — ${place}` : ""} (${i + 1})`;
+  const altOf = (i) => `${name}${place ? ` – ${place}` : ""} (${i + 1})`;
   const list = images.map((im, i) => ({ src: im.src, w: im.w, h: im.h, alt: altOf(i) }));
   const ratios = images.map(ratio);
 

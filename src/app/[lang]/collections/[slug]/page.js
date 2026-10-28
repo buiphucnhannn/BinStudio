@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { localize, href, isLocale, LOCALES } from "@/i18n";
 import { pageMeta } from "@/lib/seo";
 import { breadcrumb, imageGallery, JsonLd } from "@/lib/schema";
-import { collections, getCollection, categories, categorySeo, ui } from "@/data/site";
+import { collections, getCollection, categories, seoOf, ui } from "@/data/site";
 import Container from "@/components/ui/Container";
 import Pic from "@/components/ui/Pic";
 import SplitText from "@/components/fx/SplitText";
@@ -19,11 +19,11 @@ export async function generateMetadata({ params }) {
   const { lang, slug } = await params;
   const c = getCollection(slug);
   if (!isLocale(lang) || !c) return {};
-  const L = localize({ c, seo: categorySeo[c.category] }, lang);
+  const L = localize({ c, seo: seoOf(c) }, lang);
   const cover = c.images.find((im) => im.src === c.cover) || c.images[0];
   return pageMeta(lang, `/collections/${slug}`, {
-    // Tiêu đề có từ khoá: "Nàng thơ Đông Dương — Chụp ảnh chân dung Phú Quốc | Studio Bin"
-    title: `${L.c.name} — ${L.seo}`,
+    // Tên tab: "Nàng thơ Đông Dương – Ảnh chân dung Phú Quốc | Studio Bin"
+    title: `${L.c.name} – ${L.seo}`,
     description: L.c.desc,
     image: { url: cover.src, width: cover.w, height: cover.h, alt: L.c.name },
   });
@@ -36,12 +36,12 @@ export default async function CollectionDetailPage({ params }) {
 
   const idx = collections.findIndex((c) => c.slug === slug);
   const nextRaw = collections[(idx + 1) % collections.length];
-  const L = localize({ c: raw, next: nextRaw, categories, categorySeo, ui }, lang);
+  const L = localize({ c: raw, next: nextRaw, categories, seo: seoOf(raw), ui }, lang);
   const { c, next } = L;
   const listHref = href(lang, "/collections");
-  // Mô tả ảnh (alt) có từ khoá theo loại: "Nàng thơ Đông Dương — Chụp ảnh chân dung Phú Quốc (3)"
-  const seo = L.categorySeo[c.category];
-  const altOf = (i) => `${c.name} — ${seo} (${i + 1})`;
+  // Mô tả ảnh (alt) có từ khoá: "Nàng thơ Đông Dương – Ảnh chân dung Phú Quốc (3)"
+  const seo = L.seo;
+  const altOf = (i) => `${c.name} – ${seo} (${i + 1})`;
 
   return (
     <>
@@ -52,7 +52,7 @@ export default async function CollectionDetailPage({ params }) {
             { name: L.ui.collections, path: "/collections" },
             { name: c.name, path: `/collections/${c.slug}` },
           ]),
-          imageGallery(lang, c, { title: `${c.name} — ${seo}`, altOf }),
+          imageGallery(lang, c, { title: `${c.name} – ${seo}`, altOf }),
         ]}
       />
       {/* Hero: chữ bên trái, ảnh ngang lớn bên phải */}

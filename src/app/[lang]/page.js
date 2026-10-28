@@ -1,5 +1,6 @@
 import { siteConfig } from "@/config/site";
 import { localize, href, anchor } from "@/i18n";
+import { JsonLd, website } from "@/lib/schema";
 import {
   hero,
   marquee,
@@ -64,6 +65,7 @@ export default async function HomePage({ params }) {
 
   return (
     <>
+      <JsonLd data={website(lang, siteConfig.description[lang])} />
       <Hero hero={L.hero} ui={L.ui} exploreHref={href(lang, "/collections")} />
       <Marquee items={L.marquee} />
       <About about={L.about} id={anchor(lang, "about")} />

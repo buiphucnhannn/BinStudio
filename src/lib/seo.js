@@ -4,9 +4,10 @@ import { href, t } from "@/i18n";
 const OG_DEFAULT = { url: "/opengraph-image", width: 1200, height: 630 };
 
 // Tiêu đề trang chủ: từ khoá chính đứng trước, thương hiệu đứng sau (template "%s | Studio Bin")
+// "Photographer Phú Quốc" trùng tên doanh nghiệp trên Google Maps → nhất quán cho SEO địa phương
 export const HOME_TITLE = t(
-  "Photographer Phú Quốc – Chụp ảnh cưới, cặp đôi, gia đình",
-  "Phu Quoc Photographer – Wedding, Couple & Family Photos",
+  "Photographer Phú Quốc – Chụp ảnh cưới & du lịch",
+  "Phu Quoc Photographer – Wedding & Travel Photos",
 );
 export const titleTemplate = `%s | ${siteConfig.name}`;
 

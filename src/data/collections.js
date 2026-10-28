@@ -15,14 +15,17 @@ export const categories = {
   event: t("Tiệc & Sự kiện", "Parties & Events"),
 };
 
-// Cụm từ khoá SEO theo loại — ghép vào tiêu đề trang album: "Nàng thơ Đông Dương — Chụp ảnh chân dung Phú Quốc"
+// Từ khoá SEO ghép vào tên tab album: "{Tên album} – {Từ khoá} | Studio Bin" (gọn ≈ 60 ký tự để Google không cắt).
+// Theo loại; album có trường seo riêng (ảnh bầu, trăng mật, du lịch) dùng từ khoá sát nội dung hơn
+// (không lặp lại chữ đã có sẵn trong tên album).
 export const categorySeo = {
-  wedding: t("Chụp ảnh cưới Phú Quốc", "Phu Quoc wedding photography"),
-  couple: t("Chụp ảnh cặp đôi Phú Quốc", "Phu Quoc couple photoshoot"),
-  family: t("Chụp ảnh gia đình Phú Quốc", "Phu Quoc family photoshoot"),
-  portrait: t("Chụp ảnh chân dung Phú Quốc", "Phu Quoc portrait photoshoot"),
-  event: t("Chụp ảnh tiệc & sự kiện Phú Quốc", "Phu Quoc event photography"),
+  wedding: t("Ảnh cưới Phú Quốc", "Phu Quoc Wedding Photos"),
+  couple: t("Ảnh cặp đôi Phú Quốc", "Phu Quoc Couple Photos"),
+  family: t("Ảnh gia đình Phú Quốc", "Phu Quoc Family Photos"),
+  portrait: t("Ảnh chân dung Phú Quốc", "Phu Quoc Portrait Photos"),
+  event: t("Ảnh sự kiện Phú Quốc", "Phu Quoc Event Photos"),
 };
+export const seoOf = (c) => c.seo || categorySeo[c.category];
 
 // Thứ tự = thứ tự hiển thị trên trang Bộ sưu tập (xen kẽ các loại để lưới đa dạng)
 // cover/coverPos: ảnh bìa (cắt dọc) · hero: ảnh lớn đầu trang album (cắt ngang)
@@ -349,6 +352,7 @@ export const collections = [
   {
     slug: "maternity",
     category: "couple",
+    seo: t("Ảnh bầu Phú Quốc", "Phu Quoc Maternity Photos"),
     name: t("Chờ đón thiên thần", "Waiting for You"),
     sub: t("Cặp đôi · Maternity", "Couple · Maternity"),
     concept: t(
@@ -373,6 +377,7 @@ export const collections = [
   {
     slug: "infinity-pool",
     category: "portrait",
+    seo: t("Ảnh du lịch Phú Quốc", "Phu Quoc Travel Photos"),
     name: t("Bên hồ bơi vô cực", "By the Infinity Pool"),
     sub: t("Chân dung · Hồ bơi & bãi biển resort", "Portrait · Resort pool & beach"),
     concept: t(
@@ -406,6 +411,7 @@ export const collections = [
   {
     slug: "honeymoon",
     category: "couple",
+    seo: t("Ảnh trăng mật Phú Quốc", "Phu Quoc Honeymoon Photos"),
     name: t("Tuần trăng mật", "Honeymoon"),
     sub: t("Cặp đôi · Phòng nghỉ & villa", "Couple · Suite & villa"),
     concept: t(
@@ -424,6 +430,7 @@ export const collections = [
   {
     slug: "endless-summer",
     category: "portrait",
+    seo: t("Ảnh du lịch Phú Quốc", "Phu Quoc Travel Photos"),
     name: t("Mùa hè biển xanh", "Endless Summer"),
     sub: t("Chân dung · Đồ bơi & bãi biển", "Portrait · Swimwear & beach"),
     concept: t("Trái dừa, mũ cói và nước biển ngọc", "Coconuts, straw hats and jade water"),
@@ -494,6 +501,7 @@ export const collections = [
   {
     slug: "sunset-town-stroll",
     category: "portrait",
+    seo: t("Ảnh du lịch Phú Quốc", "Phu Quoc Travel Photos"),
     name: t("Dạo phố Thị trấn Hoàng Hôn", "Strolling Sunset Town"),
     sub: t("Chân dung · Thị trấn Hoàng Hôn", "Portrait · Sunset Town"),
     concept: t(
@@ -530,6 +538,7 @@ export const collections = [
   {
     slug: "yacht-day",
     category: "portrait",
+    seo: t("Ảnh du lịch Phú Quốc", "Phu Quoc Travel Photos"),
     name: t("Một ngày trên du thuyền", "A Day on the Yacht"),
     sub: t("Chân dung · Du thuyền ngoài đảo", "Portrait · Island yacht trip"),
     concept: t(
@@ -548,6 +557,7 @@ export const collections = [
   {
     slug: "beach-lookbook",
     category: "portrait",
+    seo: t("Ảnh du lịch Phú Quốc", "Phu Quoc Travel Photos"),
     name: t("Lookbook bãi biển", "Beach Lookbook"),
     sub: t("Chân dung · Lookbook", "Portrait · Lookbook"),
     concept: t("Khăn lụa xanh, cát vàng và nắng xiên", "Blue silk, golden sand and low sun"),

@@ -10,6 +10,7 @@ import { P } from "./photos";
 export {
   categories,
   categorySeo,
+  seoOf,
   collections,
   getCollection,
   featuredCollections,
@@ -768,7 +769,7 @@ export const booking = {
 // ---------- Trang Dịch vụ (/services) ----------
 export const servicesPage = {
   meta: {
-    title: t("Dịch vụ chụp ảnh tại Phú Quốc", "Photography Services in Phu Quoc"),
+    title: t("Dịch vụ & gói chụp ảnh Phú Quốc", "Photography Services & Packages in Phu Quoc"),
     desc: t(
       "Dịch vụ chụp ảnh của Studio Bin tại Phú Quốc: ảnh cưới & pre-wedding ngoại cảnh biển, cặp đôi, cầu hôn, săn hoàng hôn, gia đình nghỉ dưỡng tại resort/villa, chân dung nghệ thuật, sự kiện và gói trọn gói makeup – trang phục – quay phim.",
       "Studio Bin photography services in Phu Quoc: beach weddings & pre-wedding, couples, proposals, sunset sessions, family holidays at resorts & villas, editorial portraits, events and all-inclusive packages with makeup, attire and film.",
@@ -909,10 +910,7 @@ export const servicesPage = {
 // ---------- Trang Bộ sưu tập ----------
 export const collectionsPage = {
   meta: {
-    title: t(
-      "Bộ sưu tập ảnh cưới, cặp đôi & gia đình Phú Quốc",
-      "Phu Quoc Wedding, Couple & Family Portfolio",
-    ),
+    title: t("Bộ sưu tập ảnh cưới & du lịch Phú Quốc", "Phu Quoc Wedding & Travel Portfolio"),
     desc: t(
       "Album ảnh thật của Studio Bin tại Phú Quốc: pre-wedding Thị trấn Hoàng Hôn, cưới bên biển, cầu hôn, trăng mật, gia đình ở resort, chân dung editorial và tiệc bãi biển.",
       "Real albums by Studio Bin in Phu Quoc: Sunset Town pre-weddings, beach weddings, proposals, honeymoons, resort family holidays, editorial portraits and beach parties.",

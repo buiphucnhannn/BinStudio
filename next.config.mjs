@@ -25,6 +25,10 @@ const nextConfig = {
   },
   // Ẩn nút "N" góc trái khi dev (lỗi compile/runtime vẫn hiện overlay)
   devIndicators: false,
+  experimental: {
+    // Trang 404 chung cho mọi đường dẫn không tồn tại (app/global-not-found.js) — cần vì layout gốc nằm trong [lang]
+    globalNotFound: true,
+  },
   turbopack: {
     rules: {
       "*.css": {

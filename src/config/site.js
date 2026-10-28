@@ -50,5 +50,14 @@ export const siteConfig = {
 
   hours: [{ days: t("Hằng ngày", "Daily"), time: "06:00 – 21:00" }],
   hoursShort: t("Nhận lịch hằng ngày, kể cả cuối tuần", "Bookings daily, weekends included"),
-  openingHoursSchema: ["Mo,Tu,We,Th,Fr,Sa,Su 06:00-21:00"],
+  // Ngày cập nhật nội dung gần nhất — dùng cho <lastmod> trong sitemap. Sửa nội dung / thêm album thì đổi ngày này.
+  contentUpdated: "2026-10-28",
+
+  // Dữ liệu có cấu trúc cho Google (LocalBusiness)
+  streetAddress: "Khu phố 9",
+  openingHoursSchema: {
+    days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    opens: "06:00",
+    closes: "21:00",
+  },
 };

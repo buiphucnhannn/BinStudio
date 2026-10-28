@@ -39,7 +39,7 @@ src/
 │   │   └── services/         dịch vụ chi tiết, gói gợi ý, quy trình, FAQ
 │   ├── api/contact/         nhận form đặt lịch (hiện chỉ log — tích hợp email tại đây)
 │   ├── globals.css          Tailwind v4 @theme (màu, font, animation) + reveal/split/marquee
-│   └── icon.png, apple-icon.png, opengraph-image.js, manifest.js, robots.js, sitemap.js
+│   └── favicon.ico, icon.svg, icon1.png (192), apple-icon.png, opengraph-image.js, manifest.js, robots.js, sitemap.js
 ├── components/
 │   ├── fx/        SmoothScroll (Lenis — giống mẫu), SplitText, Parallax, Preloader, PageTransition, ScrollTop
 │   ├── layout/    Navbar (pill kính mờ + VI/EN — giống mẫu), Footer (bản đồ), FloatingContact

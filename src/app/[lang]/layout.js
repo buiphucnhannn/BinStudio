@@ -1,8 +1,7 @@
-import localFont from "next/font/local";
 import { notFound } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import { pageMeta, HOME_TITLE, titleTemplate } from "@/lib/seo";
-import { BUSINESS_ID, JsonLd, website } from "@/lib/schema";
+import { BUSINESS_ID, JsonLd } from "@/lib/schema";
 import { LOCALES, isLocale, localize, href } from "@/i18n";
 import { nav, ui, footer, booking, services } from "@/data/site";
 import Navbar from "@/components/layout/Navbar";
@@ -16,52 +15,11 @@ import PageTransition from "@/components/fx/PageTransition";
 import LateFonts from "@/components/fx/LateFonts";
 import BookingModal from "@/components/booking/BookingModal";
 import Toaster from "@/components/ui/Toaster";
+import { fontVariables } from "../fonts";
 import "../globals.css";
 
-// Font tự host, đã cắt gọn còn Latin + tiếng Việt (src/assets/fonts, tạo từ chính file Google Fonts phục vụ):
-// mỗi kiểu chữ 1 file thay vì 3 file latin / latin-ext / vietnamese → ~174KB thay vì ~284KB,
-// và chữ có dấu được canh khoảng (kerning) đúng vì cùng nằm trong một file.
-// (next/font yêu cầu đường dẫn viết sẵn dạng chuỗi — không ghép từ biến)
-const serif = localFont({
-  src: [
-    { path: "../../assets/fonts/cormorant-garamond-400.woff2", weight: "400", style: "normal" },
-    { path: "../../assets/fonts/cormorant-garamond-500.woff2", weight: "500", style: "normal" },
-    {
-      path: "../../assets/fonts/cormorant-garamond-400-italic.woff2",
-      weight: "400",
-      style: "italic",
-    },
-    {
-      path: "../../assets/fonts/cormorant-garamond-500-italic.woff2",
-      weight: "500",
-      style: "italic",
-    },
-  ],
-  variable: "--font-serif",
-  display: "swap",
-  adjustFontFallback: "Times New Roman",
-});
-
-const sans = localFont({
-  src: [
-    { path: "../../assets/fonts/be-vietnam-pro-400.woff2", weight: "400" },
-    { path: "../../assets/fonts/be-vietnam-pro-500.woff2", weight: "500" },
-    { path: "../../assets/fonts/be-vietnam-pro-600.woff2", weight: "600" },
-  ],
-  variable: "--font-sans",
-  display: "swap",
-  adjustFontFallback: "Arial",
-});
-
-// Font viết tay — chỉ dùng cho chữ ký / watermark cỡ lớn phía dưới, không cần tải trước
-const script = localFont({
-  src: "../../assets/fonts/great-vibes.woff2",
-  weight: "400",
-  variable: "--font-script",
-  display: "swap",
-  preload: false,
-  adjustFontFallback: false,
-});
+// Không nhận ngôn ngữ ngoài vi / en: đường dẫn lạ trả về trang 404 chung (app/global-not-found.js)
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return LOCALES.map((lang) => ({ lang }));
@@ -106,10 +64,18 @@ export default async function RootLayout({ children, params }) {
     description: site.description,
     url: site.url + href(lang, "/"),
     telephone: site.phoneIntl,
-    image: site.url + "/opengraph-image",
-    logo: site.url + "/images/brand/logo-gold.webp",
+    // Ảnh thật của studio (Google khuyến nghị nhiều ảnh, nhiều tỉ lệ) + ảnh chia sẻ
+    image: [
+      site.url + "/opengraph-image",
+      site.url + "/images/sunset-couple/sunset-couple-01.webp",
+      site.url + "/images/wedding-beach/wedding-beach-04.webp",
+      site.url + "/images/family-villa/family-villa-06.webp",
+    ],
+    // Logo chữ màu than: Google yêu cầu logo hiển thị rõ trên nền trắng (bản vàng nhạt bị chìm)
+    logo: site.url + "/images/brand/logo-dark.webp",
     address: {
       "@type": "PostalAddress",
+      streetAddress: site.streetAddress,
       addressLocality: "Phú Quốc",
       addressRegion: "An Giang",
       addressCountry: "VN",
@@ -117,16 +83,21 @@ export default async function RootLayout({ children, params }) {
     geo: { "@type": "GeoCoordinates", latitude: site.geo.lat, longitude: site.geo.lng },
     hasMap: site.mapsLink,
     sameAs: [site.facebook],
-    openingHours: site.openingHoursSchema,
-    priceRange: "$",
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: site.openingHoursSchema.days,
+      opens: site.openingHoursSchema.opens,
+      closes: site.openingHoursSchema.closes,
+    },
+    priceRange: "$$",
     areaServed: { "@type": "Place", name: "Phú Quốc, Việt Nam" },
     knowsLanguage: ["vi", "en"],
   };
 
   return (
-    <html lang={lang} className={`${serif.variable} ${sans.variable} ${script.variable}`}>
+    <html lang={lang} className={fontVariables}>
       <body>
-        <JsonLd data={[business, website(lang, site.description)]} />
+        <JsonLd data={business} />
         <Preloader
           caption={lang === "vi" ? "Photographer · Phú Quốc" : "Photographer · Phu Quoc"}
         />

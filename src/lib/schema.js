@@ -21,13 +21,14 @@ export const breadcrumb = (lang, items) => ({
   })),
 });
 
+// Tên website trên Google (thay cho tên miền): chỉ đặt ở trang chủ, url = gốc tên miền (theo hướng dẫn "site names")
 export const website = (lang, description) => ({
   "@context": "https://schema.org",
   "@type": "WebSite",
   "@id": `${siteConfig.url}/#website`,
   name: siteConfig.name,
   alternateName: siteConfig.fullName,
-  url: abs(href(lang, "/")),
+  url: `${siteConfig.url}/`,
   description,
   inLanguage: lang === "vi" ? "vi-VN" : "en",
   publisher: owner,

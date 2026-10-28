@@ -30,11 +30,12 @@ export default function sitemap() {
       images: c.images.map((im) => im.src),
     })),
   ];
-  const now = new Date();
+  // Ngày cập nhật thật (không lấy giờ build): Google chỉ tin lastmod khi nó chính xác
+  const updated = new Date(siteConfig.contentUpdated);
   return pages.flatMap((p) =>
     LOCALES.map((lang) => ({
       url: base + href(lang, p.path),
-      lastModified: now,
+      lastModified: updated,
       changeFrequency: p.changeFrequency,
       priority: p.priority,
       alternates: {
