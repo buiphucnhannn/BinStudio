@@ -4,18 +4,26 @@
  *
  * public/images/<...>.webp  →  public/_img/<width>/images/<...>.webp
  * Các cỡ phải khớp images.deviceSizes / imageSizes trong next.config.mjs; cỡ lớn nhất dùng thẳng ảnh gốc
- * (xem src/lib/image-loader.js). Ảnh đã có và mới hơn ảnh gốc thì bỏ qua → chạy lại rất nhanh.
+ * (xem src/lib/image-loader.js).
+ *
+ * Ảnh tạo ra được lưu ở .next/cache/images (Vercel giữ thư mục này giữa các lần deploy) kèm mã băm ảnh gốc:
+ * ảnh gốc không đổi thì bỏ qua → chỉ lần build đầu chậm (vài phút), các lần sau vài giây.
  */
-import { readdir, stat, mkdir } from "node:fs/promises";
+import { readdir, readFile, writeFile, mkdir, cp, access } from "node:fs/promises";
 import { join, dirname, relative } from "node:path";
+import { createHash } from "node:crypto";
 import { availableParallelism } from "node:os";
 import sharp from "sharp";
 import { VARIANT_WIDTHS } from "../src/lib/image-widths.mjs";
 
-const ROOT = join(import.meta.dirname, "..", "public");
-const SRC = join(ROOT, "images");
-const OUT = join(ROOT, "_img");
+const ROOT = join(import.meta.dirname, "..");
+const PUBLIC = join(ROOT, "public");
+const SRC = join(PUBLIC, "images");
+const CACHE = join(ROOT, ".next", "cache", "images");
+const OUT = join(PUBLIC, "_img");
+const MANIFEST = join(CACHE, "manifest.json");
 const QUALITY = 82;
+const KEY = `q${QUALITY}:${VARIANT_WIDTHS.join(",")}`; // đổi cấu hình → tạo lại toàn bộ
 
 async function* walk(dir) {
   for (const e of await readdir(dir, { withFileTypes: true })) {
@@ -25,28 +33,45 @@ async function* walk(dir) {
   }
 }
 
-const mtime = (p) => stat(p).then((s) => s.mtimeMs, () => 0);
+const exists = (p) => access(p).then(() => true, () => false);
+const old = await readFile(MANIFEST, "utf8").then(JSON.parse, () => ({}));
+const manifest = { key: KEY, files: {} };
 
-const jobs = [];
-for await (const file of walk(SRC)) {
-  const rel = relative(ROOT, file);
-  for (const w of VARIANT_WIDTHS) jobs.push({ file, w, out: join(OUT, String(w), rel) });
-}
+const files = [];
+for await (const file of walk(SRC)) files.push(file);
 
 const t0 = Date.now();
+let done = 0;
 let made = 0;
 sharp.concurrency(1);
+const queue = [...files];
 const run = async () => {
-  for (let job; (job = jobs.shift()); ) {
-    const src = await mtime(job.file);
-    if ((await mtime(job.out)) >= src) continue;
-    await mkdir(dirname(job.out), { recursive: true });
-    await sharp(job.file)
-      .resize({ width: job.w, withoutEnlargement: true })
-      .webp({ quality: QUALITY, effort: 4 })
-      .toFile(job.out);
-    made++;
+  for (let file; (file = queue.shift()); ) {
+    const rel = relative(PUBLIC, file).replaceAll("\\", "/");
+    const buf = await readFile(file);
+    const hash = createHash("sha1").update(buf).digest("hex");
+    const outs = VARIANT_WIDTHS.map((w) => join(CACHE, String(w), rel));
+    const fresh =
+      old.key === KEY && old.files?.[rel] === hash && (await Promise.all(outs.map(exists))).every(Boolean);
+    if (!fresh) {
+      for (const [i, w] of VARIANT_WIDTHS.entries()) {
+        await mkdir(dirname(outs[i]), { recursive: true });
+        await sharp(buf)
+          .resize({ width: w, withoutEnlargement: true })
+          .webp({ quality: QUALITY, effort: 4 })
+          .toFile(outs[i]);
+      }
+      made++;
+    }
+    manifest.files[rel] = hash;
+    if (++done % 50 === 0) console.log(`[images] ${done}/${files.length}`);
   }
 };
 await Promise.all(Array.from({ length: Math.max(2, availableParallelism()) }, run));
-console.log(`[images] ${made} ảnh mới · ${((Date.now() - t0) / 1000).toFixed(1)}s`);
+
+await mkdir(CACHE, { recursive: true });
+await writeFile(MANIFEST, JSON.stringify(manifest));
+for (const w of VARIANT_WIDTHS) await cp(join(CACHE, String(w)), join(OUT, String(w)), { recursive: true });
+console.log(
+  `[images] ${files.length} ảnh gốc · ${made} ảnh tạo mới · ${((Date.now() - t0) / 1000).toFixed(1)}s`,
+);
