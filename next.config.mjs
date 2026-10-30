@@ -1,3 +1,5 @@
+import { DEVICE_SIZES, IMAGE_SIZES } from "./src/lib/image-widths.mjs";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Cho phép build vào thư mục khác (vd. NEXT_DIST_DIR=.next-verify) để kiểm tra bản production
@@ -38,9 +40,14 @@ const nextConfig = {
     },
   },
   images: {
-    // Next 16 bắt buộc khai báo danh sách quality; ảnh studio dùng 90 cho nét, ô lưới album 85
+    // Không dùng Image Optimization của Vercel (gói Hobby: 5.000 lượt/tháng, vượt là ảnh lỗi):
+    // ảnh các cỡ được tạo sẵn lúc build (scripts/build-images.mjs), loader trỏ thẳng tới file tĩnh.
+    loader: "custom",
+    loaderFile: "./src/lib/image-loader.js",
+    deviceSizes: DEVICE_SIZES,
+    imageSizes: IMAGE_SIZES,
+    // Next 16 bắt buộc khai báo danh sách quality (giá trị quality trong code giữ nguyên, loader bỏ qua)
     qualities: [75, 85, 90],
-    formats: ["image/avif", "image/webp"],
   },
   // Tiếng Việt mặc định tại "/" (đường dẫn tiếng Việt, rewrite trong src/proxy.js),
   // tiếng Anh tại "/en" (đường dẫn tiếng Anh = route thật app/[lang]).

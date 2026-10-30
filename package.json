@@ -4,7 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "predev": "node scripts/build-images.mjs",
     "build": "next build",
+    "prebuild": "node scripts/build-images.mjs",
+    "images": "node scripts/build-images.mjs",
     "start": "next start",
     "lint": "eslint .",
     "format": "prettier --write .",
