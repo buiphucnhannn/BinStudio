@@ -19,6 +19,7 @@ import "./globals.css";
  * SEO: trả mã 404 thật (không chuyển hướng về trang chủ — tránh "soft 404"), Next tự gắn noindex.
  */
 export const metadata = {
+  other: { google: "notranslate" },
   title: `Không tìm thấy trang · Page not found | ${siteConfig.name}`,
   description:
     "Trang bạn tìm không tồn tại hoặc đã được di chuyển. Xem các bộ ảnh cưới, cặp đôi, gia đình của Studio Bin tại Phú Quốc.",
@@ -30,7 +31,7 @@ export default function GlobalNotFound() {
   const L = localize({ nav, ui, booking, services }, lang);
 
   return (
-    <html lang={lang} className={fontVariables}>
+    <html lang={lang} translate="no" className={`notranslate ${fontVariables}`}>
       <body>
         <SmoothScroll />
         <LateFonts />

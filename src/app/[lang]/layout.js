@@ -38,6 +38,8 @@ export async function generateMetadata({ params }) {
     keywords: site.keywords,
     ...pageMeta(lang, "/"),
     robots: { index: true, follow: true },
+    // Chrome không hiện gợi ý "Dịch trang này" (site đã song ngữ)
+    other: { google: "notranslate" },
   };
 }
 
@@ -94,8 +96,10 @@ export default async function RootLayout({ children, params }) {
     knowsLanguage: ["vi", "en"],
   };
 
+  // Chặn dịch tự động (Google Dịch / Safari / Edge): site đã có sẵn bản Việt & Anh,
+  // dịch máy làm vỡ tiêu đề hiệu ứng và bố cục
   return (
-    <html lang={lang} className={fontVariables}>
+    <html lang={lang} translate="no" className={`notranslate ${fontVariables}`}>
       <body>
         <JsonLd data={business} />
         <Preloader

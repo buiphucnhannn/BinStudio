@@ -43,7 +43,10 @@ export default function SplitText({
 
   return (
     <Tag
-      className={cn("split", visible && "is-visible", className)}
+      // Chữ bị tách thành từng ký tự/từ → trình dịch tự động (Google Dịch trong Chrome/Safari) dịch từng mảnh
+      // và trộn lẫn ("ReMộtl momeNtS"). Giữ nguyên tiêu đề, site đã có sẵn bản Việt / Anh.
+      translate="no"
+      className={cn("split notranslate", visible && "is-visible", className)}
       data-manual={manual ? "" : undefined}
       style={{ "--step": `${step}ms`, "--base": `${baseDelay}ms` }}
     >

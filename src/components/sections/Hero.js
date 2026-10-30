@@ -213,56 +213,58 @@ export default function Hero({ hero, ui, exploreHref }) {
         </div>
       </div>
 
-      {/* Bộ đếm slide + thanh tiến độ (góc phải dưới) */}
-      <div
-        className={cn(
-          "absolute right-5 bottom-7 z-10 flex items-end gap-5 text-white sm:right-8 lg:right-[max(4rem,calc((100vw-1312px)/2))]",
-          anim("[animation:fadeUp_1s_2.2s_both]"),
-        )}
-      >
-        <p className="hidden text-[11px] tracking-[0.25em] text-white/70 uppercase text-legible md:block">
-          {slides[idx].label}
-        </p>
-        <div className="flex items-center gap-2">
-          {slides.map((s, i) => (
-            <button
-              key={s.wide.src}
-              type="button"
-              onClick={() => setIdx(i)}
-              aria-label={`${pad2(i + 1)} ${s.label}`}
-              className="group flex h-6 items-center"
-            >
-              <span className="relative block h-px w-8 overflow-hidden bg-white/30 sm:w-10">
-                {i === idx && (
-                  <span
-                    key={`${i}-${idx}`}
-                    className="absolute inset-0 origin-left bg-accent-light"
-                    style={{ animation: `slidebar ${TICK}ms linear both` }}
-                  />
-                )}
-              </span>
-            </button>
+      {/* Hàng đáy: nhãn đặc điểm (trái) + bộ đếm slide (phải) chung một hàng flex →
+          chữ dài hơn (bản dịch tự động, ngôn ngữ khác, zoom) tự xuống dòng thay vì đè lên nhau */}
+      <div className="absolute inset-x-5 bottom-7 z-10 flex items-end justify-between gap-8 sm:inset-x-8 lg:right-[max(4rem,calc((100vw-1312px)/2))] lg:left-[max(4rem,calc((100vw-1312px)/2))]">
+        <ul
+          className={cn(
+            "hidden min-w-0 flex-1 flex-wrap items-center gap-x-6 gap-y-2 text-[11px] tracking-[0.25em] text-white/85 uppercase text-legible lg:flex",
+            anim("[animation:fadeUp_1s_2.2s_both]"),
+          )}
+        >
+          {hero.badges.map((b) => (
+            <li key={b} className="flex items-center gap-2">
+              <span className="h-1 w-1 rounded-full bg-accent-light" />
+              {b}
+            </li>
           ))}
+        </ul>
+        <div
+          className={cn(
+            "ml-auto flex shrink-0 items-end gap-5 text-white",
+            anim("[animation:fadeUp_1s_2.2s_both]"),
+          )}
+        >
+          <p className="hidden text-[11px] tracking-[0.25em] text-white/70 uppercase text-legible md:block">
+            {slides[idx].label}
+          </p>
+          <div className="flex items-center gap-2">
+            {slides.map((s, i) => (
+              <button
+                key={s.wide.src}
+                type="button"
+                onClick={() => setIdx(i)}
+                aria-label={`${pad2(i + 1)} ${s.label}`}
+                className="group flex h-6 items-center"
+              >
+                <span className="relative block h-px w-8 overflow-hidden bg-white/30 sm:w-10">
+                  {i === idx && (
+                    <span
+                      key={`${i}-${idx}`}
+                      className="absolute inset-0 origin-left bg-accent-light"
+                      style={{ animation: `slidebar ${TICK}ms linear both` }}
+                    />
+                  )}
+                </span>
+              </button>
+            ))}
+          </div>
+          <p className="font-serif text-2xl leading-none text-legible">
+            {pad2(idx + 1)}
+            <span className="text-white/50"> / {pad2(slides.length)}</span>
+          </p>
         </div>
-        <p className="font-serif text-2xl leading-none text-legible">
-          {pad2(idx + 1)}
-          <span className="text-white/50"> / {pad2(slides.length)}</span>
-        </p>
       </div>
-
-      <ul
-        className={cn(
-          "absolute bottom-7 left-5 z-10 hidden items-center gap-6 text-[11px] tracking-[0.25em] text-white/85 uppercase text-legible sm:left-8 lg:left-[max(4rem,calc((100vw-1312px)/2))] lg:flex",
-          anim("[animation:fadeUp_1s_2.2s_both]"),
-        )}
-      >
-        {hero.badges.map((b) => (
-          <li key={b} className="flex items-center gap-2">
-            <span className="h-1 w-1 rounded-full bg-accent-light" />
-            {b}
-          </li>
-        ))}
-      </ul>
     </section>
   );
 }
