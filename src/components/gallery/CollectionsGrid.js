@@ -6,11 +6,14 @@ import Pic from "@/components/ui/Pic";
 import { cn, pad2 } from "@/lib/utils";
 import { href } from "@/i18n";
 import { SEARCH_MAX, parseQuery, score, toIndex } from "@/lib/search";
-import { ArrowRight, Close, Search } from "@/components/ui/Icons";
+import { ArrowRight, Check, ChevronDown, Close, Search } from "@/components/ui/Icons";
+
+// Số loại ảnh hiện thành ô lọc (nhiều bộ nhất trước); các loại còn lại nằm trong nút "…"
+const VISIBLE_CATS = 4;
 
 /**
  * Lưới bộ sưu tập: ô tìm kiếm + bộ lọc theo kiểu chụp.
- * Tìm ngay trên trình duyệt (27 album, không gọi server) — quy tắc khớp & xếp hạng xem src/lib/search.js;
+ * Tìm ngay trên trình duyệt (vài chục album, không gọi server) — quy tắc khớp & xếp hạng xem src/lib/search.js;
  * gõ tiếng Anh trên bản Việt vẫn ra (searchExtra). Kết quả xếp theo mức liên quan; số trên mỗi ô lọc theo kết quả tìm.
  * Từ khoá chỉ được so khớp chuỗi và hiển thị dạng text (React tự escape) — không HTML, không RegExp từ dữ liệu người dùng.
  * Phím tắt: "/" nhảy vào ô tìm, Esc xoá.
@@ -47,7 +50,19 @@ export default function CollectionsGrid({ lang, collections, categories, searchE
         .map((r) => r.c)
     : collections;
   const list = cat ? found.filter((c) => c.category === cat) : found;
-  const cats = Object.entries(categories);
+  // Loại có nhiều bộ đứng trước — xếp theo TỔNG số bộ (không theo kết quả tìm) để ô lọc không nhảy chỗ khi gõ;
+  // VISIBLE_CATS loại đầu hiện thành ô, phần còn lại gom vào nút "…" (dropdown)
+  const cats = useMemo(() => {
+    const total = (key) => collections.filter((c) => c.category === key).length;
+    return Object.entries(categories)
+      .map(([key, label], i) => ({ key, label, total: total(key), i }))
+      .sort((a, b) => b.total - a.total || a.i - b.i);
+  }, [collections, categories]);
+  const shown = cats.slice(0, VISIBLE_CATS);
+  const more = cats.slice(VISIBLE_CATS);
+  const countOf = (key) => found.filter((c) => c.category === key).length;
+  const gridRef = useRef(null);
+  useRowAlign(gridRef, list.map((c) => c.slug).join());
 
   // "/" để nhảy vào ô tìm (trừ khi đang gõ ở ô khác)
   useEffect(() => {
@@ -133,25 +148,42 @@ export default function CollectionsGrid({ lang, collections, categories, searchE
         </div>
       </form>
 
-      {/* Mobile: một hàng vuốt ngang (không rớt nhiều dòng); từ sm: xuống dòng & căn giữa */}
-      <div className="-mx-5 mt-5 no-scrollbar flex snap-x scroll-px-5 items-center gap-2 overflow-x-auto px-5 sm:mx-0 sm:flex-wrap sm:justify-center sm:overflow-visible sm:px-0">
-        <button type="button" onClick={() => setCat("")} className={chip(!cat)} aria-pressed={!cat}>
-          {ui.all} · {found.length}
-        </button>
-        {cats.map(([key, label]) => {
-          const n = found.filter((c) => c.category === key).length;
-          return (
-            <button
-              key={key}
-              type="button"
-              onClick={() => setCat(key === cat ? "" : key)}
-              className={cn(chip(cat === key), n === 0 && cat !== key && "opacity-45")}
-              aria-pressed={cat === key}
-            >
-              {label} · {n}
-            </button>
-          );
-        })}
+      {/* Mobile: một hàng vuốt ngang (không rớt nhiều dòng), nút "…" đứng ngoài vùng cuộn để dropdown không bị cắt;
+          từ sm: xuống dòng & căn giữa */}
+      <div className="mt-5 flex items-center gap-2 sm:justify-center">
+        <div className="-ml-5 no-scrollbar flex min-w-0 snap-x scroll-px-5 items-center gap-2 overflow-x-auto [mask-image:linear-gradient(to_right,#000_calc(100%-28px),transparent)] pr-6 pl-5 sm:ml-0 sm:flex-wrap sm:justify-center sm:overflow-visible sm:[mask-image:none] sm:pr-0 sm:pl-0">
+          <button
+            type="button"
+            onClick={() => setCat("")}
+            className={chip(!cat)}
+            aria-pressed={!cat}
+          >
+            {ui.all} · {found.length}
+          </button>
+          {shown.map(({ key, label }) => {
+            const n = countOf(key);
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setCat(key === cat ? "" : key)}
+                className={cn(chip(cat === key), n === 0 && cat !== key && "opacity-45")}
+                aria-pressed={cat === key}
+              >
+                {label} · {n}
+              </button>
+            );
+          })}
+        </div>
+        {more.length > 0 && (
+          <MoreFilters
+            items={more.map(({ key, label }) => ({ key, label, n: countOf(key) }))}
+            cat={cat}
+            onPick={(key) => setCat(key === cat ? "" : key)}
+            label={ui.moreFilters}
+            chip={chip}
+          />
+        )}
       </div>
 
       {/* Thông báo kết quả cho trình đọc màn hình (và hiện chữ khi đang tìm) */}
@@ -177,10 +209,11 @@ export default function CollectionsGrid({ lang, collections, categories, searchE
           </button>
         </div>
       ) : (
-        <div className="mt-8 flex flex-wrap justify-center gap-5">
+        <div ref={gridRef} className="mt-8 flex flex-wrap justify-center gap-5">
           {list.map((c, i) => (
             <Link
               key={c.slug}
+              data-card
               href={href(lang, `/collections/${c.slug}`)}
               className={cn(
                 "group reveal relative block overflow-hidden rounded-[1.5rem] bg-sand-200",
@@ -204,12 +237,23 @@ export default function CollectionsGrid({ lang, collections, categories, searchE
                 {c.images.length} {ui.photos}
               </span>
               <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-6 text-white">
-                <div>
-                  <p className="text-[11px] tracking-[0.3em] text-white/70 uppercase lg:text-[10px]">
+                {/* data-slot: các phần cùng loại được cân cao bằng nhau theo từng hàng (useRowAlign); tên 1 dòng căn giữa ô */}
+                <div className="min-w-0">
+                  <p
+                    data-slot="sub"
+                    className="flex flex-col justify-end text-[11px] tracking-[0.3em] text-white/70 uppercase lg:text-[10px]"
+                  >
                     {c.sub}
                   </p>
-                  <h2 className="mt-1.5 font-serif text-[1.8rem] leading-tight">{c.name}</h2>
-                  <p className="mt-1 text-[13px] text-white/75">{c.concept}</p>
+                  <h2
+                    data-slot="title"
+                    className="mt-1.5 flex flex-col justify-center font-serif text-[1.8rem] leading-tight"
+                  >
+                    {c.name}
+                  </h2>
+                  <p data-slot="concept" className="mt-1 text-[13px] text-white/75">
+                    {c.concept}
+                  </p>
                 </div>
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-ink transition group-hover:translate-x-0.5">
                   <ArrowRight className="h-4 w-4" />
@@ -217,6 +261,172 @@ export default function CollectionsGrid({ lang, collections, categories, searchE
               </div>
             </Link>
           ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Cân chữ trên thẻ theo từng hàng: trong một hàng, dòng phụ / tên album / mô tả của mọi thẻ được đặt cao bằng
+ * phần cao nhất trong hàng → các phần cùng loại luôn thẳng hàng, dù tên hay mô tả có thẻ 1 dòng, có thẻ 2 dòng.
+ * Số dòng đổi theo bề rộng màn hình nên phải đo thật: chạy lại khi đổi cỡ, khi lọc/tìm (key) và khi font tải xong.
+ * Mobile 1 cột: mỗi hàng 1 thẻ → không thay đổi gì.
+ */
+const SLOTS = ["sub", "title", "concept"];
+function useRowAlign(ref, key) {
+  useEffect(() => {
+    const grid = ref.current;
+    if (!grid) return;
+    let frame = 0;
+    const align = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const cards = [...grid.querySelectorAll("[data-card]")];
+        const slots = cards.map((card) =>
+          SLOTS.map((s) => card.querySelector(`[data-slot="${s}"]`)),
+        );
+        slots.flat().forEach((el) => el && (el.style.minHeight = ""));
+        // Gom thẻ theo hàng (cùng vị trí dọc), rồi lấy chiều cao lớn nhất của từng phần trong hàng
+        const rows = new Map();
+        cards.forEach((card, i) => {
+          const top = Math.round(card.offsetTop);
+          if (!rows.has(top)) rows.set(top, []);
+          rows.get(top).push(slots[i]);
+        });
+        for (const row of rows.values()) {
+          if (row.length < 2) continue;
+          SLOTS.forEach((_, k) => {
+            const max = Math.max(...row.map((r) => r[k]?.offsetHeight || 0));
+            row.forEach((r) => r[k] && (r[k].style.minHeight = `${max}px`));
+          });
+        }
+      });
+    };
+    align();
+    const ro = new ResizeObserver(align);
+    ro.observe(grid);
+    document.fonts?.addEventListener("loadingdone", align);
+    return () => {
+      cancelAnimationFrame(frame);
+      ro.disconnect();
+      document.fonts?.removeEventListener("loadingdone", align);
+    };
+  }, [ref, key]);
+}
+
+/**
+ * Nút "…" mở danh sách các loại ảnh còn lại. Đang lọc theo một loại trong đây thì nút hiện tên loại đó (tô đậm).
+ * Đóng khi chọn, bấm ra ngoài hoặc Esc; ↑/↓ chuyển mục, Enter/Space chọn.
+ */
+function MoreFilters({ items, cat, onPick, label, chip }) {
+  const [open, setOpen] = useState(false);
+  const wrapRef = useRef(null);
+  const btnRef = useRef(null);
+  const itemRefs = useRef([]);
+  const menuId = useId();
+  const active = items.find((it) => it.key === cat);
+
+  useEffect(() => {
+    if (!open) return;
+    const i = Math.max(
+      0,
+      items.findIndex((it) => it.key === cat),
+    );
+    itemRefs.current[i]?.focus();
+    const onDown = (e) => {
+      if (!wrapRef.current?.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, [open, items, cat]);
+
+  const close = () => {
+    setOpen(false);
+    btnRef.current?.focus();
+  };
+  const onMenuKey = (e) => {
+    const list = itemRefs.current.filter(Boolean);
+    const i = list.indexOf(document.activeElement);
+    if (e.key === "Escape") {
+      e.preventDefault();
+      close();
+    } else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      const d = e.key === "ArrowDown" ? 1 : -1;
+      list[(i + d + list.length) % list.length]?.focus();
+    } else if (e.key === "Tab") {
+      setOpen(false);
+    }
+  };
+
+  return (
+    <div ref={wrapRef} className="relative shrink-0">
+      <button
+        ref={btnRef}
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowDown" && !open) {
+            e.preventDefault();
+            setOpen(true);
+          }
+        }}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-controls={open ? menuId : undefined}
+        aria-label={active ? undefined : label}
+        title={label}
+        className={cn(chip(!!active), "flex items-center gap-1.5")}
+      >
+        {active ? (
+          `${active.label} · ${active.n}`
+        ) : (
+          <span aria-hidden className="text-[15px] leading-none tracking-[0.15em]">
+            …
+          </span>
+        )}
+        <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", open && "rotate-180")} />
+      </button>
+
+      {open && (
+        <div
+          id={menuId}
+          role="menu"
+          aria-label={label}
+          onKeyDown={onMenuKey}
+          className="absolute top-full right-0 z-30 mt-2 min-w-[15rem] rounded-2xl border border-ink/10 bg-white p-1.5 shadow-soft"
+        >
+          {items.map((it, i) => {
+            const on = it.key === cat;
+            return (
+              <button
+                key={it.key}
+                ref={(el) => {
+                  itemRefs.current[i] = el;
+                }}
+                type="button"
+                role="menuitemradio"
+                aria-checked={on}
+                onClick={() => {
+                  onPick(it.key);
+                  close();
+                }}
+                className={cn(
+                  "flex w-full items-center justify-between gap-4 rounded-xl px-3.5 py-2.5 text-left text-[13px] transition outline-none",
+                  on
+                    ? "bg-ink/[0.06] text-ink"
+                    : "text-ink/75 hover:bg-ink/[0.04] focus:bg-ink/[0.04]",
+                  it.n === 0 && !on && "opacity-45",
+                )}
+              >
+                <span className="whitespace-nowrap">
+                  {it.label} · {it.n}
+                </span>
+                {on && <Check className="h-4 w-4 shrink-0" />}
+              </button>
+            );
+          })}
         </div>
       )}
     </div>

@@ -6,6 +6,7 @@ import { fromViPath, legacyViRedirect, toViPath } from "@/i18n/routes";
  *   "/"                              → /vi
  *   "/bo-suu-tap/cap-doi-hoang-hon"  → /vi/collections/sunset-couple
  *   "/dich-vu"                       → /vi/services
+ *   "/ban-quyen-anh"                 → /vi/image-license
  * URL trên trình duyệt giữ nguyên. Bản tiếng Anh (/en/...) trùng route thật nên không cần rewrite.
  *
  * Vì sao rewrite ở đây mà không để trong rewrites() của next.config:
@@ -50,5 +51,7 @@ export const config = {
     "/dich-vu",
     "/collections/:path*",
     "/services",
+    "/ban-quyen-anh",
+    "/image-license",
   ],
 };

@@ -4,7 +4,7 @@
 // thêm 1 object bên dưới + slug tiếng Việt trong src/i18n/routes.js (SLUGS_VI).
 // ============================================================
 import { t } from "@/i18n";
-import { P, V, W, img, seq } from "./photos";
+import { P, V, W, seq } from "./photos";
 
 // ---------- Phân loại ----------
 export const categories = {
@@ -55,7 +55,7 @@ export const collections = [
       V("wedding-beach", 9, "center 28%"),
       W("wedding-beach", 10),
       W("wedding-beach", 11, "center 35%"),
-      ...seq("wedding-beach", 12, 13),
+      ...seq("wedding-beach", 12, 25),
     ],
   },
   {
@@ -71,7 +71,7 @@ export const collections = [
     cover: P("mediterranean-prewedding", 2),
     coverPos: "center 40%",
     hero: { src: P("mediterranean-prewedding", 9), pos: "center 55%" },
-    images: seq("mediterranean-prewedding", 1, 9),
+    images: seq("mediterranean-prewedding", 1, 10),
   },
   {
     slug: "sunset-couple",
@@ -93,7 +93,7 @@ export const collections = [
       V("sunset-couple", 4, "center 40%"),
       V("sunset-couple", 5, "center 35%"),
       V("sunset-couple", 6, "center 30%"),
-      ...seq("sunset-couple", 7, 12),
+      ...seq("sunset-couple", 7, 20),
     ],
   },
   {
@@ -106,13 +106,13 @@ export const collections = [
       "Pink colonnades, a wooden library and slanting light",
     ),
     desc: t(
-      "Một ngày làm nàng thơ trong khu nghỉ dưỡng mang kiến trúc Đông Dương: đọc sách bên cửa sổ, dạo hành lang cột hồng, ngồi lại trong những căn phòng màu đỏ son và xanh ngọc. Nhiều bộ váy, nhiều góc sáng — một bộ editorial trọn vẹn không cần ra biển.",
-      "A day as a muse inside an Indochine-style resort: reading by the window, wandering pink colonnades, pausing in vermilion and jade rooms. Several outfits, many kinds of light — a complete editorial without setting foot on the beach.",
+      "Một ngày làm nàng thơ trong khu nghỉ dưỡng mang kiến trúc Đông Dương: đọc sách bên cửa sổ, dạo hành lang cột hồng, ngồi lại trong những căn phòng màu đỏ son và xanh ngọc. Nhiều bộ váy, nhiều góc sáng — từ đầm xanh pastel giữa hàng cột hồng tới vài khung hình cuối buổi trên bãi cát trắng trước resort.",
+      "A day as a muse inside an Indochine-style resort: reading by the window, wandering pink colonnades, pausing in vermilion and jade rooms. Several outfits, many kinds of light — from a pastel-blue dress among pink columns to a few closing frames on the white sand in front of the resort.",
     ),
     cover: P("indochine-muse", 9),
     coverPos: "center 40%",
     hero: { src: P("indochine-muse", 2), pos: "center 55%" },
-    images: seq("indochine-muse", 1, 27),
+    images: seq("indochine-muse", 1, 37),
   },
   {
     slug: "family-villa",
@@ -160,6 +160,24 @@ export const collections = [
     images: seq("tropical-prewedding", 1, 16),
   },
   {
+    slug: "meadow-muse",
+    category: "portrait",
+    name: t("Nàng thơ đồng cỏ", "The Meadow Muse"),
+    sub: t("Chân dung · Đồng cỏ lúc nắng chiều", "Portrait · A sunlit meadow"),
+    concept: t(
+      "Mũ ren, bó hoa baby trắng và tấm thảm picnic",
+      "A lace bonnet, white gypsophila and a picnic blanket",
+    ),
+    desc: t(
+      "Chân dung nàng thơ cùng Studio Bin – photographer Phú Quốc, trên đồng cỏ xanh có con đường mòn và hàng cây phía xa: váy ren trắng, mũ bèo kiểu cổ điển, bó hoa baby trong tay. Nắng xiên làm sáng viền tóc, cô gái ngồi ghế gỗ trắng rồi nằm dài trên tấm thảm kẻ — nhẹ và mơ như một trang truyện cũ.",
+      "A muse portrait by Studio Bin, Phu Quoc photographer, on a green meadow with a footpath and distant trees: a white lace dress, a vintage ruffled bonnet and a bunch of gypsophila. Low sun lights up her hair as she sits on a white chair, then stretches out on a checked blanket — soft and dreamy, like a page from an old storybook.",
+    ),
+    cover: P("meadow-muse", 4),
+    coverPos: "center 30%",
+    hero: { src: P("meadow-muse", 7), pos: "center 45%" },
+    images: seq("meadow-muse", 1, 11),
+  },
+  {
     slug: "a-day-together",
     category: "couple",
     name: t("Một ngày bên nhau", "A Day Together"),
@@ -202,7 +220,7 @@ export const collections = [
       V("sunset-portrait", 9, "center 35%"),
       V("sunset-portrait", 10, "center 35%"),
       V("sunset-portrait", 11, "center 55%"),
-      img("sunset-portrait", 12),
+      ...seq("sunset-portrait", 12, 18),
     ],
   },
   {
@@ -239,7 +257,7 @@ export const collections = [
     cover: P("proposal-anniversary", 2),
     coverPos: "center 40%",
     hero: { src: P("proposal-anniversary", 3), pos: "center 50%" },
-    images: seq("proposal-anniversary", 1, 11),
+    images: seq("proposal-anniversary", 1, 15),
   },
   {
     slug: "resort-editorial",
@@ -262,8 +280,26 @@ export const collections = [
       V("resort-editorial", 5, "center 30%"),
       W("resort-editorial", 6, "center 60%"),
       W("resort-editorial", 7, "center 40%"),
-      ...seq("resort-editorial", 8, 17),
+      ...seq("resort-editorial", 8, 33),
     ],
+  },
+  {
+    slug: "resort-prewedding",
+    category: "wedding",
+    name: t("Pre-wedding tại resort", "Resort Pre-wedding"),
+    sub: t("Pre-wedding · Resort & bãi biển", "Pre-wedding · Resort & beach"),
+    concept: t(
+      "Hồ bơi tràn bờ trên đồi, chiếc ô trắng và biển chiều xanh thẫm",
+      "A hilltop infinity pool, a white umbrella and a deep-blue evening sea",
+    ),
+    desc: t(
+      "Pre-wedding Phú Quốc gọn trong một resort: hoàng hôn bên hồ bơi tràn bờ trên đồi nhìn ra quần đảo, khu vườn rủ lá của resort khi trời đổ mưa với chiếc ô trắng, rồi ra bãi biển lúc chạng vạng khi chú rể quỳ xuống trao nhẫn. Một số khung hình được dàn trang sẵn như album cưới.",
+      "A Phu Quoc pre-wedding within a single resort: sunset by a hilltop infinity pool overlooking the islands, the resort's hanging-garden courtyard in the rain with a white umbrella, then the beach at blue hour as the groom kneels with the ring. Some frames come laid out like pages from a wedding album.",
+    ),
+    cover: P("resort-prewedding", 6),
+    coverPos: "center 40%",
+    hero: { src: P("resort-prewedding", 2), pos: "center 50%" },
+    images: seq("resort-prewedding", 1, 9),
   },
   {
     slug: "sunset-town-date",
@@ -281,7 +317,7 @@ export const collections = [
     cover: P("sunset-town-date", 3),
     coverPos: "center 40%",
     hero: { src: P("sunset-town-date", 7), pos: "center 55%" },
-    images: seq("sunset-town-date", 1, 9),
+    images: seq("sunset-town-date", 1, 11),
   },
   {
     slug: "family-beach",
@@ -323,13 +359,13 @@ export const collections = [
       "Ruffled white, blush pink and arched windows",
     ),
     desc: t(
-      "Bộ chân dung giữa những vòm đá kiểu Ý nhìn ra biển và cầu thang ngập hoa giấy. Hai bộ váy — trắng bèo nhún và hồng phấn — chuyển từ nắng trưa trong trẻo sang ánh chiều dịu, giữ trọn vẻ lãng mạn kiểu châu Âu ngay giữa Phú Quốc.",
-      "A portrait set among Italian-style stone arches facing the sea and stairways flooded with bougainvillea. Two dresses — ruffled white and blush pink — move from clear midday light to soft late afternoon, a touch of European romance in the middle of Phu Quoc.",
+      "Bộ chân dung giữa những vòm đá kiểu Ý nhìn ra biển và cầu thang ngập hoa giấy. Nhiều bộ váy — trắng bèo nhún, hồng phấn, maxi vàng chanh với mũ cói, đầm ngắn vàng nhạt — chuyển từ nắng trưa trong trẻo sang ánh chiều dịu, giữ trọn vẻ lãng mạn kiểu châu Âu ngay giữa Phú Quốc.",
+      "A portrait set among Italian-style stone arches facing the sea and stairways flooded with bougainvillea. Several dresses — ruffled white, blush pink, a lemon maxi with a straw hat, a pale-yellow mini — move from clear midday light to soft late afternoon, a touch of European romance in the middle of Phu Quoc.",
     ),
     cover: P("mediterranean-muse", 7),
     coverPos: "center 30%",
     hero: { src: P("mediterranean-muse", 1), pos: "center 50%" },
-    images: seq("mediterranean-muse", 1, 11),
+    images: seq("mediterranean-muse", 1, 29),
   },
   {
     slug: "blue-sea-prewedding",
@@ -391,7 +427,7 @@ export const collections = [
     cover: P("infinity-pool", 3),
     coverPos: "center 60%",
     hero: { src: P("infinity-pool", 9), pos: "center 62%" },
-    images: seq("infinity-pool", 1, 13),
+    images: seq("infinity-pool", 1, 21),
   },
   {
     slug: "family-palms",
@@ -407,6 +443,24 @@ export const collections = [
     coverPos: "center 40%",
     hero: { src: P("family-palms", 7), pos: "center 55%" },
     images: seq("family-palms", 1, 7),
+  },
+  {
+    slug: "silk-muse",
+    category: "portrait",
+    name: t("Nàng thơ lụa satin", "The Silk Muse"),
+    sub: t("Chân dung · Quầy bar bãi biển & ban công đá", "Portrait · Beach bar & stone balconies"),
+    concept: t(
+      "Đầm lụa sâm panh, ly nước cam và ánh đèn chiều",
+      "Champagne silk, a glass of juice and early-evening light",
+    ),
+    desc: t(
+      "Hai buổi chụp chân dung ở Phú Quốc cùng một tinh thần: đầm lụa satin màu sâm panh bắt trọn ánh nắng cuối ngày. Buổi đầu ở quầy bar gỗ ven biển với tấm ván lướt sóng và ly nước cam; buổi sau giữa những lan can đá, hàng cột cổ điển, vòng ngọc trai và tóc búi kiểu xưa. Sang trọng, mềm mại và rất điện ảnh.",
+      "Two Phu Quoc portrait sessions in the same spirit: champagne satin catching the last light of the day. The first at a wooden beach bar with a surfboard and a glass of juice; the second among stone balustrades and classical columns, with pearls and a vintage updo. Elegant, soft and cinematic.",
+    ),
+    cover: P("silk-muse", 13),
+    coverPos: "center 25%",
+    hero: { src: P("silk-muse", 21), pos: "center 35%" },
+    images: seq("silk-muse", 1, 23),
   },
   {
     slug: "honeymoon",
@@ -425,7 +479,7 @@ export const collections = [
     cover: P("honeymoon", 8),
     coverPos: "center 50%",
     hero: { src: P("honeymoon", 4), pos: "center 40%" },
-    images: seq("honeymoon", 1, 10),
+    images: seq("honeymoon", 1, 11),
   },
   {
     slug: "endless-summer",
@@ -441,7 +495,7 @@ export const collections = [
     cover: P("endless-summer", 3),
     coverPos: "center 25%",
     hero: { src: P("endless-summer", 15), pos: "center 60%" },
-    images: seq("endless-summer", 1, 19),
+    images: seq("endless-summer", 1, 30),
   },
   {
     slug: "celebrations",
@@ -462,6 +516,25 @@ export const collections = [
     images: seq("celebrations", 1, 14),
   },
   {
+    slug: "vintage-muse",
+    category: "portrait",
+    seo: t("Ảnh concept Phú Quốc", "Phu Quoc Concept Photos"),
+    name: t("Nàng thơ hoài cổ", "The Vintage Muse"),
+    sub: t("Chân dung · Phố cổ & tiệm thuốc xưa", "Portrait · Old streets & an apothecary"),
+    concept: t(
+      "Đầm ren đen, xe cổ và tà áo dài trước tiệm Đông y",
+      "Black lace, a classic car and an áo dài by an old apothecary",
+    ),
+    desc: t(
+      "Bộ ảnh concept hoài cổ của Studio Bin – photographer Phú Quốc: đầm ren đen, khăn lông và kính tròn bên chiếc xe cổ giữa phố, rồi tà áo dài ren vàng trước cánh cửa gỗ của tiệm Đông y, bên bàn viết và những chiếc lọ sứ. Ánh sáng trầm, màu ấm — dành cho ai yêu vẻ đẹp của những thập niên cũ.",
+      "A vintage concept shoot by Studio Bin, Phu Quoc photographer, that turns back the clock: black lace, a fur stole and round sunglasses beside a classic car on the street, then a golden lace áo dài at the wooden doors of a traditional apothecary, by a writing desk and porcelain jars. Low light and warm tones — for anyone who loves the elegance of decades past.",
+    ),
+    cover: P("vintage-muse", 4),
+    coverPos: "center 35%",
+    hero: { src: P("vintage-muse", 3), pos: "center 60%" },
+    images: seq("vintage-muse", 1, 12),
+  },
+  {
     slug: "editorial-couple",
     category: "couple",
     name: t("Cặp đôi phong cách tạp chí", "Editorial Couple"),
@@ -475,6 +548,25 @@ export const collections = [
     coverPos: "center 35%",
     hero: { src: P("editorial-couple", 5), pos: "center 40%" },
     images: seq("editorial-couple", 1, 7),
+  },
+  {
+    slug: "concept-studio",
+    category: "portrait",
+    seo: t("Ảnh concept Phú Quốc", "Phu Quoc Concept Photos"),
+    name: t("Concept nghệ thuật", "Art Concepts"),
+    sub: t("Chân dung · Concept tại studio", "Portrait · Studio concepts"),
+    concept: t(
+      "Trăng tròn, phông hoa sơn dầu và những trái cà chua đỏ",
+      "A full moon, oil-painted florals and bright red tomatoes",
+    ),
+    desc: t(
+      "Ảnh concept nghệ thuật của Studio Bin – photographer Phú Quốc, tự lên ý tưởng, dựng bối cảnh và đánh đèn trong studio: sườn xám đen dưới vầng trăng, nàng thơ vintage ôm sách trước phông hoa sơn dầu, váy đỏ trên nền hoàng hôn rực, cô gái tóc xanh cá tính và một concept cà chua tươi tắn. Mỗi bộ là một câu chuyện riêng — từ trang phục, trang điểm tới ánh sáng.",
+      "Art concept photos by Studio Bin, Phu Quoc photographer — designed, styled and lit in the studio: a black qipao beneath a full moon, a vintage muse holding a book against oil-painted florals, a red dress against a blazing sunset, a bold blue-haired look and a fresh tomato concept. Each set tells its own story — from wardrobe and make-up to light.",
+    ),
+    cover: P("concept-studio", 17),
+    coverPos: "center 30%",
+    hero: { src: P("concept-studio", 20), pos: "center 40%" },
+    images: seq("concept-studio", 1, 30),
   },
   {
     slug: "family-travel",
@@ -496,6 +588,7 @@ export const collections = [
       W("family-travel", 4, "center 55%"),
       W("family-travel", 5, "center 55%"),
       W("family-travel", 6, "center 55%"),
+      ...seq("family-travel", 7, 13),
     ],
   },
   {
@@ -509,13 +602,31 @@ export const collections = [
       "A pink dress, a straw hat and the clock-tower square",
     ),
     desc: t(
-      "Chân dung du lịch giữa những công trình kiểu Ý của Thị trấn Hoàng Hôn: đầm hồng rực bên hàng cột đá, mũ cói và váy nâu trên quảng trường tháp đồng hồ, cầu thang xanh và đài phun nước tượng ngựa. Màu sắc tươi, bố cục gọn — hợp để đăng ngay trong chuyến đi.",
-      "Travel portraits among Sunset Town's Italian-style buildings: a vivid pink dress by stone columns, a straw hat and earthy outfit on the clock-tower square, green stairways and a horse fountain. Bright colours and clean compositions — ready to post during the trip.",
+      "Chân dung du lịch giữa những công trình kiểu Ý của Thị trấn Hoàng Hôn: đầm hồng rực bên hàng cột đá, mũ cói và váy nâu trên quảng trường tháp đồng hồ, cầu thang xanh, ban công nhìn ra cáp treo và đài phun nước tượng ngựa. Màu sắc tươi, bố cục gọn — hợp để đăng ngay trong chuyến đi.",
+      "Travel portraits among Sunset Town's Italian-style buildings: a vivid pink dress by stone columns, a straw hat and earthy outfit on the clock-tower square, green stairways, balconies facing the cable car and a horse fountain. Bright colours and clean compositions — ready to post during the trip.",
     ),
     cover: P("sunset-town-stroll", 1),
     coverPos: "center 30%",
     hero: { src: P("sunset-town-stroll", 11), pos: "center 62%" },
-    images: seq("sunset-town-stroll", 1, 13),
+    images: seq("sunset-town-stroll", 1, 32),
+  },
+  {
+    slug: "family-sunset-town",
+    category: "family",
+    name: t("Cả nhà ở Thị trấn Hoàng Hôn", "Family Day in Sunset Town"),
+    sub: t("Gia đình · Thị trấn Hoàng Hôn", "Family · Sunset Town"),
+    concept: t(
+      "Váy voan kem, sơ mi trắng và vòm đá lúc chiều tà",
+      "Cream tulle, white shirts and a stone arch at dusk",
+    ),
+    desc: t(
+      "Ảnh gia đình Phú Quốc: cả đại gia đình cùng mặc trắng dạo Thị trấn Hoàng Hôn — quảng trường tháp chuông, cầu thang gạch hoa, đài phun nước tượng ngựa. Xen giữa là những khung hình riêng của từng cặp — ghế đá nhìn ra biển, nụ hôn dưới vòm đá khi mặt trời xuống — và vài tấm đen trắng bên lan can để làm quà kỷ niệm.",
+      "Phu Quoc family photos: the whole extended family in white, strolling through Sunset Town — the bell-tower square, the tiled stairways, the horse fountain. In between come portraits of each couple — a bench facing the sea, a kiss beneath a stone arch as the sun goes down — and a few black-and-white frames by the balustrade as keepsakes.",
+    ),
+    cover: P("family-sunset-town", 6),
+    coverPos: "center 50%",
+    hero: { src: P("family-sunset-town", 10), pos: "center 75%" },
+    images: seq("family-sunset-town", 1, 15),
   },
   {
     slug: "sunset-picnic",
@@ -552,7 +663,7 @@ export const collections = [
     cover: P("yacht-day", 3),
     coverPos: "center 30%",
     hero: { src: P("yacht-day", 1), pos: "center 55%" },
-    images: seq("yacht-day", 1, 5),
+    images: seq("yacht-day", 1, 15),
   },
   {
     slug: "beach-lookbook",
@@ -562,8 +673,8 @@ export const collections = [
     sub: t("Chân dung · Lookbook", "Portrait · Lookbook"),
     concept: t("Khăn lụa xanh, cát vàng và nắng xiên", "Blue silk, golden sand and low sun"),
     desc: t(
-      "Bộ lookbook cho khách muốn ảnh cá nhân phong cách tạp chí du lịch: trưa nắng dưới hàng dừa, chiều nằm trên cát với khăn lụa bay. Bin tư vấn trang phục và màu sắc từ trước buổi chụp.",
-      "A lookbook for guests who want personal photos in travel-magazine style: noon sun under the palms, then lying on golden sand with silk in the wind. Bin advises on outfits and colours before the shoot.",
+      "Bộ lookbook cho khách muốn ảnh cá nhân phong cách tạp chí du lịch: trưa nắng dưới hàng dừa với mũ cói và trái dừa, sofa bãi biển của resort, chiều nằm trên cát với khăn lụa bay. Bin tư vấn trang phục và màu sắc từ trước buổi chụp.",
+      "A lookbook for guests who want personal photos in travel-magazine style: noon sun under the palms with a straw hat and a coconut, a resort beach sofa, then lying on golden sand with silk in the wind. Bin advises on outfits and colours before the shoot.",
     ),
     cover: P("beach-lookbook", 6),
     coverPos: "center 30%",
@@ -575,7 +686,7 @@ export const collections = [
       V("beach-lookbook", 4, "center 45%"),
       V("beach-lookbook", 5, "center 45%"),
       V("beach-lookbook", 6, "center 30%"),
-      ...seq("beach-lookbook", 7, 11),
+      ...seq("beach-lookbook", 7, 30),
     ],
   },
 ];

@@ -23,6 +23,7 @@ export default function sitemap() {
       images: collections.map((c) => c.cover),
     },
     { path: "/services", priority: 0.8, changeFrequency: "monthly", images: [] },
+    { path: "/image-license", priority: 0.3, changeFrequency: "yearly", images: [] },
     ...collections.map((c) => ({
       path: `/collections/${c.slug}`,
       priority: 0.7,

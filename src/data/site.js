@@ -51,6 +51,7 @@ export const ui = {
   directions: t("Mở Google Maps", "Open in Google Maps"),
   toTop: t("Lên đầu trang", "Back to top"),
   all: t("Tất cả", "All"),
+  moreFilters: t("Thêm loại ảnh", "More types"),
   resetFilters: t("Xoá bộ lọc", "Clear filter"),
   noResults: t("Chưa có bộ ảnh phù hợp.", "No collection matches this filter yet."),
   search: t("Tìm bộ ảnh", "Search collections"),
@@ -949,4 +950,71 @@ export const footer = {
     "A local Phu Quoc photographer — weddings, couples, families and portraits in a candid, documentary style.",
   ),
   rights: t("Bảo lưu mọi quyền.", "All rights reserved."),
+};
+
+// ---------- Trang bản quyền hình ảnh ----------
+// Google Hình ảnh đọc trang này qua trường license / acquireLicensePage trong dữ liệu ảnh (src/lib/schema.js)
+// và có thể hiện nhãn "Licensable" cho ảnh. Mục "request" là nơi xin cấp phép (acquireLicensePage trỏ tới #id này).
+export const licensePage = {
+  meta: {
+    title: t("Bản quyền & cấp phép sử dụng hình ảnh", "Image Copyright & Licensing"),
+    desc: t(
+      "Toàn bộ ảnh trên website do Studio Bin – photographer Phú Quốc chụp và giữ bản quyền. Xem quyền sử dụng của khách hàng và cách xin cấp phép dùng ảnh.",
+      "All photos on this website are taken and owned by Studio Bin, a Phu Quoc photographer. See how clients may use their photos and how to request a licence.",
+    ),
+  },
+  eyebrow: t("Bản quyền hình ảnh", "Image licensing"),
+  title: t("Bản quyền &", "Copyright &"),
+  accent: t("cấp phép ảnh.", "licensing."),
+  intro: t(
+    "Mọi hình ảnh trên website này đều do Studio Bin chụp và giữ quyền tác giả. Trang này giải thích bạn được dùng ảnh như thế nào, và cách xin phép khi bạn muốn dùng ảnh cho mục đích khác.",
+    "Every photo on this website was taken by Studio Bin, who holds the copyright. This page explains how the photos may be used, and how to ask for permission when you need something more.",
+  ),
+  sections: [
+    {
+      id: t("quyen-tac-gia", "copyright"),
+      title: t("Quyền tác giả", "Copyright"),
+      body: [
+        t(
+          "Ảnh trên website thuộc quyền tác giả của Studio Bin theo pháp luật Việt Nam về sở hữu trí tuệ. Bạn không được sao chép, chỉnh sửa, cắt bỏ thông tin tác giả hay dùng ảnh vào mục đích thương mại (quảng cáo, bán sản phẩm, trang của doanh nghiệp khác…) khi chưa có sự đồng ý bằng văn bản của Studio Bin.",
+          "The photos on this website are protected by copyright under Vietnamese intellectual property law and belong to Studio Bin. Please do not copy, edit, remove the credit from, or use them commercially (advertising, selling products, another business's pages…) without Studio Bin's written permission.",
+        ),
+      ],
+    },
+    {
+      id: t("khach-hang", "clients"),
+      title: t("Nếu bạn là khách hàng của Studio Bin", "If you are a Studio Bin client"),
+      body: [
+        t(
+          "Bạn được dùng ảnh của chính mình cho mục đích cá nhân: in ảnh, làm album, thiệp cưới, đăng mạng xã hội hay gửi cho người thân. Bin rất vui nếu bạn ghi nguồn hoặc gắn thẻ Studio Bin khi chia sẻ.",
+          "You may use your own photos for personal purposes: prints, albums, wedding cards, social media or sharing with family. Bin always appreciates a credit or a tag when you share.",
+        ),
+        t(
+          "Nếu bạn xuất hiện trong một bức ảnh trên website và muốn gỡ ảnh đó xuống, chỉ cần nhắn cho Bin — ảnh sẽ được gỡ.",
+          "If you appear in a photo on this website and would like it taken down, just send Bin a message and it will be removed.",
+        ),
+      ],
+    },
+    {
+      id: t("chia-se", "sharing"),
+      title: t("Chia sẻ & trích dẫn", "Sharing & editorial use"),
+      body: [
+        t(
+          "Bạn luôn có thể chia sẻ đường dẫn tới các trang trên website. Báo chí, blog hoặc trang du lịch muốn đăng ảnh cần xin phép trước và ghi rõ “Ảnh: Studio Bin” kèm đường dẫn về studiobinphuquoc.com.",
+          "You are always welcome to share links to pages on this website. Press, blogs or travel sites that would like to publish a photo should ask first and credit “Photo: Studio Bin” with a link back to studiobinphuquoc.com.",
+        ),
+      ],
+    },
+    {
+      id: "license-request", // anchor nội bộ; bản tiếng Việt hiện "#xin-cap-phep" (src/i18n/routes.js)
+      request: true,
+      title: t("Xin cấp phép sử dụng ảnh", "Request a licence"),
+      body: [
+        t(
+          "Nhắn cho Bin qua một trong các kênh dưới đây, kèm: đường dẫn tới ảnh bạn muốn dùng, mục đích sử dụng, nơi đăng (website, ấn phẩm, quảng cáo…) và thời gian sử dụng. Bin sẽ phản hồi điều kiện và chi phí (nếu có).",
+          "Message Bin through any of the channels below with: a link to the photo, how you plan to use it, where it will appear (website, print, advertising…) and for how long. Bin will reply with the terms and any fee.",
+        ),
+      ],
+    },
+  ],
 };

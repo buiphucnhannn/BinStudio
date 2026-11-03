@@ -51,7 +51,7 @@ export const siteConfig = {
   hours: [{ days: t("Hằng ngày", "Daily"), time: "06:00 – 21:00" }],
   hoursShort: t("Nhận lịch hằng ngày, kể cả cuối tuần", "Bookings daily, weekends included"),
   // Ngày cập nhật nội dung gần nhất — dùng cho <lastmod> trong sitemap. Sửa nội dung / thêm album thì đổi ngày này.
-  contentUpdated: "2026-10-28",
+  contentUpdated: "2026-11-03",
 
   // Dữ liệu có cấu trúc cho Google (LocalBusiness)
   streetAddress: "Khu phố 9",

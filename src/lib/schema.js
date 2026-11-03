@@ -34,8 +34,9 @@ export const website = (lang, description) => ({
   publisher: owner,
 });
 
-// Ảnh kèm thông tin tác giả / bản quyền (Google Hình ảnh hiển thị "Credit" & "Copyright")
-const imageObject = (im, caption) => ({
+// Ảnh kèm thông tin tác giả / bản quyền / cấp phép (Google Hình ảnh hiển thị "Credit", "Copyright"
+// và nhãn "Licensable"): license = trang điều khoản, acquireLicensePage = mục xin cấp phép trên trang đó
+const imageObject = (lang, im, caption) => ({
   "@type": "ImageObject",
   contentUrl: abs(im.src),
   width: im.w,
@@ -44,6 +45,8 @@ const imageObject = (im, caption) => ({
   creator: { "@type": "Organization", name: siteConfig.name },
   creditText: siteConfig.name,
   copyrightNotice: `© ${siteConfig.name}`,
+  license: abs(href(lang, "/image-license")),
+  acquireLicensePage: abs(href(lang, "/image-license#license-request")),
 });
 
 // Trang album: ImageGallery liệt kê toàn bộ ảnh
@@ -57,8 +60,12 @@ export const imageGallery = (lang, c, { title, altOf }) => ({
   author: owner,
   publisher: owner,
   contentLocation: { "@type": "Place", name: "Phú Quốc, Việt Nam" },
-  primaryImageOfPage: imageObject(c.images.find((im) => im.src === c.cover) || c.images[0], c.name),
-  image: c.images.map((im, i) => imageObject(im, altOf(i))),
+  primaryImageOfPage: imageObject(
+    lang,
+    c.images.find((im) => im.src === c.cover) || c.images[0],
+    c.name,
+  ),
+  image: c.images.map((im, i) => imageObject(lang, im, altOf(i))),
 });
 
 // Trang danh sách bộ sưu tập: CollectionPage + ItemList các album

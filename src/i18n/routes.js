@@ -13,6 +13,7 @@
 const PAGES_VI = {
   "/collections": "/bo-suu-tap",
   "/services": "/dich-vu",
+  "/image-license": "/ban-quyen-anh",
 };
 
 // Slug album: slug nội bộ (tiếng Anh) → slug tiếng Việt không dấu
@@ -44,6 +45,12 @@ export const SLUGS_VI = {
   "resort-birthday": "sinh-nhat-o-resort",
   "family-palms": "gia-dinh-duoi-rang-dua",
   celebrations: "tiec-va-su-kien",
+  "meadow-muse": "nang-tho-dong-co",
+  "resort-prewedding": "pre-wedding-resort",
+  "silk-muse": "nang-tho-lua-satin",
+  "vintage-muse": "nang-tho-hoai-co",
+  "concept-studio": "concept-nghe-thuat",
+  "family-sunset-town": "gia-dinh-thi-tran-hoang-hon",
 };
 
 // Anchor section (#id) xuất hiện trên URL: id nội bộ (tiếng Anh) → id tiếng Việt
@@ -52,6 +59,7 @@ const ANCHORS_VI = {
   locations: "dia-diem",
   contact: "lien-he",
   services: "danh-sach-dich-vu",
+  "license-request": "xin-cap-phep",
 };
 
 const invert = (o) => Object.fromEntries(Object.entries(o).map(([k, v]) => [v, k]));
