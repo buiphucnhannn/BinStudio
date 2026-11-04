@@ -1,8 +1,9 @@
 /**
  * Song ngữ Việt / Anh.
  * - Chuỗi trong data viết dạng t("tiếng Việt", "English") => { vi, en }; localize(data, lang) duyệt sâu và chọn ngôn ngữ.
- * - URL: tiếng Việt tại "/" với đường dẫn tiếng Việt, tiếng Anh tại "/en" với đường dẫn tiếng Anh
- *   (bảng ánh xạ ở ./routes, rewrite trong src/proxy.js).
+ * - URL: tiếng Anh là bản mặc định — trang chủ ở gốc "/", trang con dưới "/en/..." (đường dẫn tiếng Anh);
+ *   tiếng Việt: trang chủ "/vi", trang con đường dẫn tiếng Việt không tiền tố (/bo-suu-tap/..., /dich-vu)
+ *   (bảng ánh xạ ở ./routes, rewrite trong src/proxy.js). DEFAULT_LOCALE = ngôn ngữ dữ liệu gốc (chuỗi t()), không phải URL.
  */
 import { toViPath, fromViPath } from "./routes";
 export { anchor } from "./routes";
@@ -35,11 +36,12 @@ export function localize(data, lang) {
 
 // Luôn truyền đường dẫn NỘI BỘ (route thật, slug tiếng Anh); trả về URL công khai đúng ngôn ngữ:
 // href("vi", "/collections/wedding-beach") => "/bo-suu-tap/anh-cuoi-bien"
-// href("en", "/collections/wedding-beach") => "/en/collections/wedding-beach"; href("vi", "/#about") => "/#gioi-thieu"
+// href("en", "/collections/wedding-beach") => "/en/collections/wedding-beach"; href("vi", "/#about") => "/vi#gioi-thieu"
+// Trang chủ tiếng Anh nằm ở GỐC domain (bản mặc định của studio): href("en", "/") => "/", href("en", "/#about") => "/#about";
+// trang chủ tiếng Việt ở "/vi"; trang con tiếng Việt giữ đường dẫn tiếng Việt không tiền tố (/bo-suu-tap/...).
 export function href(lang, path = "/") {
   if (lang === DEFAULT_LOCALE) return toViPath(path);
-  if (path === "/") return "/en";
-  if (path.startsWith("/#")) return `/en${path.slice(1)}`;
+  if (path === "/" || path.startsWith("/#")) return path;
   return `/en${path}`;
 }
 
@@ -50,5 +52,5 @@ export function toCanonicalPath(pathname = "/") {
 }
 
 export function localeFromPath(pathname) {
-  return /^\/en(\/|$)/.test(pathname) ? "en" : "vi";
+  return pathname === "/" || /^\/en(\/|$)/.test(pathname) ? "en" : "vi";
 }

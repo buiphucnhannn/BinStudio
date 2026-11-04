@@ -693,6 +693,30 @@ export const collections = [
 
 export const getCollection = (slug) => collections.find((c) => c.slug === slug);
 
+// ---------- Mô tả trang album trên Google (meta description) ----------
+// Câu trọn vẹn ≤ 155 ký tự thay vì cắt đoạn văn dài giữa chừng: tên album, ý tưởng, số ảnh + từ khoá SEO, lời mời.
+//   "Lễ cưới bên biển: váy ren, hoa trắng và tiếng cười. 25 ảnh cưới Phú Quốc do Studio Bin chụp – xem trọn album, đặt lịch ngay."
+//   "Beach Wedding: lace, white flowers and laughter. 25 Phu Quoc wedding photos by Studio Bin – see the album and book."
+const META_MAX = 155;
+const lowerFirst = (s) => s.charAt(0).toLowerCase() + s.slice(1);
+export function metaDescOf(c) {
+  const n = c.images.length;
+  const seo = seoOf(c);
+  const kwVi = `${n} ${lowerFirst(seo.vi)}`; // "25 ảnh cưới Phú Quốc"
+  const kwEn = `${n} ${seo.en.replace(/^(Phu Quoc )(.+)$/, (_, place, rest) => place + rest.toLowerCase())}`; // "25 Phu Quoc wedding photos"
+  const fit = (full, short) => (full.length <= META_MAX ? full : short);
+  return t(
+    fit(
+      `${c.name.vi}: ${lowerFirst(c.concept.vi)}. ${kwVi} do Studio Bin chụp – xem trọn album, đặt lịch ngay.`,
+      `${c.name.vi}: ${lowerFirst(c.concept.vi)}. ${kwVi} do Studio Bin chụp.`,
+    ),
+    fit(
+      `${c.name.en}: ${lowerFirst(c.concept.en)}. ${kwEn} by Studio Bin – see the album and book.`,
+      `${c.name.en}: ${lowerFirst(c.concept.en)}. ${kwEn} by Studio Bin.`,
+    ),
+  );
+}
+
 // ---------- Mô tả ảnh (alt) cho ảnh tác phẩm dùng ngoài trang album ----------
 // Ảnh /images/<slug>/... thuộc bộ sưu tập <slug> → "{Tên album} – {Từ khoá SEO}", vd. "Lễ cưới bên biển – Ảnh cưới Phú Quốc"
 // (cùng mẫu với alt trên trang album) → ảnh ở trang chủ / dịch vụ cũng lên được Google Hình ảnh.

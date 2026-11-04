@@ -1,7 +1,7 @@
 /**
  * Đường dẫn thuần một ngôn ngữ cho mỗi bản (không pha Việt – Anh):
- *   tiếng Việt: /bo-suu-tap/cap-doi-hoang-hon, /dich-vu
- *   tiếng Anh:  /en/collections/sunset-couple, /en/services
+ *   tiếng Anh (mặc định): trang chủ /, /en/collections/sunset-couple, /en/services
+ *   tiếng Việt:           trang chủ /vi, /bo-suu-tap/cap-doi-hoang-hon, /dich-vu
  *
  * Trong code luôn dùng đường dẫn NỘI BỘ = route thật trong app/[lang] (slug tiếng Anh):
  *   "/collections", "/collections/sunset-couple", "/services".
@@ -81,14 +81,18 @@ const splitHash = (path) => {
   return i < 0 ? [path, ""] : [path.slice(0, i), path.slice(i)];
 };
 
+// Trang chủ tiếng Việt ở "/vi" (gốc domain "/" là trang chủ tiếng Anh — bản mặc định của studio)
+export const VI_HOME = "/vi";
+
 function viPage(p) {
+  if (p === "/" || p === "") return VI_HOME;
   const [, page, slug, ...rest] = p.split("/");
   const vi = PAGES_VI[`/${page}`];
   if (!vi || rest.length) return p;
   return slug ? `${vi}/${SLUGS_VI[slug] || slug}` : vi;
 }
 
-// "/collections/sunset-couple" → "/bo-suu-tap/cap-doi-hoang-hon"; "/#contact" → "/#lien-he"
+// "/collections/sunset-couple" → "/bo-suu-tap/cap-doi-hoang-hon"; "/#contact" → "/vi#lien-he"
 export function toViPath(path) {
   const [p, hash] = splitHash(path);
   return viPage(p) + (hash && `#${anchor("vi", hash.slice(1))}`);
@@ -97,6 +101,7 @@ export function toViPath(path) {
 // URL tiếng Việt → route nội bộ; không phải URL tiếng Việt của trang con → null
 // "/bo-suu-tap/cap-doi-hoang-hon" → "/collections/sunset-couple"
 export function fromViPath(path) {
+  if (path === VI_HOME) return "/";
   const [, page, slug, ...rest] = path.split("/");
   const internal = PAGES_INTERNAL[`/${page}`];
   if (!internal || rest.length) return null;

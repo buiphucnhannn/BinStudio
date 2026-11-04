@@ -17,6 +17,7 @@ export {
   featuredCollections,
   totalPhotos,
   photoAlt,
+  metaDescOf,
 } from "./collections";
 
 // ---------- Điều hướng ----------
@@ -27,21 +28,6 @@ export const nav = [
   { label: t("Địa điểm", "Locations"), href: "/#locations" },
   { label: t("Liên hệ", "Contact"), href: "/#contact" },
 ];
-
-// Thanh gợi ý đổi ngôn ngữ (components/layout/LangSuggest.js) cho khách CHƯA chọn ngôn ngữ.
-// Khoá = ngôn ngữ được mời chuyển sang; lời mời viết bằng chính ngôn ngữ đó để khách đọc được.
-export const langSuggest = {
-  en: {
-    text: "This page is in Vietnamese. View it in English?",
-    go: "View in English",
-    stay: "Ở lại tiếng Việt",
-  },
-  vi: {
-    text: "Trang đang hiển thị tiếng Anh. Xem bằng tiếng Việt?",
-    go: "Xem tiếng Việt",
-    stay: "Stay in English",
-  },
-};
 
 export const ui = {
   book: t("Đặt lịch chụp", "Book a session"),
@@ -794,8 +780,8 @@ export const servicesPage = withAlts({
   meta: {
     title: t("Dịch vụ & gói chụp ảnh Phú Quốc", "Photography Services & Packages in Phu Quoc"),
     desc: t(
-      "Dịch vụ chụp ảnh của Studio Bin tại Phú Quốc: ảnh cưới & pre-wedding ngoại cảnh biển, cặp đôi, cầu hôn, săn hoàng hôn, gia đình nghỉ dưỡng tại resort/villa, chân dung nghệ thuật, sự kiện và gói trọn gói makeup – trang phục – quay phim.",
-      "Studio Bin photography services in Phu Quoc: beach weddings & pre-wedding, couples, proposals, sunset sessions, family holidays at resorts & villas, editorial portraits, events and all-inclusive packages with makeup, attire and film.",
+      "Dịch vụ chụp ảnh tại Phú Quốc của Studio Bin: cưới & pre-wedding, cầu hôn, cặp đôi, gia đình nghỉ dưỡng. Gói rõ ràng, có makeup, trang phục. Đặt lịch ngay.",
+      "Phu Quoc photography services by Studio Bin: weddings, pre-wedding, proposals, couple & family holiday shoots. Clear packages, English-speaking. Book now.",
     ),
   },
   hero: {
@@ -939,8 +925,9 @@ export const collectionsPage = withAlts({
   meta: {
     title: t("Bộ sưu tập ảnh cưới & du lịch Phú Quốc", "Phu Quoc Wedding & Travel Portfolio"),
     desc: t(
-      "Album ảnh thật của Studio Bin tại Phú Quốc: pre-wedding Thị trấn Hoàng Hôn, cưới bên biển, cầu hôn, trăng mật, gia đình ở resort, chân dung editorial và tiệc bãi biển.",
-      "Real albums by Studio Bin in Phu Quoc: Sunset Town pre-weddings, beach weddings, proposals, honeymoons, resort family holidays, editorial portraits and beach parties.",
+      // Số album tự đếm từ dữ liệu → luôn đúng khi thêm / bớt bộ sưu tập
+      `${collections.length} album ảnh thật của Studio Bin tại Phú Quốc: cưới & pre-wedding, cặp đôi, cầu hôn, gia đình, chân dung và tiệc. Lọc theo kiểu chụp, xem trọn từng bộ.`,
+      `${collections.length} real photo albums by Studio Bin in Phu Quoc: weddings, pre-weddings, couples, proposals, families, portraits and parties. Filter by style and explore.`,
     ),
   },
   title: t("Bộ sưu tập của", "Portfolio by"),

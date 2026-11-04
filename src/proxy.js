@@ -1,34 +1,36 @@
 import { NextResponse } from "next/server";
-import { LANG_COOKIE, fromViPath, legacyViRedirect, toViPath } from "@/i18n/routes";
+import { LANG_COOKIE, VI_HOME, fromViPath, legacyViRedirect, toViPath } from "@/i18n/routes";
 
 /**
- * URL tiếng Việt (không tiền tố) → route thật app/[lang] với lang = "vi".
- *   "/"                              → /vi
+ * Định tuyến song ngữ. Tiếng Anh là bản MẶC ĐỊNH ở gốc domain; tiếng Việt có đường dẫn tiếng Việt riêng:
+ *   "/"                              → /en   (trang chủ tiếng Anh — Google hiển thị bản này cho tên miền)
+ *   "/vi"                            → /vi   (trang chủ tiếng Việt, route thật)
  *   "/bo-suu-tap/cap-doi-hoang-hon"  → /vi/collections/sunset-couple
- *   "/dich-vu"                       → /vi/services
- *   "/ban-quyen-anh"                 → /vi/image-license
- * URL trên trình duyệt giữ nguyên. Bản tiếng Anh (/en/...) trùng route thật nên không cần rewrite.
+ *   "/dich-vu", "/ban-quyen-anh"     → /vi/services, /vi/image-license
+ * Trang con tiếng Anh (/en/...) trùng route thật nên không cần rewrite. URL trên trình duyệt giữ nguyên.
  *
  * Vì sao rewrite ở đây mà không để trong rewrites() của next.config:
- * trên Vercel, rewrite gốc "/" → "/vi" trả về HTML cho cả yêu cầu RSC (chuyển trang phía client),
+ * trên Vercel, rewrite gốc "/" trả về HTML cho cả yêu cầu RSC (chuyển trang phía client),
  * nên khi bấm về trang chủ, router của Next phải tải lại toàn trang → màn chào (Preloader) hiện lại.
  * Rewrite trong Proxy chạy trước bước định tuyến nên yêu cầu RSC được trả đúng dữ liệu RSC.
  *
- * Đường dẫn trùng lặp / cũ được chuyển hướng 308 về URL tiếng Việt chuẩn (tránh trùng nội dung cho SEO):
+ * Đường dẫn trùng lặp / cũ được chuyển hướng 308 về URL chuẩn (tránh trùng nội dung cho SEO):
+ *   /en                          → /  (trang chủ tiếng Anh cũ)
  *   /vi/...                      → bỏ tiền tố /vi
  *   /collections/..., /services  → /bo-suu-tap/..., /dich-vu
  *   /bo-suu-tap/sunset-couple    → /bo-suu-tap/cap-doi-hoang-hon (slug cũ)
  *
  * Ngôn ngữ theo người xem (xem preferredLang):
- *   - Đã tự chọn (bấm VI/EN hoặc thanh gợi ý → cookie LANG_COOKIE): mở đúng ngôn ngữ đã chọn ở mọi trang.
- *   - Chưa chọn: chỉ TRANG CHỦ "/" mở bản tiếng Anh (mặc định của studio); link sâu giữ nguyên ngôn ngữ
- *     của URL, không tự chuyển — thay vào đó LangSuggest hiện thanh nhỏ mời đổi ngôn ngữ.
- * Chuyển hướng 307 (tạm thời), không cache, KHÔNG áp dụng cho bot → Google thu thập đủ cả hai bản ngôn ngữ.
+ *   - Đã tự chọn (bấm VI/EN → cookie LANG_COOKIE): mở đúng ngôn ngữ đã chọn ở mọi trang.
+ *   - Chưa chọn: mọi URL mở đúng ngôn ngữ của nó, KHÔNG tự chuyển — link tiếng Việt từ Google / Zalo /
+ *     Facebook luôn ra trang tiếng Việt; trang chủ "/" vốn đã là tiếng Anh (bản mặc định của studio).
+ * Chuyển hướng theo lựa chọn: 307 (tạm thời), không cache, KHÔNG áp dụng cho bot.
  */
 
-// Trình thu thập / xem trước link (Googlebot, Bingbot, Facebook, Zalo, Lighthouse...): không chuyển hướng
+// Trình thu thập / xem trước link: Googlebot, "Google Favicon" (không có chữ "bot"), Bing, Facebook, Zalo,
+// WhatsApp, Lighthouse... — không bao giờ chuyển hướng theo ngôn ngữ
 const BOT_UA =
-  /bot|crawl|spider|slurp|facebookexternalhit|facebookcatalog|embedly|preview|lighthouse|pagespeed|inspectiontool|headless|zalo/i;
+  /bot|crawl|spider|slurp|google|facebookexternalhit|facebookcatalog|embedly|preview|lighthouse|pagespeed|inspectiontool|headless|zalo|whatsapp|viber|skype/i;
 
 // Ngôn ngữ người xem: "vi" | "en" = đã TỰ CHỌN (cookie) · "new" = chưa chọn · null = không xét (bot, RSC, prefetch...)
 function preferredLang(request) {
@@ -49,30 +51,31 @@ export function proxy(request) {
     url.pathname = path;
     if (mode === "rewrite") return NextResponse.rewrite(url);
     if (mode !== "lang") return NextResponse.redirect(url, 308);
-    // Đổi ngôn ngữ theo người xem: tạm thời, không cache (mỗi người một kết quả)
+    // Đổi ngôn ngữ theo lựa chọn người xem: tạm thời, không cache (mỗi người một kết quả)
     const res = NextResponse.redirect(url, 307);
     res.headers.set("Cache-Control", "private, no-store");
     return res;
   };
   const want = preferredLang(request);
 
-  // Trang tiếng Anh: người đã chọn tiếng Việt → bản tiếng Việt tương ứng (nếu có)
-  if (/^\/en(\/|$)/.test(pathname)) {
+  // Trang chủ tiếng Anh (gốc domain); người đã chọn tiếng Việt → /vi
+  if (pathname === "/") return want === "vi" ? go(VI_HOME, "lang") : go("/en", "rewrite");
+  // Địa chỉ trang chủ tiếng Anh cũ → gốc domain (URL chuẩn duy nhất)
+  if (pathname === "/en") return go("/");
+
+  // Trang con tiếng Anh: người đã chọn tiếng Việt → bản tiếng Việt tương ứng (nếu có)
+  if (pathname.startsWith("/en/")) {
     if (want !== "vi") return NextResponse.next();
-    const inner = pathname.replace(/^\/en/, "") || "/";
-    const vi = toViPath(inner);
-    return vi === "/" || fromViPath(vi) ? go(vi, "lang") : NextResponse.next();
+    const vi = toViPath(pathname.slice(3));
+    return fromViPath(vi) ? go(vi, "lang") : NextResponse.next();
   }
 
-  const internal = pathname === "/" ? "/" : fromViPath(pathname);
+  // Trang tiếng Việt (/vi và đường dẫn tiếng Việt): người đã chọn tiếng Anh → bản tiếng Anh tương ứng.
+  // Khách chưa chọn luôn mở đúng tiếng Việt — đúng địa chỉ bấm từ Google / Zalo / Facebook.
+  const internal = fromViPath(pathname);
   if (internal) {
-    // Trang tiếng Việt → bản tiếng Anh chỉ khi: người xem đã chọn tiếng Anh, hoặc khách mới vào TRANG CHỦ.
-    // Link sâu tiếng Việt (/dich-vu, /bo-suu-tap/...) của khách chưa chọn luôn mở đúng tiếng Việt —
-    // đúng địa chỉ khách bấm từ Google / Zalo / Facebook; thanh gợi ý (LangSuggest) mời xem bản tiếng Anh.
-    if (want === "en" || (want === "new" && internal === "/")) {
-      return go(internal === "/" ? "/en" : `/en${internal}`, "lang");
-    }
-    return go(`/vi${internal === "/" ? "" : internal}`, "rewrite");
+    if (want === "en") return go(internal === "/" ? "/" : `/en${internal}`, "lang");
+    return pathname === VI_HOME ? NextResponse.next() : go(`/vi${internal}`, "rewrite");
   }
 
   const legacy = legacyViRedirect(pathname);
@@ -91,6 +94,7 @@ export const config = {
     "/",
     "/en",
     "/en/:path*",
+    "/vi",
     "/vi/:path*",
     "/bo-suu-tap/:path*",
     "/dich-vu",

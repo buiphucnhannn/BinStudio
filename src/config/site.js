@@ -9,8 +9,9 @@ export const siteConfig = {
   shortName: "Studio Bin",
   tagline: t("Photographer tại Phú Quốc", "Photographer in Phu Quoc"),
   description: t(
-    "Studio Bin — nhiếp ảnh gia bản địa tại Phú Quốc. Chụp ảnh cưới & pre-wedding ngoại cảnh biển, cặp đôi, cầu hôn, săn hoàng hôn, gia đình nghỉ dưỡng tại resort/villa, chân dung nghệ thuật & sự kiện. Phong cách phóng sự tự nhiên, phục vụ khách trong và ngoài nước.",
-    "Studio Bin — a local photographer in Phu Quoc, Vietnam. Beach weddings & pre-wedding, couples, proposals, sunset sessions, family holidays at resorts & villas, editorial portraits & events. Candid, documentary style for guests from around the world.",
+    // Mô tả trang chủ trên Google (≤ 155 ký tự để không bị cắt): từ khoá chính đứng đầu, kết bằng lời mời đặt lịch
+    "Studio Bin – photographer bản địa ở Phú Quốc: chụp ảnh cưới, pre-wedding, cầu hôn, cặp đôi hoàng hôn và gia đình nghỉ dưỡng. Ảnh tự nhiên, đặt lịch nhanh.",
+    "Local Phu Quoc photographer for beach weddings, pre-wedding, proposals, couple & family holiday photos. English-speaking, candid style. Book Studio Bin.",
   ),
   // Domain dùng cho SEO (sitemap, canonical, ảnh chia sẻ). Ưu tiên NEXT_PUBLIC_SITE_URL;
   // không có thì tự lấy domain production Vercel cấp (biến hệ thống VERCEL_PROJECT_PRODUCTION_URL).
@@ -51,7 +52,7 @@ export const siteConfig = {
   hours: [{ days: t("Hằng ngày", "Daily"), time: "06:00 – 21:00" }],
   hoursShort: t("Nhận lịch hằng ngày, kể cả cuối tuần", "Bookings daily, weekends included"),
   // Ngày cập nhật nội dung gần nhất — dùng cho <lastmod> trong sitemap. Sửa nội dung / thêm album thì đổi ngày này.
-  contentUpdated: "2026-11-03",
+  contentUpdated: "2026-11-04",
 
   // Dữ liệu có cấu trúc cho Google (LocalBusiness)
   streetAddress: "Khu phố 9",

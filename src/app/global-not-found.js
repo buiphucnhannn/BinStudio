@@ -1,4 +1,5 @@
 import { siteConfig } from "@/config/site";
+import { ICONS } from "@/lib/seo";
 import { localize } from "@/i18n";
 import { nav, ui, booking, services } from "@/data/site";
 import Navbar from "@/components/layout/Navbar";
@@ -19,6 +20,7 @@ import "./globals.css";
  * SEO: trả mã 404 thật (không chuyển hướng về trang chủ — tránh "soft 404"), Next tự gắn noindex.
  */
 export const metadata = {
+  icons: ICONS,
   other: { google: "notranslate" },
   title: `Không tìm thấy trang · Page not found | ${siteConfig.name}`,
   description:

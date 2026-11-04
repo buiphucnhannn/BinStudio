@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { localize, href, isLocale, LOCALES } from "@/i18n";
 import { pageMeta } from "@/lib/seo";
 import { breadcrumb, imageGallery, JsonLd } from "@/lib/schema";
-import { collections, getCollection, categories, seoOf, ui } from "@/data/site";
+import { collections, getCollection, categories, seoOf, metaDescOf, ui } from "@/data/site";
 import Container from "@/components/ui/Container";
 import Pic from "@/components/ui/Pic";
 import SplitText from "@/components/fx/SplitText";
@@ -19,12 +19,13 @@ export async function generateMetadata({ params }) {
   const { lang, slug } = await params;
   const c = getCollection(slug);
   if (!isLocale(lang) || !c) return {};
-  const L = localize({ c, seo: seoOf(c) }, lang);
+  const L = localize({ c, seo: seoOf(c), desc: metaDescOf(c) }, lang);
   const cover = c.images.find((im) => im.src === c.cover) || c.images[0];
   return pageMeta(lang, `/collections/${slug}`, {
     // Tên tab: "Nàng thơ Đông Dương – Ảnh chân dung Phú Quốc | Studio Bin"
     title: `${L.c.name} – ${L.seo}`,
-    description: L.c.desc,
+    // Câu mô tả riêng cho Google (tên album, số ảnh, từ khoá) — đoạn văn dài vẫn hiển thị đầy đủ trên trang
+    description: L.desc,
     image: { url: cover.src, width: cover.w, height: cover.h, alt: L.c.name },
   });
 }

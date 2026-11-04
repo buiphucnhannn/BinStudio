@@ -63,7 +63,7 @@ export default function NotFoundView() {
           </Link>
         </div>
         <Link
-          href="/en"
+          href="/"
           hrefLang="en"
           className="mt-5 inline-flex items-center gap-2 text-sm text-ink-soft underline-offset-4 transition hover:text-ink hover:underline"
         >

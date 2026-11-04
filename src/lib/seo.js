@@ -11,6 +11,22 @@ export const HOME_TITLE = t(
 );
 export const titleTemplate = `%s | ${siteConfig.name}`;
 
+/**
+ * Favicon — file tĩnh trong public/, URL CỐ ĐỊNH (không kèm mã băm như quy ước file app/icon của Next,
+ * vốn đổi theo môi trường build). Theo yêu cầu favicon của Google Search:
+ * khai báo <link rel="icon"> trên trang chủ, ảnh vuông bội số của 48px (ICO 48×48, PNG 192×192),
+ * URL ổn định, Googlebot / "Google Favicon" tải được (robots.txt cho phép, không chuyển hướng).
+ * /favicon.ico & /apple-touch-icon.png cũng là đường dẫn mặc định trình duyệt tự tìm.
+ */
+export const ICONS = {
+  icon: [
+    { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
+    { url: "/icon.svg", type: "image/svg+xml" },
+    { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+  ],
+  apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+};
+
 // Mô tả meta gọn trong ~160 ký tự (Google cắt phần dư), cắt ở ranh giới từ
 export function clip(text, max = 158) {
   if (!text || text.length <= max) return text;
