@@ -86,7 +86,7 @@ export default function GoldenHour({ data }) {
               <div className="relative aspect-[4/3] overflow-hidden">
                 <Pic
                   src={s.image.src}
-                  alt=""
+                  alt={s.image.alt || ""}
                   fill
                   sizes="(min-width: 1440px) 311px, (min-width: 1024px) 21vw, (min-width: 640px) 44vw, 90vw"
                   className="object-cover transition-transform duration-[1200ms] group-hover:scale-105"

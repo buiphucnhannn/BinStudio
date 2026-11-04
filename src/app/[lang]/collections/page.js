@@ -3,7 +3,7 @@ import { localize, href, isLocale } from "@/i18n";
 import { pageMeta } from "@/lib/seo";
 import { breadcrumb, collectionList, JsonLd } from "@/lib/schema";
 import { SLUGS_VI } from "@/i18n/routes";
-import { collections, collectionsPage, categories, ui, totalPhotos } from "@/data/site";
+import { collections, collectionsPage, categories, ui, totalPhotos, photoAlt } from "@/data/site";
 import Container from "@/components/ui/Container";
 import Pic from "@/components/ui/Pic";
 import SplitText from "@/components/fx/SplitText";
@@ -107,7 +107,8 @@ export default async function CollectionsListPage({ params }) {
                     >
                       <Pic
                         src={src}
-                        alt=""
+                        alt={i < col.length ? localize(photoAlt(src), lang) || "" : ""}
+                        aria-hidden={i >= col.length || undefined}
                         fill
                         sizes="(min-width: 1440px) 203px, (min-width: 1024px) 14vw, 29vw"
                         loading={i < 2 ? "eager" : undefined}
@@ -144,7 +145,7 @@ export default async function CollectionsListPage({ params }) {
             <div key={im.src} className="relative">
               <Pic
                 src={im.src}
-                alt=""
+                alt={im.alt || ""}
                 fill
                 sizes="34vw"
                 className="object-cover"

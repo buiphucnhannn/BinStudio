@@ -77,7 +77,7 @@ export default function ServicesHero({ lang, hero, ui }) {
               >
                 <Pic
                   src={im.src}
-                  alt=""
+                  alt={im.alt || ""}
                   fill
                   loading="eager"
                   fetchPriority={i === 0 ? "high" : undefined}

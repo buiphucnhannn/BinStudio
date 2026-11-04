@@ -82,7 +82,7 @@ export default function Faq({ faq }) {
               <div className="relative aspect-[4/5] w-full overflow-hidden">
                 <Pic
                   src={p.src}
-                  alt=""
+                  alt={p.alt || ""}
                   fill
                   sizes="(min-width: 1440px) 264px, (min-width: 1280px) 233px, 173px"
                   className="object-cover"

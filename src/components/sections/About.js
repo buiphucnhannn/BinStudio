@@ -67,7 +67,7 @@ export default function About({ about, id = "about" }) {
             <AfterIntro>
               <Pic
                 src={about.main.src}
-                alt=""
+                alt={about.main.alt || ""}
                 fill
                 sizes="(min-width: 1280px) 480px, (min-width: 1024px) 37vw, (min-width: 540px) 480px, 90vw"
                 className="object-cover"
@@ -101,7 +101,7 @@ export default function About({ about, id = "about" }) {
                   <AfterIntro>
                     <Pic
                       src={p.src}
-                      alt=""
+                      alt={p.alt || ""}
                       fill
                       sizes="(min-width: 1280px) 205px, 156px"
                       className="object-cover"

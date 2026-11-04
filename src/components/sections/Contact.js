@@ -11,7 +11,7 @@ const Polaroid = ({ p, className = "", sizes = "(min-width: 1760px) 240px, 14vw"
     >
       <Pic
         src={p.src}
-        alt=""
+        alt={p.alt || ""}
         fill
         sizes={sizes}
         className="object-cover"

@@ -20,7 +20,7 @@ export default function ServicesCta({ cta, site, ui }) {
           <div key={im.src} className="relative">
             <Pic
               src={im.src}
-              alt=""
+              alt={im.alt || ""}
               fill
               sizes="34vw"
               className="object-cover"

@@ -36,7 +36,7 @@ export default function DayGrid({ data }) {
             >
               <Pic
                 src={m.src}
-                alt=""
+                alt={m.alt || ""}
                 fill
                 sizes={
                   m.wide

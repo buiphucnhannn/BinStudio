@@ -4,7 +4,18 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Check } from "@/components/ui/Icons";
 import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
-import { LIMITS, PEOPLE, maxDateVN, todayVN, validateBooking } from "@/lib/validation/booking";
+import {
+  LIMITS,
+  PEOPLE,
+  checkDate,
+  checkHotel,
+  checkName,
+  checkNote,
+  checkPhone,
+  maxDateVN,
+  todayVN,
+  validateBooking,
+} from "@/lib/validation/booking";
 
 /**
  * Form đặt lịch → /api/contact → email "Yêu cầu đặt lịch mới" về hộp thư studio.
@@ -16,6 +27,19 @@ import { LIMITS, PEOPLE, maxDateVN, todayVN, validateBooking } from "@/lib/valid
 const TIMEOUT_MS = 15_000;
 const DURATION = { field: 6000, rate: 9000, server: 8000 };
 const FIELD_ORDER = ["name", "phone", "hotel", "date", "people", "service", "note"];
+// Kiểm tra từng ô ngay khi rời ô (cùng luật với lúc gửi & server) → báo lỗi dưới ô, không đợi bấm Gửi
+const CHECKS = {
+  name: checkName,
+  phone: checkPhone,
+  hotel: checkHotel,
+  date: checkDate,
+  note: checkNote,
+};
+// Ô điện thoại chỉ nhận số, dấu +, khoảng trắng và ( ) - . (gõ hay dán ký tự khác đều bị bỏ)
+const PHONE_CHARS = /[^\d+\s().-]/g;
+// Ràng buộc HTML (form.checkValidity / :invalid) — trình duyệt hiểu pattern theo cờ "v" nên ký hiệu phải escape
+const NAME_PATTERN = String.raw`.*\p{L}.*`; // phải có ít nhất 1 chữ cái
+const PHONE_PATTERN = String.raw`[0-9+ \(\)\-\.]{8,20}`;
 
 export default function BookingForm({ booking, services, preset, lang }) {
   const f = booking.fields;
@@ -37,14 +61,25 @@ export default function BookingForm({ booking, services, preset, lang }) {
   const openedAt = useRef(0);
   const lastToast = useRef(null); // toast lỗi đang hiện — đóng trước khi báo lỗi mới để không chồng
 
+  // Khoảng ngày chọn được: từ hôm nay tới 2 năm sau — theo giờ VN nên server & trình duyệt ra cùng một ngày
+  const [dateRange] = useState(() => ({ min: todayVN(), max: maxDateVN() }));
   useEffect(() => {
     openedAt.current = Date.now();
   }, []);
 
-  const set = (k) => (e) => {
-    setForm((v) => ({ ...v, [k]: e.target.value }));
-    if (errors[k]) setErrors(({ [k]: _drop, ...rest }) => rest);
+  // Báo / gỡ lỗi của 1 ô theo giá trị hiện tại (ô còn trống thì chưa báo — chỉ báo khi bấm Gửi)
+  const checkField = (k, value) => {
+    const res = String(value).length ? CHECKS[k]?.(value) : null;
+    setErrors(({ [k]: _drop, ...rest }) => (res?.error ? { ...rest, [k]: res.error } : rest));
   };
+  const set = (k) => (e) => {
+    const value = k === "phone" ? e.target.value.replace(PHONE_CHARS, "") : e.target.value;
+    setForm((v) => ({ ...v, [k]: value }));
+    if (k === "date")
+      checkField(k, value); // bộ chọn ngày không có "rời ô" rõ ràng → kiểm tra ngay
+    else if (errors[k]) setErrors(({ [k]: _drop, ...rest }) => rest);
+  };
+  const blur = (k) => (e) => checkField(k, e.target.value);
 
   const msg = (code) => E[code] || f.toastErrDesc;
   const clearToast = () => lastToast.current && toast.dismiss(lastToast.current);
@@ -231,6 +266,9 @@ export default function BookingForm({ booking, services, preset, lang }) {
             name="name"
             required
             maxLength={LIMITS.name}
+            // Phải có ít nhất 1 chữ cái (chỉ gõ dấu cách / số / ký hiệu → không hợp lệ)
+            pattern={NAME_PATTERN}
+            onBlur={blur("name")}
             className={cn("field", bad("name"))}
             {...a11y("name")}
             aria-label={f.name}
@@ -249,6 +287,8 @@ export default function BookingForm({ booking, services, preset, lang }) {
             type="tel"
             inputMode="tel"
             maxLength={LIMITS.phone}
+            pattern={PHONE_PATTERN}
+            onBlur={blur("phone")}
             className={cn("field", bad("phone"))}
             {...a11y("phone")}
             aria-label={f.phone}
@@ -269,6 +309,7 @@ export default function BookingForm({ booking, services, preset, lang }) {
             name="hotel"
             required
             maxLength={LIMITS.hotel}
+            onBlur={blur("hotel")}
             className={cn("field pt-[1.15rem] pb-1.5", bad("hotel"))}
             {...a11y("hotel")}
             placeholder={f.hotelPlaceholder}
@@ -289,13 +330,11 @@ export default function BookingForm({ booking, services, preset, lang }) {
               className={cn("field pt-[1.15rem] pb-1.5", bad("date"))}
               {...a11y("date")}
               type="date"
+              min={dateRange.min}
+              max={dateRange.max}
               value={form.date}
               onChange={set("date")}
-              // Giới hạn chọn ngày: từ hôm nay (giờ VN) tới 2 năm sau — đặt khi người dùng mở ô ngày
-              onFocus={(e) => {
-                e.currentTarget.min = todayVN();
-                e.currentTarget.max = maxDateVN();
-              }}
+              onBlur={blur("date")}
             />
           </label>
           {hint("date")}
@@ -354,6 +393,7 @@ export default function BookingForm({ booking, services, preset, lang }) {
           placeholder={f.note}
           value={form.note}
           onChange={set("note")}
+          onBlur={blur("note")}
         />
         {hint("note")}
       </div>

@@ -41,7 +41,7 @@ function SlidePicture({ slide, first, active }) {
       <source media={DESKTOP} srcSet={wide.srcSet} sizes="100vw" />
       <img
         {...img}
-        alt=""
+        alt={slide.tall.alt || slide.wide.alt || ""}
         srcSet={tallSet}
         loading={first ? "eager" : "lazy"}
         fetchPriority={first ? "high" : undefined}

@@ -35,7 +35,7 @@ export default function Testimonials({ data }) {
                 <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full bg-sand-200">
                   <Pic
                     src={tm.image.src}
-                    alt=""
+                    alt={tm.image.alt || ""}
                     fill
                     sizes="44px"
                     className="object-cover"

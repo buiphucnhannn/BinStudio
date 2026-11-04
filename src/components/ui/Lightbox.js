@@ -19,6 +19,38 @@ export default function Lightbox({ images, index, onClose, onChange }) {
   const prev = useCallback(() => onChange((index - 1 + total) % total), [index, total, onChange]);
   const next = useCallback(() => onChange((index + 1) % total), [index, total, onChange]);
 
+  // Nút Back (hoặc vuốt back trên điện thoại) = đóng ảnh, vẫn ở lại trang: mở lightbox thì ghi thêm 1 mục
+  // lịch sử (cùng URL, giữ state của Next router), Back lấy lại mục đó → popstate → đóng.
+  // Đóng bằng ✕ / Esc / bấm nền thì tự gỡ mục đã ghi để lần Back sau rời trang như bình thường.
+  // Chuyển ảnh trong lightbox không ghi thêm lịch sử (effect chỉ phụ thuộc open).
+  // Gỡ mục lịch sử sau 1 nhịp: Strict Mode (dev) chạy effect 2 lần liền → lần chạy lại huỷ việc gỡ, giữ mục cũ.
+  const closeRef = useRef(onClose);
+  const backTimer = useRef(null);
+  useEffect(() => {
+    closeRef.current = onClose;
+  }, [onClose]);
+  useEffect(() => {
+    if (!open) return;
+    if (backTimer.current) {
+      clearTimeout(backTimer.current);
+      backTimer.current = null;
+    } else history.pushState({ ...history.state, lightbox: true }, "");
+    let viaBack = false;
+    const onPop = () => {
+      viaBack = true;
+      closeRef.current();
+    };
+    window.addEventListener("popstate", onPop);
+    return () => {
+      window.removeEventListener("popstate", onPop);
+      if (viaBack || !history.state?.lightbox) return;
+      backTimer.current = setTimeout(() => {
+        backTimer.current = null;
+        history.back();
+      }, 0);
+    };
+  }, [open]);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => {

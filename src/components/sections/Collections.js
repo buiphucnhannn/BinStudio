@@ -12,23 +12,24 @@ import { ArrowRight } from "@/components/ui/Icons";
  * Bộ sưu tập kiểu "editorial grid": 6 thẻ kích thước khác nhau, so le, có số thứ tự.
  * Hover: ảnh phóng nhẹ, caption trượt lên, vòng mũi tên hiện ra.
  */
-// sizes khớp từng thẻ: 7/12, 5/12, 4/12 khung nội dung (tối đa 1312px); sm: 2 cột; mobile: 1 cột
+// Lưới so le 12 cột chỉ từ lg (≥1024px): ở tablet 768px thẻ 4/12 chỉ còn ~218px → tiêu đề vỡ mỗi chữ một dòng.
+// 640–1023px: 2 cột đều; mobile: 1 cột. sizes khớp từng thẻ: 7/12, 5/12, 4/12 khung nội dung (tối đa 1312px)
 const SIZES = [
-  "(min-width: 1440px) 757px, (min-width: 1024px) 51vw, (min-width: 768px) 54vw, (min-width: 640px) 44vw, 90vw",
-  "(min-width: 1440px) 538px, (min-width: 1024px) 37vw, (min-width: 768px) 38vw, (min-width: 640px) 44vw, 90vw",
-  "(min-width: 1440px) 538px, (min-width: 1024px) 37vw, (min-width: 768px) 38vw, (min-width: 640px) 44vw, 90vw",
-  "(min-width: 1440px) 427px, (min-width: 1024px) 29vw, (min-width: 768px) 30vw, (min-width: 640px) 44vw, 90vw",
-  "(min-width: 1440px) 427px, (min-width: 1024px) 29vw, (min-width: 768px) 30vw, (min-width: 640px) 44vw, 90vw",
-  "(min-width: 1440px) 427px, (min-width: 1024px) 29vw, (min-width: 768px) 30vw, (min-width: 640px) 44vw, 90vw",
+  "(min-width: 1440px) 757px, (min-width: 1024px) 51vw, (min-width: 640px) 44vw, 90vw",
+  "(min-width: 1440px) 538px, (min-width: 1024px) 37vw, (min-width: 640px) 44vw, 90vw",
+  "(min-width: 1440px) 538px, (min-width: 1024px) 37vw, (min-width: 640px) 44vw, 90vw",
+  "(min-width: 1440px) 427px, (min-width: 1024px) 29vw, (min-width: 640px) 44vw, 90vw",
+  "(min-width: 1440px) 427px, (min-width: 1024px) 29vw, (min-width: 640px) 44vw, 90vw",
+  "(min-width: 1440px) 427px, (min-width: 1024px) 29vw, (min-width: 640px) 44vw, 90vw",
 ];
 
 const LAYOUT = [
-  "md:col-span-7 md:row-span-2 aspect-[4/5] md:aspect-auto",
-  "md:col-span-5 aspect-[4/5] md:aspect-[5/4]",
-  "md:col-span-5 aspect-[4/5] md:aspect-[5/4]",
-  "md:col-span-4 aspect-[4/5]",
-  "md:col-span-4 aspect-[4/5]",
-  "md:col-span-4 aspect-[4/5]",
+  "lg:col-span-7 lg:row-span-2 aspect-[4/5] lg:aspect-auto",
+  "lg:col-span-5 aspect-[4/5] lg:aspect-[5/4]",
+  "lg:col-span-5 aspect-[4/5] lg:aspect-[5/4]",
+  "lg:col-span-4 aspect-[4/5]",
+  "lg:col-span-4 aspect-[4/5]",
+  "lg:col-span-4 aspect-[4/5]",
 ];
 
 export default function Collections({ lang, collections, ui, heading }) {
@@ -47,14 +48,14 @@ export default function Collections({ lang, collections, ui, heading }) {
             accentClass="italic text-accent-deep"
             className="max-w-2xl h-display text-[2.2rem] sm:text-[2.8rem] lg:text-[3.3rem]"
           />
-          <div className="reveal" style={{ "--reveal-delay": "150ms" }}>
+          <div className="reveal shrink-0" style={{ "--reveal-delay": "150ms" }}>
             <Button href={allHref} arrow>
               {ui.viewAll}
             </Button>
           </div>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-12 md:gap-5">
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-12 lg:gap-5">
           {collections.map((c, i) => (
             <Link
               key={c.slug}
@@ -85,7 +86,7 @@ export default function Collections({ lang, collections, ui, heading }) {
                 {c.images.length} {ui.photos}
               </span>
 
-              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-6 text-white md:p-7">
+              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-6 text-white lg:p-7">
                 <div className="min-w-0">
                   <p className="text-[11px] tracking-[0.3em] text-white/70 uppercase lg:text-[10px]">
                     {c.sub}
@@ -93,7 +94,7 @@ export default function Collections({ lang, collections, ui, heading }) {
                   <h3
                     className={cn(
                       "mt-1.5 font-serif leading-tight",
-                      i === 0 ? "text-3xl md:text-[2.6rem]" : "text-2xl md:text-[1.9rem]",
+                      i === 0 ? "text-3xl lg:text-[2.6rem]" : "text-2xl lg:text-[1.9rem]",
                     )}
                   >
                     {c.name}

@@ -33,7 +33,7 @@ export default function Process({ data }) {
                 <div className="relative mx-auto -mt-6 aspect-[4/5] w-full max-w-[280px] overflow-hidden rounded-[1.5rem] bg-sand-200">
                   <Pic
                     src={s.image.src}
-                    alt=""
+                    alt={s.image.alt || ""}
                     fill
                     sizes="(min-width: 1280px) 280px, (min-width: 1024px) 210px, 280px"
                     className="object-cover"

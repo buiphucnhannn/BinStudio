@@ -49,7 +49,7 @@ export default function Services({ lang, services, ui }) {
           </h2>
           {/* Góc phải: khẩu độ xoay chậm + nút sang trang Dịch vụ — căn tâm tiêu đề */}
           <div
-            className="reveal relative flex items-center gap-6"
+            className="reveal relative flex shrink-0 items-center gap-6"
             style={{ "--reveal-delay": "200ms" }}
           >
             <Ornament
@@ -58,10 +58,10 @@ export default function Services({ lang, services, ui }) {
             />
             <Link
               href={href(lang, "/services")}
-              className="group inline-flex items-center gap-3 rounded-full border border-ink/15 py-1.5 pr-1.5 pl-6 text-sm font-medium text-ink transition hover:border-ink"
+              className="group inline-flex items-center gap-3 rounded-full border border-ink/15 py-1.5 pr-1.5 pl-6 text-sm font-medium whitespace-nowrap text-ink transition hover:border-ink"
             >
               {services.allLabel}
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-white transition-transform group-hover:translate-x-0.5">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink text-white transition-transform group-hover:translate-x-0.5">
                 <ArrowRight className="h-4 w-4" />
               </span>
             </Link>
@@ -71,6 +71,8 @@ export default function Services({ lang, services, ui }) {
           className="reveal mt-5 max-w-2xl text-[15px] leading-relaxed text-ink-soft sm:text-base"
           style={{ "--reveal-delay": "160ms" }}
         >
+          {/* Câu hướng dẫn "ảnh bên trái" chỉ đúng khi có khung ảnh dính (từ lg) */}
+          <span className="hidden lg:inline">{services.scrollHint} </span>
           {services.desc}
         </p>
 

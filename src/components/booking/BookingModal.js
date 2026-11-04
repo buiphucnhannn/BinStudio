@@ -68,7 +68,7 @@ export default function BookingModal({ booking, services, site, lang }) {
         <div className="relative hidden lg:block">
           <Pic
             src={booking.image.src}
-            alt=""
+            alt={booking.image.alt || ""}
             fill
             sizes="420px"
             className="object-cover"

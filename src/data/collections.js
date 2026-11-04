@@ -692,6 +692,30 @@ export const collections = [
 ];
 
 export const getCollection = (slug) => collections.find((c) => c.slug === slug);
+
+// ---------- Mô tả ảnh (alt) cho ảnh tác phẩm dùng ngoài trang album ----------
+// Ảnh /images/<slug>/... thuộc bộ sưu tập <slug> → "{Tên album} – {Từ khoá SEO}", vd. "Lễ cưới bên biển – Ảnh cưới Phú Quốc"
+// (cùng mẫu với alt trên trang album) → ảnh ở trang chủ / dịch vụ cũng lên được Google Hình ảnh.
+const bySlug = Object.fromEntries(collections.map((c) => [c.slug, c]));
+export function photoAlt(src) {
+  const c = bySlug[String(src).split("/")[2]];
+  if (!c) return undefined; // ảnh thương hiệu / trang trí
+  const seo = seoOf(c);
+  return t(`${c.name.vi} – ${seo.vi}`, `${c.name.en} – ${seo.en}`);
+}
+
+// Gắn alt cho mọi ảnh { src } trong một khối dữ liệu (chưa có alt riêng) — thêm ảnh mới không cần nhớ viết alt
+export function withAlts(node) {
+  if (Array.isArray(node)) return node.map(withAlts);
+  if (!node || typeof node !== "object") return node;
+  if (Object.keys(node).length === 2 && "vi" in node && "en" in node) return node; // chuỗi song ngữ
+  const out = Object.fromEntries(Object.entries(node).map(([k, v]) => [k, withAlts(v)]));
+  if (typeof out.src === "string" && out.alt === undefined) {
+    const alt = photoAlt(out.src);
+    if (alt) out.alt = alt;
+  }
+  return out;
+}
 export const featuredCollections = [
   "wedding-beach",
   "sunset-couple",

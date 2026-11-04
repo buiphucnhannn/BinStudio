@@ -7,6 +7,7 @@ import { t } from "@/i18n";
 
 // Ảnh: /images/<bộ>/<bộ>-NN.webp (xem src/data/photos.js). Bộ sưu tập: src/data/collections.js.
 import { P } from "./photos";
+import { collections, withAlts } from "./collections";
 export {
   categories,
   categorySeo,
@@ -15,6 +16,7 @@ export {
   getCollection,
   featuredCollections,
   totalPhotos,
+  photoAlt,
 } from "./collections";
 
 // ---------- Điều hướng ----------
@@ -79,7 +81,7 @@ export const ui = {
 };
 
 // ---------- Hero ----------
-export const hero = {
+export const hero = withAlts({
   eyebrow: t("Studio Bin · Photographer · Phú Quốc", "Studio Bin · Photographer · Phu Quoc"),
   title: t("Khoảnh khắc thật,", "Real moments,"),
   accent: t("giữa biển trời Phú Quốc.", "under Phu Quoc skies."),
@@ -120,7 +122,7 @@ export const hero = {
     t("Giao tiếp tiếng Anh", "English speaking"),
     t("Bãi biển riêng · Resort cao cấp", "Private beaches · Luxury resorts"),
   ],
-};
+});
 
 // ---------- Dải chữ chạy ----------
 export const marquee = [
@@ -137,7 +139,7 @@ export const marquee = [
 ];
 
 // ---------- Về Bin ----------
-export const about = {
+export const about = withAlts({
   eyebrow: t("Về Studio Bin", "About Studio Bin"),
   manifesto: [
     { text: t("Không dàn dựng.", "Nothing staged.") },
@@ -168,7 +170,7 @@ export const about = {
       label: t("Am hiểu từng bãi biển, từng khung giờ", "Knows every beach, every hour"),
     },
   ],
-};
+});
 
 // ---------- Vì sao chọn Bin (USP theo brief) ----------
 export const usps = {
@@ -207,9 +209,14 @@ export const services = {
   eyebrow: t("Dịch vụ", "Services"),
   title: t("Năm cách để giữ lại Phú Quốc.", "Five ways to keep Phu Quoc with you."),
   allLabel: t("Xem chi tiết dịch vụ", "See all services"),
+  // scrollHint chỉ hiện khi có khung ảnh dính bên trái (từ lg); mobile/tablet ảnh nằm trong từng thẻ
+  scrollHint: t(
+    "Cuộn qua từng dịch vụ — ảnh bên trái sẽ đổi theo.",
+    "Scroll through each service — the photo on the left follows along.",
+  ),
   desc: t(
-    "Cuộn qua từng dịch vụ — ảnh bên trái sẽ đổi theo. Mọi gói đều có thể kết hợp và tuỳ chỉnh theo lịch trình của bạn.",
-    "Scroll through each service — the photo on the left follows along. Every package can be combined and tailored to your itinerary.",
+    "Mọi gói đều có thể kết hợp và tuỳ chỉnh theo lịch trình của bạn.",
+    "Every package can be combined and tailored to your itinerary.",
   ),
   items: [
     {
@@ -304,7 +311,7 @@ export const services = {
 };
 
 // ---------- Giờ vàng: lịch ánh sáng Phú Quốc ----------
-export const goldenHour = {
+export const goldenHour = withAlts({
   eyebrow: t("Lịch ánh sáng", "Light calendar"),
   cta: t("Đặt lịch giờ vàng", "Book golden hour"),
   title: t(
@@ -357,7 +364,7 @@ export const goldenHour = {
       image: { src: P("sunset-portrait", 5), pos: "center 50%" },
     },
   ],
-};
+});
 
 // ---------- Địa điểm gợi ý ----------
 export const locations = {
@@ -434,7 +441,7 @@ export const locations = {
 };
 
 // ---------- Quy trình (4 bước) ----------
-export const process = {
+export const process = withAlts({
   eyebrow: t("Quy trình", "How it works"),
   title: t("Bốn bước, một bộ ảnh để đời.", "Four steps to a set you'll keep forever."),
   steps: [
@@ -475,7 +482,7 @@ export const process = {
       image: { src: P("wedding-beach", 9), pos: "center 28%" },
     },
   ],
-};
+});
 
 // ---------- Khoảnh khắc (dải ngang ghim) ----------
 export const moments = {
@@ -565,7 +572,7 @@ export const moments = {
 };
 
 // ---------- Lưới ảnh "Một ngày ở Phú Quốc" (dùng nốt ảnh còn lại) ----------
-export const dayGrid = {
+export const dayGrid = withAlts({
   eyebrow: t("Một ngày với Bin", "A day with Bin"),
   title: t("Từ bình minh đến giờ xanh.", "From sunrise to blue hour."),
   items: [
@@ -578,10 +585,10 @@ export const dayGrid = {
     { src: P("sunset-couple", 6), time: "17:55", pos: "center 30%" },
     { src: P("sunset-portrait", 11), time: "18:21", pos: "center 55%" },
   ],
-};
+});
 
 // ---------- Đánh giá (nội dung mẫu — thay bằng review thật của khách) ----------
-export const testimonials = {
+export const testimonials = withAlts({
   eyebrow: t("Khách nói về Bin", "Kind words"),
   title: t("Những lời nhắn sau chuyến đi.", "Notes sent after the trip."),
   note: t(
@@ -617,10 +624,10 @@ export const testimonials = {
       image: { src: P("wedding-beach", 11), pos: "center 35%" },
     },
   ],
-};
+});
 
 // ---------- Liên hệ (khối mời gọi cuối trang) ----------
-export const contact = {
+export const contact = withAlts({
   script: t("Hẹn gặp bạn ở Phú Quốc", "See you in Phu Quoc"),
   eyebrow: t("Liên hệ & đặt lịch", "Contact & booking"),
   title: t("Ngày nào bạn ở trên đảo?", "Which day are you on the island?"),
@@ -634,10 +641,10 @@ export const contact = {
     { src: P("beach-lookbook", 5), caption: "blue silk", pos: "center 45%" },
     { src: P("sunset-portrait", 1), caption: "b&w", pos: "center 25%" },
   ],
-};
+});
 
 // ---------- Popup đặt lịch ----------
-export const booking = {
+export const booking = withAlts({
   title: t("Đặt lịch chụp ảnh", "Book a photo session"),
   desc: t(
     "Để lại thông tin, Bin sẽ liên hệ xác nhận lịch, gợi ý địa điểm và gửi báo giá trong ngày.",
@@ -765,10 +772,10 @@ export const booking = {
     "Xin chào Studio Bin, mình muốn đặt lịch chụp ảnh:",
     "Hello Studio Bin, I'd like to book a photo session:",
   ),
-};
+});
 
 // ---------- Trang Dịch vụ (/services) ----------
-export const servicesPage = {
+export const servicesPage = withAlts({
   meta: {
     title: t("Dịch vụ & gói chụp ảnh Phú Quốc", "Photography Services & Packages in Phu Quoc"),
     desc: t(
@@ -792,8 +799,12 @@ export const servicesPage = {
       { src: P("sunset-portrait", 2), pos: "center 25%" },
     ],
     stats: [
-      { value: "05", label: t("Nhóm dịch vụ", "Service groups") },
-      { value: "09", label: t("Bộ sưu tập", "Collections") },
+      // Đếm từ dữ liệu (không gõ cứng) → luôn khớp trang chủ & trang Bộ sưu tập
+      {
+        value: String(services.items.length).padStart(2, "0"),
+        label: t("Nhóm dịch vụ", "Service groups"),
+      },
+      { value: String(collections.length).padStart(2, "0"), label: t("Bộ sưu tập", "Collections") },
       { value: "24h", label: t("Ảnh xem trước", "Sneak peeks") },
     ],
   },
@@ -906,10 +917,10 @@ export const servicesPage = {
       { src: P("resort-editorial", 5), pos: "center 30%" },
     ],
   },
-};
+});
 
 // ---------- Trang Bộ sưu tập ----------
-export const collectionsPage = {
+export const collectionsPage = withAlts({
   meta: {
     title: t("Bộ sưu tập ảnh cưới & du lịch Phú Quốc", "Phu Quoc Wedding & Travel Portfolio"),
     desc: t(
@@ -941,7 +952,7 @@ export const collectionsPage = {
     [P("sunset-couple", 6), P("resort-editorial", 3), P("family-villa", 8)],
     [P("beach-lookbook", 3), P("maternity", 2), P("family-travel", 1)],
   ],
-};
+});
 
 // ---------- Footer ----------
 export const footer = {
