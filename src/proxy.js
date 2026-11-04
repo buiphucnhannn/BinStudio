@@ -19,16 +19,18 @@ import { LANG_COOKIE, fromViPath, legacyViRedirect, toViPath } from "@/i18n/rout
  *   /collections/..., /services  → /bo-suu-tap/..., /dich-vu
  *   /bo-suu-tap/sunset-couple    → /bo-suu-tap/cap-doi-hoang-hon (slug cũ)
  *
- * Ngôn ngữ theo người xem (xem preferredLang): khách mới vào → bản tiếng Anh; đã bấm VI/EN → nhớ lựa chọn
- * (cookie LANG_COOKIE do nút đổi ngôn ngữ ghi). Chuyển hướng 307 (tạm thời) và KHÔNG áp dụng cho bot,
- * để Google vẫn thu thập & lập chỉ mục được cả hai bản ngôn ngữ ở đúng URL của nó.
+ * Ngôn ngữ theo người xem (xem preferredLang):
+ *   - Đã tự chọn (bấm VI/EN hoặc thanh gợi ý → cookie LANG_COOKIE): mở đúng ngôn ngữ đã chọn ở mọi trang.
+ *   - Chưa chọn: chỉ TRANG CHỦ "/" mở bản tiếng Anh (mặc định của studio); link sâu giữ nguyên ngôn ngữ
+ *     của URL, không tự chuyển — thay vào đó LangSuggest hiện thanh nhỏ mời đổi ngôn ngữ.
+ * Chuyển hướng 307 (tạm thời), không cache, KHÔNG áp dụng cho bot → Google thu thập đủ cả hai bản ngôn ngữ.
  */
 
 // Trình thu thập / xem trước link (Googlebot, Bingbot, Facebook, Zalo, Lighthouse...): không chuyển hướng
 const BOT_UA =
   /bot|crawl|spider|slurp|facebookexternalhit|facebookcatalog|embedly|preview|lighthouse|pagespeed|inspectiontool|headless|zalo/i;
 
-// Ngôn ngữ người xem muốn: cookie đã chọn, không có thì tiếng Anh. null = không chuyển hướng.
+// Ngôn ngữ người xem: "vi" | "en" = đã TỰ CHỌN (cookie) · "new" = chưa chọn · null = không xét (bot, RSC, prefetch...)
 function preferredLang(request) {
   const h = request.headers;
   if (request.method !== "GET") return null;
@@ -37,7 +39,7 @@ function preferredLang(request) {
   if (!(h.get("accept") || "").includes("text/html")) return null;
   if (BOT_UA.test(h.get("user-agent") || "")) return null;
   const saved = request.cookies.get(LANG_COOKIE)?.value;
-  return saved === "vi" || saved === "en" ? saved : "en";
+  return saved === "vi" || saved === "en" ? saved : "new";
 }
 
 export function proxy(request) {
@@ -64,8 +66,12 @@ export function proxy(request) {
 
   const internal = pathname === "/" ? "/" : fromViPath(pathname);
   if (internal) {
-    // Trang tiếng Việt: khách mới / người đã chọn tiếng Anh → bản tiếng Anh tương ứng
-    if (want === "en") return go(internal === "/" ? "/en" : `/en${internal}`, "lang");
+    // Trang tiếng Việt → bản tiếng Anh chỉ khi: người xem đã chọn tiếng Anh, hoặc khách mới vào TRANG CHỦ.
+    // Link sâu tiếng Việt (/dich-vu, /bo-suu-tap/...) của khách chưa chọn luôn mở đúng tiếng Việt —
+    // đúng địa chỉ khách bấm từ Google / Zalo / Facebook; thanh gợi ý (LangSuggest) mời xem bản tiếng Anh.
+    if (want === "en" || (want === "new" && internal === "/")) {
+      return go(internal === "/" ? "/en" : `/en${internal}`, "lang");
+    }
     return go(`/vi${internal === "/" ? "" : internal}`, "rewrite");
   }
 

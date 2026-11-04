@@ -3,10 +3,11 @@ import { siteConfig } from "@/config/site";
 import { pageMeta, HOME_TITLE, titleTemplate } from "@/lib/seo";
 import { BUSINESS_ID, JsonLd } from "@/lib/schema";
 import { LOCALES, isLocale, localize, href } from "@/i18n";
-import { nav, ui, footer, booking, services } from "@/data/site";
+import { nav, ui, footer, booking, services, langSuggest } from "@/data/site";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import FloatingContact from "@/components/layout/FloatingContact";
+import LangSuggest from "@/components/layout/LangSuggest";
 import Reveal from "@/components/ui/Reveal";
 import SmoothScroll from "@/components/fx/SmoothScroll";
 import ScrollTop from "@/components/fx/ScrollTop";
@@ -110,6 +111,7 @@ export default async function RootLayout({ children, params }) {
         <PageTransition />
         <Reveal />
         <Navbar lang={lang} nav={L.nav} ui={L.ui} phone={site.phone} phoneRaw={site.phoneIntl} />
+        <LangSuggest lang={lang} copy={langSuggest} />
         <main>{children}</main>
         <Footer lang={lang} site={site} nav={L.nav} ui={L.ui} footer={L.footer} />
         <FloatingContact site={site} ui={L.ui} />

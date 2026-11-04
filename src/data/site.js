@@ -28,6 +28,21 @@ export const nav = [
   { label: t("Liên hệ", "Contact"), href: "/#contact" },
 ];
 
+// Thanh gợi ý đổi ngôn ngữ (components/layout/LangSuggest.js) cho khách CHƯA chọn ngôn ngữ.
+// Khoá = ngôn ngữ được mời chuyển sang; lời mời viết bằng chính ngôn ngữ đó để khách đọc được.
+export const langSuggest = {
+  en: {
+    text: "This page is in Vietnamese. View it in English?",
+    go: "View in English",
+    stay: "Ở lại tiếng Việt",
+  },
+  vi: {
+    text: "Trang đang hiển thị tiếng Anh. Xem bằng tiếng Việt?",
+    go: "Xem tiếng Việt",
+    stay: "Stay in English",
+  },
+};
+
 export const ui = {
   book: t("Đặt lịch chụp", "Book a session"),
   bookFree: t("Đặt lịch chụp ảnh", "Book a photo session"),

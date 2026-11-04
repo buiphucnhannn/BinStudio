@@ -7,13 +7,7 @@ import { cn, lockScroll } from "@/lib/utils";
 import { href, toCanonicalPath } from "@/i18n";
 import { ArrowRight, Close } from "@/components/ui/Icons";
 import Logo from "@/components/ui/Logo";
-import { LANG_COOKIE } from "@/i18n/routes";
-
-// Nhớ ngôn ngữ người xem chọn trong 1 năm (proxy đọc cookie này khi mở trang)
-const rememberLang = (lang) => {
-  const secure = location.protocol === "https:" ? "; secure" : "";
-  document.cookie = `${LANG_COOKIE}=${lang}; path=/; max-age=31536000; samesite=lax${secure}`;
-};
+import { rememberLang } from "@/lib/lang";
 
 /**
  * Header dạng "viên thuốc" kính mờ nổi cách mép (theo mẫu ButStudio / MUSE Bridal):
