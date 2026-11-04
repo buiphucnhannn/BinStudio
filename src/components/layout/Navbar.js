@@ -7,6 +7,13 @@ import { cn, lockScroll } from "@/lib/utils";
 import { href, toCanonicalPath } from "@/i18n";
 import { ArrowRight, Close } from "@/components/ui/Icons";
 import Logo from "@/components/ui/Logo";
+import { LANG_COOKIE } from "@/i18n/routes";
+
+// Nhớ ngôn ngữ người xem chọn trong 1 năm (proxy đọc cookie này khi mở trang)
+const rememberLang = (lang) => {
+  const secure = location.protocol === "https:" ? "; secure" : "";
+  document.cookie = `${LANG_COOKIE}=${lang}; path=/; max-age=31536000; samesite=lax${secure}`;
+};
 
 /**
  * Header dạng "viên thuốc" kính mờ nổi cách mép (theo mẫu ButStudio / MUSE Bridal):
@@ -115,10 +122,12 @@ export default function Navbar({ lang, nav, ui, phone, phoneRaw }) {
         </nav>
 
         <div className="flex items-center gap-1.5 sm:gap-2">
-          {/* Đổi ngôn ngữ: thẻ <a> thường (tải lại trang) — đổi cả layout gốc (html lang, metadata) */}
+          {/* Đổi ngôn ngữ: thẻ <a> thường (tải lại trang) — đổi cả layout gốc (html lang, metadata).
+              Ghi lựa chọn vào cookie trước khi chuyển trang → lần sau vào web mở đúng ngôn ngữ (src/proxy.js) */}
           <a
             href={langHref}
             hrefLang={otherLang}
+            onClick={() => rememberLang(otherLang)}
             aria-label={otherLang === "en" ? "Switch to English" : "Chuyển sang tiếng Việt"}
             className={cn(
               "flex h-9 items-center gap-1 rounded-full px-3 text-[11px] font-semibold tracking-[0.18em] transition",

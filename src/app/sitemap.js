@@ -42,7 +42,7 @@ export default function sitemap() {
       alternates: {
         languages: {
           ...Object.fromEntries(LOCALES.map((l) => [l, base + href(l, p.path)])),
-          "x-default": base + href("vi", p.path),
+          "x-default": base + href("en", p.path),
         },
       },
       ...(p.images.length && { images: [...new Set(p.images)].map(abs) }),

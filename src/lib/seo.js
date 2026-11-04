@@ -35,7 +35,8 @@ export function pageMeta(lang, path, { title, description, image } = {}) {
     description: desc,
     alternates: {
       canonical: href(lang, path),
-      languages: { vi: href("vi", path), en: href("en", path), "x-default": href("vi", path) },
+      // x-default = bản cho người xem chưa chọn ngôn ngữ: tiếng Anh (khớp src/proxy.js)
+      languages: { vi: href("vi", path), en: href("en", path), "x-default": href("en", path) },
     },
     openGraph: {
       type: "website",

@@ -9,6 +9,9 @@
  * File này không import gì để proxy nhẹ.
  */
 
+// Cookie lưu ngôn ngữ người xem đã chọn ("vi" | "en"): nút VI/EN ghi, src/proxy.js đọc để mở đúng bản ngôn ngữ
+export const LANG_COOKIE = "lang";
+
 // Trang: nội bộ → đường dẫn tiếng Việt
 const PAGES_VI = {
   "/collections": "/bo-suu-tap",
