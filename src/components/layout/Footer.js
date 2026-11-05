@@ -27,7 +27,7 @@ export default function Footer({ lang, site, nav, ui, footer }) {
               aria-label="Studio Bin"
               className="inline-block transition-opacity hover:opacity-80"
             >
-              <Logo className="h-10" light />
+              <Logo className="h-20" sizes="130px" light />
             </Link>
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-sand/70">{footer.blurb}</p>
             <div className="mt-6 flex gap-2">

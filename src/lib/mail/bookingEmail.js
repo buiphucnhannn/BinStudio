@@ -95,10 +95,9 @@ export function bookingEmail(b) {
   <tr><td align="center" style="padding:32px 12px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:24px;overflow:hidden;box-shadow:0 18px 40px -24px rgba(31,31,29,.35);">
 
-      <!-- Header navy + logo -->
+      <!-- Header navy + logo (bản cho nền tối; logo đã có chữ STUDIO · PHU QUOC) -->
       <tr><td align="center" style="background:${C.navy};padding:34px 24px 30px;">
-        <img src="cid:studio-bin-logo" width="180" alt="Studio Bin" style="display:block;width:180px;max-width:60%;height:auto;border:0;">
-        <p style="margin:14px 0 0;font-family:${SANS};font-size:10px;letter-spacing:4px;text-transform:uppercase;color:${C.gold};">Photographer · Phú Quốc</p>
+        <img src="cid:studio-bin-logo" width="200" height="124" alt="Studio Bin — Photographer Phú Quốc" style="display:block;width:200px;max-width:64%;height:auto;border:0;">
       </td></tr>
 
       <!-- Tiêu đề -->

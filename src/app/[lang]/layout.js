@@ -74,8 +74,8 @@ export default async function RootLayout({ children, params }) {
       site.url + "/images/wedding-beach/wedding-beach-04.webp",
       site.url + "/images/family-villa/family-villa-06.webp",
     ],
-    // Logo chữ màu than: Google yêu cầu logo hiển thị rõ trên nền trắng (bản vàng nhạt bị chìm)
-    logo: site.url + "/images/brand/logo-dark.webp",
+    // Logo màu gốc (navy + mặt trời cam): Google yêu cầu logo hiển thị rõ trên nền trắng
+    logo: site.url + "/images/brand/logo-color.webp",
     address: {
       "@type": "PostalAddress",
       streetAddress: site.streetAddress,

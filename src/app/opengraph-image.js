@@ -22,7 +22,7 @@ export default async function OpengraphImage() {
     readFile(join(cwd, "public/images/sunset-couple/sunset-couple-01.webp")).then((b) =>
       sharp(b).resize({ width: 1400 }).jpeg({ quality: 90 }).toBuffer(),
     ),
-    readFile(join(cwd, "public/images/brand/logo-gold.webp")).then((b) =>
+    readFile(join(cwd, "public/images/brand/logo-light.webp")).then((b) =>
       sharp(b).png().toBuffer(),
     ),
     readFile(join(cwd, "src/assets/og-fonts/cormorant-500.woff")),
@@ -63,7 +63,7 @@ export default async function OpengraphImage() {
           color: C.cream,
         }}
       >
-        <img src={dataUrl(logo, "image/png")} alt="" style={{ width: 210, height: 65 }} />
+        <img src={dataUrl(logo, "image/png")} alt="" style={{ width: 190, height: 117 }} />
 
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div
