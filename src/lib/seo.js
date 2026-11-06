@@ -19,9 +19,10 @@ export const titleTemplate = `%s | ${siteConfig.name}`;
  * /favicon.ico & /apple-touch-icon.png cũng là đường dẫn mặc định trình duyệt tự tìm.
  */
 export const ICONS = {
+  // Chỉ ICO + PNG: Google Search hỗ trợ BMP, GIF, ICO, PNG, JPEG, PPM, TIFF — KHÔNG có SVG,
+  // nên không khai báo SVG để Google không chọn nhầm file không đọc được.
   icon: [
     { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
-    { url: "/icon.svg", type: "image/svg+xml" },
     { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
   ],
   apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
