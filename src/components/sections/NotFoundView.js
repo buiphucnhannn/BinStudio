@@ -24,9 +24,9 @@ export default function NotFoundView() {
           className="mt-5 flex items-center justify-center gap-3 font-serif text-[6rem] leading-none text-ink sm:text-[8rem]"
         >
           <span>4</span>
-          {/* eslint-disable-next-line @next/next/no-img-element -- biểu tượng SVG tĩnh (app/icon.svg) */}
+          {/* eslint-disable-next-line @next/next/no-img-element -- biểu tượng tĩnh (public/icon-192.png, cùng file favicon) */}
           <img
-            src="/icon.svg"
+            src="/icon-192.png"
             alt=""
             width={110}
             height={110}
