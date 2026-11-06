@@ -24,14 +24,45 @@ export default function NotFoundView() {
           className="mt-5 flex items-center justify-center gap-3 font-serif text-[6rem] leading-none text-ink sm:text-[8rem]"
         >
           <span>4</span>
-          {/* eslint-disable-next-line @next/next/no-img-element -- biểu tượng tĩnh (public/icon-192.png, cùng file favicon) */}
-          <img
-            src="/icon-192.png"
-            alt=""
-            width={110}
-            height={110}
+          {/* SVG nhúng thẳng (cùng hình với favicon): không dùng <img> vì nội dung trang 404 đi kèm mọi trang,
+              React sẽ phát lệnh tải trước ảnh đó trên cả trang chủ dù không hiển thị (cảnh báo "preloaded but not used") */}
+          <svg
+            viewBox="-100 -100 200 200"
             className="h-[0.78em] w-[0.78em] animate-spin-slow"
-          />
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient id="nf-gold" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stopColor="#e2be78" />
+                <stop offset="0.5" stopColor="#c08f3e" />
+                <stop offset="1" stopColor="#9c6f2c" />
+              </linearGradient>
+              <mask
+                id="nf-blades"
+                maskUnits="userSpaceOnUse"
+                x="-100"
+                y="-100"
+                width="200"
+                height="200"
+              >
+                <circle r="91" fill="#fff" />
+                <path
+                  d="M-44.22 -12.68L-22.30 -40.23L12.68 -44.22L40.23 -22.30L44.22 12.68L22.30 40.23L-12.68 44.22L-40.23 22.30Z"
+                  fill="#000"
+                />
+                <path
+                  d="M-22.30 -40.23L18.24 -91.19M12.68 -44.22L77.38 -51.59M40.23 -22.30L91.19 18.24M44.22 12.68L51.59 77.38M22.30 40.23L-18.24 91.19M-12.68 44.22L-77.38 51.59M-40.23 22.30L-91.19 -18.24M-44.22 -12.68L-51.59 -77.38"
+                  stroke="#000"
+                  strokeWidth="2.6"
+                  strokeLinecap="round"
+                />
+              </mask>
+            </defs>
+            <g transform="scale(0.94)">
+              <circle r="97.7" fill="none" stroke="url(#nf-gold)" strokeWidth="4.6" />
+              <circle r="91" fill="url(#nf-gold)" mask="url(#nf-blades)" />
+            </g>
+          </svg>
           <span>4</span>
         </p>
 
