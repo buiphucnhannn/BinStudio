@@ -22,7 +22,7 @@ export const ICONS = {
   // Chỉ ICO + PNG: Google Search hỗ trợ BMP, GIF, ICO, PNG, JPEG, PPM, TIFF — KHÔNG có SVG,
   // nên không khai báo SVG để Google không chọn nhầm file không đọc được.
   icon: [
-    { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
+    { url: "/favicon.ico", sizes: "16x16 32x32 48x48 256x256", type: "image/x-icon" },
     { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
   ],
   apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
